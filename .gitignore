@@ -1,0 +1,10 @@
+node_modules/
+backend/database.db
+*.js
+*.json
+*.txt
+!package.json
+!package-lock.json
+!backend/app.py
+!backend/database_schema.sql
+!student360_enhanced.html
