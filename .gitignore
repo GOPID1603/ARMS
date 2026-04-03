@@ -7,4 +7,4 @@ backend/database.db
 !package-lock.json
 !backend/app.py
 !backend/database_schema.sql
-!student360_enhanced.html
+!index.html

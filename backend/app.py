@@ -225,7 +225,7 @@ def submit_bulk_attendance():
 
 @app.route('/')
 def index():
-    html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'student360_enhanced.html')
+    html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'index.html')
     return send_file(html_path)
 
 if __name__ == '__main__':
