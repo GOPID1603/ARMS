@@ -8,3 +8,4 @@ backend/database.db
 !backend/app.py
 !backend/database_schema.sql
 !index.html
+!requirements.txt

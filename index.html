@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student 360° — Unified Academic Platform</title>
+  <link rel="icon" href="s360_logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -566,7 +567,7 @@
       font-size: .95rem;
       color: var(--dark-text);
       outline: none;
-      background: #fafbff;
+      background:var(--light-bg);
       transition: all var(--transition);
     }
 
@@ -1558,7 +1559,7 @@
       font-size: .92rem;
       color: var(--dark-text);
       outline: none;
-      background: #fafbff;
+      background:var(--light-bg);
       transition: all var(--transition);
     }
 
@@ -1609,6 +1610,7 @@
       text-transform: uppercase;
       letter-spacing: .06em;
       color: rgba(255, 255, 255, .85);
+      white-space: nowrap;
     }
 
     thead th:first-child {
@@ -1632,6 +1634,7 @@
     tbody td {
       padding: .85em 1.1em;
       color: var(--body-text);
+      white-space: nowrap;
     }
 
     tbody td strong {
@@ -1994,7 +1997,7 @@
       align-items: center;
       gap: 1em;
       padding: .9em 1em;
-      background: #fafbff;
+      background:var(--light-bg);
       border-radius: var(--radius-sm);
       border: 1px solid #f0f2fb;
       transition: all var(--transition);
@@ -2431,7 +2434,7 @@
       border-radius: 11px;
       font-family: 'Outfit', sans-serif;
       font-size: .9rem;
-      background: #fafbff;
+      background:var(--light-bg);
       outline: none;
       transition: all var(--transition);
     }
@@ -2456,7 +2459,7 @@
     }
 
     .att-student-row:hover {
-      background: #fafbff;
+      background:var(--light-bg);
     }
 
     .asr-avatar {
@@ -2773,7 +2776,7 @@
       align-items: center;
       gap: .9em;
       padding: .75em .9em;
-      background: #fafbff;
+      background:var(--light-bg);
       border-radius: var(--radius-sm);
       border: 1px solid #f0f2fb;
       transition: all var(--transition);
@@ -2862,6 +2865,10 @@
 
       .login-left {
         display: none;
+      }
+
+      .mobile-logo-wrap {
+        display: block !important;
       }
 
       .ash-grid {
@@ -3164,6 +3171,20 @@
       background: #1e293b;
     }
 
+    
+    body.dark-mode #cb-widget,
+    body.dark-mode .cb-footer,
+    body.dark-mode .cb-input {
+      background: #1e293b;
+      border-color: #334155;
+      color: #f1f5f9;
+    }
+    body.dark-mode .cb-msg-bot {
+      background: #0f172a;
+      border-color: #334155;
+      color: #f1f5f9;
+    }
+
     /* ─── stagger animation helper ─── */
     .stagger-in>* {
       opacity: 0;
@@ -3192,6 +3213,490 @@
 
     .stagger-in>*:nth-child(6) {
       animation-delay: .3s;
+    }
+
+    /* ═══════════════════════════════════════════════
+       AI CHATBOT WIDGET
+    ═══════════════════════════════════════════════ */
+    #cb-fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(13, 27, 62, 0.3);
+      z-index: 9999;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #cb-fab:hover {
+      transform: scale(1.1) translateY(-5px);
+      box-shadow: 0 15px 40px rgba(196, 90, 168, 0.4);
+    }
+    #cb-widget {
+      position: fixed;
+      bottom: 110px;
+      right: 30px;
+      width: 380px;
+      height: 600px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(13, 27, 62, 0.15);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform-origin: bottom right;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+      pointer-events: none;
+    }
+    #cb-widget.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+    .cb-header {
+      background: linear-gradient(135deg, #1a1f36, #2b3643);
+      color: #fff;
+      padding: 1.2em 1.5em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .cb-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .cb-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .cb-close:hover { color: #fff; }
+    .cb-body {
+      flex: 1;
+      padding: 1.5em;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      scroll-behavior: smooth;
+    }
+    .cb-msg {
+      max-width: 85%;
+      padding: 0.9em 1.2em;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      animation: cbMsgIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    @keyframes cbMsgIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .cb-msg-bot {
+      background: #f7f9fc;
+      color: var(--dark-text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #e8ecf4;
+    }
+    .cb-msg-user {
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 4px 15px rgba(43, 54, 67, 0.2);
+    }
+    .cb-footer {
+      padding: 1.2em;
+      background: #fff;
+      border-top: 1px solid #e8ecf4;
+      display: flex;
+      gap: 0.8em;
+      align-items: center;
+    }
+    .cb-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .cb-input {
+      width: 100%;
+      padding: 0.9em 1.2em;
+      border-radius: 14px;
+      border: 2px solid #e8ecf4;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      background: #fdfdfe;
+    }
+    .cb-input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(196, 90, 168, 0.1);
+    }
+    .cb-input:disabled {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #ef4444;
+      cursor: not-allowed;
+    }
+    .cb-send {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+    .cb-send:hover {
+      transform: scale(1.05);
+      background: var(--secondary);
+    }
+    .cb-send:disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PROJECT PRESENTATION & SHOWCASE MODULE CSS
+    ═══════════════════════════════════════════════ */
+    .presentation-container {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.5em;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .presentation-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .slide-deck-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      padding: 1.5em;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+    }
+    .slide-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1em;
+    }
+    .slide-element {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateX(50px) scale(0.98);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .slide-element.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+      z-index: 10;
+    }
+    .slide-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5em;
+      line-height: 1.2;
+    }
+    .slide-body {
+      font-size: 1rem;
+      color: var(--body-text);
+      line-height: 1.6;
+    }
+    .slide-body ul {
+      margin-left: 1.2em;
+      margin-top: 0.8em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+    .slide-body li {
+      font-weight: 500;
+    }
+    .slide-body strong {
+      color: var(--accent);
+    }
+    .slide-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1em;
+      border-top: 1px solid #e8ecf4;
+    }
+    .slide-indicators {
+      display: flex;
+      gap: 0.5em;
+    }
+    .slide-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .slide-dot.active {
+      background: var(--accent);
+      width: 24px;
+      border-radius: 10px;
+    }
+    .slide-btn {
+      padding: 0.6em 1.2em;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      transition: all 0.2s;
+    }
+    .slide-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .slide-btn:disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* DB Benchmark simulator */
+    .benchmark-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      padding: 1.5em;
+      height: 100%;
+    }
+    .sim-bar-container {
+      margin-top: 1.5em;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+    }
+    .sim-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px;
+      align-items: center;
+      gap: 1em;
+    }
+    .sim-db-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+    .sim-track {
+      background: var(--light-bg);
+      height: 24px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #e8ecf4;
+    }
+    .sim-bar {
+      height: 100%;
+      width: 0;
+      transition: width 0.1s linear, background-color 0.5s;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+      box-sizing: border-box;
+    }
+    .sim-bar-sqlite {
+      background: linear-gradient(90deg, #4b8bbe, #306998);
+    }
+    .sim-bar-supabase {
+      background: linear-gradient(90deg, #10b981, #059669);
+    }
+    .sim-time-badge {
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .sim-time-badge.show {
+      opacity: 1;
+    }
+    .sim-result {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--dark-text);
+      text-align: right;
+    }
+    .sim-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+      margin-top: 1.5em;
+      padding-top: 1.2em;
+      border-top: 1px solid #e8ecf4;
+    }
+    .sim-stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .sim-stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Speaker Notes & Q&As */
+    .showcase-info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    @media (max-width: 768px) {
+      .showcase-info-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .speaker-notes-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #cbd5e1;
+      border-radius: var(--radius-xl);
+      padding: 1.5em;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .notes-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 1em;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.5em;
+    }
+    .notes-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      font-style: italic;
+      min-height: 160px;
+    }
+    .notes-body strong {
+      color: #f87171;
+    }
+
+    .qa-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      padding: 1.5em;
+    }
+    .qa-header {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+      margin-bottom: 1em;
+      border-bottom: 1px solid #e8ecf4;
+      padding-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .qa-item {
+      border: 1px solid #e8ecf4;
+      border-radius: 8px;
+      margin-bottom: 0.6em;
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .qa-item-header {
+      background: var(--light-bg);
+      padding: 0.7em 1em;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--dark-text);
+    }
+    .qa-item-header:hover {
+      background: #e2e8f0;
+    }
+    .qa-item-body {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      font-size: 0.82rem;
+      color: var(--body-text);
+      line-height: 1.5;
+      background: #fff;
+    }
+    .qa-item.active .qa-item-body {
+      padding: 0.8em 1em;
+      max-height: 200px;
+      border-top: 1px solid #e8ecf4;
+    }
+    .qa-item-header i {
+      transition: transform 0.3s;
+    }
+    .qa-item.active .qa-item-header i {
+      transform: rotate(180deg);
     }
   </style>
 
@@ -3299,7 +3804,7 @@
 
   <!-- LOADER -->
   <div id="loader">
-    <div class="loader-logo">Student <span>360°</span></div>
+    <div class="loader-logo"><img src="s360_logo.png" style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 10px; vertical-align: middle; margin-right: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" alt="Student 360 Logo">Student <span>360°</span></div>
     <div class="loader-bar">
       <div class="loader-fill"></div>
     </div>
@@ -3321,7 +3826,7 @@
       <!-- LEFT -->
       <div class="login-left">
         <div class="login-brand">
-          <div class="login-brand-icon"><i class="fa fa-graduation-cap"></i></div>
+          <div class="login-brand-icon" style="background: transparent; box-shadow: none; width: auto; height: auto;"><img src="s360_logo.png" style="flex-shrink: 0; min-width: 54px; width: 54px; height: 54px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.2);" alt="Student 360 Logo"></div>
           <div class="login-brand-text">Student 360°<small>Unified Academic Platform</small></div>
         </div>
         <p class="login-tagline">A <strong>next-generation platform</strong> empowering students, faculty, and
@@ -3360,6 +3865,9 @@
       </div>
       <!-- RIGHT -->
       <div class="login-right">
+        <div class="mobile-logo-wrap" style="display:none; text-align:center; margin-bottom: 1.5em;">
+           <img src="s360_logo.png" style="width: 72px; height: 72px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+        </div>
         <h2>Welcome Back</h2>
         <p>Sign in to your academic portal</p>
         <!-- UNIFIED LOGIN FORM -->
@@ -3387,12 +3895,34 @@
     </div>
   </div>
 
+  <!-- ═══════════════ AI CHATBOT ═══════════════ -->
+  <div id="cb-fab" onclick="toggleChatbot()" style="display:none">
+    <img src="zara_logo.jpg" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;" alt="ZARA Logo">
+  </div>
+  <div id="cb-widget">
+    <div class="cb-header">
+      <div class="cb-title">
+        <img src="zara_logo.jpg" style="flex-shrink: 0; min-width: 24px; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-right: 8px;" alt="ZARA Logo"> ZARA
+      </div>
+      <button class="cb-close" onclick="toggleChatbot()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="cb-body" id="cb-body">
+      <div class="cb-msg cb-msg-bot">Hello! I am ZARA, your University AI Assistant. How can I help you today?</div>
+    </div>
+    <div class="cb-footer">
+      <div class="cb-input-wrap">
+        <input type="text" id="cb-input" class="cb-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatbotMsg()">
+      </div>
+      <button class="cb-send" id="cb-send-btn" onclick="sendChatbotMsg()"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+
   <!-- ═══════════════ APP SHELL ═══════════════ -->
   <div id="app">
     <!-- SIDEBAR -->
     <aside id="sidebar">
       <div class="sb-logo">
-        <div class="sb-logo-icon"><i class="fa fa-graduation-cap"></i></div>
+        <img src="s360_logo.png" style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" alt="Student 360 Logo">
         <div>
           <div class="sb-logo-text">Student 360°</div>
           <div class="sb-logo-sub" id="portal-label">Portal</div>
@@ -3450,11 +3980,11 @@
 
     async function loadBackendData() {
       try {
-        const res = await fetch('http://localhost:5000/api/data');
+        const res = await fetch('/api/data');
         DATA = await res.json();
       } catch (e) {
         console.error("Backend Error:", e);
-        flash('Backend server unreachable. Ensure python app.py is running on port 5000.', 'error');
+        flash('Backend server unreachable.', 'error');
       }
     }
 
@@ -3569,7 +4099,7 @@
     // Backend API Handlers
     async function apiPost(endpoint, payload, method = 'POST') {
       try {
-        const res = await fetch(`http://localhost:5000${endpoint}`, {
+        const res = await fetch(endpoint, {
           method: method, headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
@@ -3584,7 +4114,7 @@
 
     async function apiDelete(endpoint) {
       try {
-        const res = await fetch(`http://localhost:5000${endpoint}`, { method: 'DELETE' });
+        const res = await fetch(endpoint, { method: 'DELETE' });
         const ans = await res.json();
         if (ans.success) {
           await loadBackendData();
@@ -3750,8 +4280,8 @@
         { group: 'SYSTEM', items: [
             { id: 'sendnotif', icon: 'fa-paper-plane', label: 'Notifications' },
             { id: 'auditlogs', icon: 'fa-shield-halved', label: 'Audit Logs & RBAC' },
-            { id: 'auditlogs', icon: 'fa-shield-halved', label: 'Audit Logs & RBAC' },
             { id: 'settings', icon: 'fa-gear', label: 'Settings' },
+            { id: 'chatadmin', icon: 'fa-comments', label: 'AI Chat Moderation' },
           ]
         },
       ]
@@ -4167,7 +4697,7 @@
       </div>
       <div class="form-group"><label>Reason / Event</label><textarea id="od-reason" rows="4" style="resize:vertical" placeholder="Describe the reason in detail (medical, sports event, etc.)..."></textarea></div>
       <div class="form-group"><label>Supporting Document (optional)</label>
-        <div style="border:2px dashed #d0d8f0;border-radius:11px;padding:1.5em;text-align:center;cursor:pointer;color:var(--muted);font-size:.88rem;background:#fafbff" onclick="flash('Document upload coming in v2.0','info')">
+        <div style="border:2px dashed #d0d8f0;border-radius:11px;padding:1.5em;text-align:center;cursor:pointer;color:var(--muted);font-size:.88rem;background:var(--light-bg)" onclick="flash('Document upload coming in v2.0','info')">
           <i class="fa fa-cloud-arrow-up" style="font-size:1.5rem;display:block;margin-bottom:.4em;color:var(--secondary)"></i>
           Click to upload proof / certificate
         </div>
@@ -4941,17 +5471,17 @@
   <div class="page-header"><div class="ph-title"><div class="ph-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"><i class="fa fa-sitemap"></i></div><div class="ph-text"><h1>Department Student Search</h1><p>Filter by department, specialization or mentor</p></div></div></div>
   <div class="card" style="margin-bottom:1.5em">
     <div style="display:flex;gap:.8em;flex-wrap:wrap;align-items:center">
-      <select id="ds-dept" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:#fafbff;" onchange="updateDsSpecs()">
+      <select id="ds-dept" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:var(--light-bg);" onchange="updateDsSpecs()">
         <option value="">All Departments</option><option value="CSE">CSE</option><option value="AIDS">AIDS</option><option value="AIML">AIML</option>
       </select>
-      <select id="ds-spec" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:#fafbff;">
+      <select id="ds-spec" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:var(--light-bg);">
         <option value="">All Specializations</option>
       </select>
-      <select id="ds-mentor" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:#fafbff;">
+      <select id="ds-mentor" style="flex:1;min-width:180px;padding:.6em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:var(--light-bg);">
         <option value="">All Mentors</option>
         ${DATA.faculty.map(f => `<option value="${f.id}">${f.name}</option>`).join('')}
       </select>
-      <input type="text" id="ds-name" placeholder="Student name..." style="flex:2;min-width:200px;padding:.6em 1em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:#fafbff;">
+      <input type="text" id="ds-name" placeholder="Student name..." style="flex:2;min-width:200px;padding:.6em 1em;border:2px solid #e8ecf4;border-radius:10px;font-family:inherit;font-size:.9rem;color:var(--dark-text);outline:none;background:var(--light-bg);">
       <button class="btn btn-primary btn-sm" style="background:linear-gradient(135deg,#a855f7,#9333ea);color:#fff;border-radius:11px;padding:.6em 1.2em;border:none;cursor:pointer;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.5em;" onclick="doDeptSearch()"><i class="fa fa-search"></i> Search</button>
       <button class="btn btn-ghost btn-sm" style="background:var(--light-bg);color:var(--body-text);border:1.5px solid #e8ecf4;border-radius:11px;padding:.6em 1.2em;cursor:pointer;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.5em;" onclick="clearDeptSearch()"><i class="fa fa-rotate-left"></i> Clear</button>
     </div>
@@ -5379,7 +5909,7 @@
     <div class="card" style="--anim-delay:0.5s">
       <div class="card-header"><div class="card-title"><i class="fa fa-comments"></i> Direct Faculty Connect</div></div>
       <div style="font-size:.82rem;color:var(--muted);margin-bottom:1em">Message your child's assigned mentor or HOD directly.</div>
-      <div style="display:flex;flex-direction:column;gap:1em;background:#fafbff;padding:1em;border-radius:12px;border:1px solid #e8ecf4">
+      <div style="display:flex;flex-direction:column;gap:1em;background:var(--light-bg);padding:1em;border-radius:12px;border:1px solid #e8ecf4">
         <div style="display:flex;gap:1em;align-items:center">
           <div style="width:40px;height:40px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">SP</div>
           <div><div style="font-weight:700">Dr. Suresh Patil</div><div style="font-size:.75rem;color:var(--muted)">CSE Mentor</div></div>
@@ -5434,7 +5964,7 @@
             </div>
             <span class="badge badge-success">₹24L - ₹32L</span>
           </div>
-          <div style="margin-top:1em;font-size:.82rem;color:var(--muted);display:flex;gap:.5em"><span style="background:#f1f5f9;padding:.2em .6em;border-radius:20px">Python</span><span style="background:#f1f5f9;padding:.2em .6em;border-radius:20px">Data Structures</span></div>
+          <div style="margin-top:1em;font-size:.82rem;color:var(--muted);display:flex;gap:.5em"><span style="background:var(--light-bg);padding:.2em .6em;border-radius:20px">Python</span><span style="background:var(--light-bg);padding:.2em .6em;border-radius:20px">Data Structures</span></div>
           <button class="btn btn-primary btn-block" style="margin-top:1em" onclick="flash('Profile and Resume submitted to Google!','success')"><i class="fa fa-paper-plane"></i> 1-Click Apply</button>
         </div>
       </div>
@@ -5456,7 +5986,7 @@
   <div class="grid-2">
     <div class="card" style="--anim-delay:0.1s">
       <div class="card-header"><div class="card-title"><i class="fa fa-cloud-arrow-up"></i> Assignment Dropbox</div></div>
-      <div style="border:2px dashed #cbd5e1;border-radius:12px;padding:3em 1em;text-align:center;background:#f8fafc;cursor:pointer;transition:all 0.3s ease" onmouseover="this.style.background='#f1f5f9';this.style.borderColor='#3b82f6'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#cbd5e1'" onclick="flash('AI Plagiarism Check initiated on uploaded file...','info')">
+      <div style="border:2px dashed #cbd5e1;border-radius:12px;padding:3em 1em;text-align:center;background:var(--light-bg);cursor:pointer;transition:all 0.3s ease" onmouseover="this.style.background='#f1f5f9';this.style.borderColor='#3b82f6'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#cbd5e1'" onclick="flash('AI Plagiarism Check initiated on uploaded file...','info')">
         <i class="fa fa-file-arrow-up fa-3x" style="color:#94a3b8;margin-bottom:.5em"></i>
         <div style="font-weight:700;color:var(--dark-text)">Drag & Drop Assignment PDF/ZIP</div>
         <div style="font-size:.8rem;color:var(--muted)">Max file size: 50MB. Auto-runs Plagiarism AI Checker.</div>
@@ -5551,6 +6081,24 @@
         </table>
       </div>
       <button class="btn btn-ghost btn-block" style="margin-top:1.5em" onclick="flash('Renewal request submitted.','info')"><i class="fa fa-rotate"></i> Renew All</button>
+    </div>
+  </div>
+</div>`;
+
+      // AI CHAT MANAGEMENT (ADMIN ONLY)
+      __html += `<div class="section" id="sec-chatadmin">
+  <div class="page-header"><div class="ph-title"><div class="ph-icon" style="background:linear-gradient(135deg,#c026d3,#86198f)"><i class="fa fa-comments"></i></div><div class="ph-text"><h1>AI Chat Moderation</h1><p>Monitor portal bot usage and block abuse</p></div></div></div>
+  <div class="grid-2">
+    <div class="card" style="grid-column: span 2">
+      <div class="card-header"><div class="card-title"><i class="fa fa-list"></i> Portal Chatbot Logs & Usage</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>User ID</th><th>Name / Role</th><th>Message Log</th><th>Flag</th><th>Action</th></tr></thead>
+          <tbody id="admin-chatlogs-tbody">
+            <!-- Populated by renderChatLogs() -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>`;
@@ -5848,6 +6396,132 @@
       }
       animate();
     })();
+
+    /* ═══════════════════════════════════════════════
+       AI CHATBOT LOGIC
+    ═══════════════════════════════════════════════ */
+    let cbIsBlocked = false;
+    
+    function toggleChatbot() {
+      const widget = document.getElementById('cb-widget');
+      if (widget.classList.contains('active')) {
+        widget.classList.remove('active');
+      } else {
+        widget.classList.add('active');
+        if (currentUser) {
+          const uId = currentRole === 'student' ? currentUser.reg : currentRole === 'faculty' ? currentUser.id : 'admin';
+          if (DATA.blockedUsers && DATA.blockedUsers.includes(uId)) {
+            cbIsBlocked = true;
+            document.getElementById('cb-input').disabled = true;
+            document.getElementById('cb-send-btn').disabled = true;
+            document.getElementById('cb-input').placeholder = "Blocked by Administrator";
+          }
+        }
+      }
+    }
+
+    async function sendChatbotMsg() {
+      const inputEl = document.getElementById('cb-input');
+      const msg = inputEl.value.trim();
+      if (!msg || cbIsBlocked || !currentUser) return;
+
+      const bodyEl = document.getElementById('cb-body');
+      
+      // Add user message to UI
+      const userDiv = document.createElement('div');
+      userDiv.className = 'cb-msg cb-msg-user';
+      userDiv.innerText = msg;
+      bodyEl.appendChild(userDiv);
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+
+      inputEl.value = '';
+
+      const uId = currentRole === 'student' ? currentUser.reg : currentRole === 'faculty' ? currentUser.id : 'admin';
+
+      try {
+        const res = await apiPost('/api/chatbot', {
+          user_id: uId,
+          role: currentRole,
+          name: currentUser.name,
+          message: msg
+        });
+
+        if (res && res.success) {
+          setTimeout(() => {
+            const botDiv = document.createElement('div');
+            botDiv.className = 'cb-msg cb-msg-bot';
+            botDiv.innerText = res.response;
+            bodyEl.appendChild(botDiv);
+            bodyEl.scrollTop = bodyEl.scrollHeight;
+            if (currentRole === 'admin') renderChatLogs(); // live update admin view
+          }, 500);
+        } else if (res) {
+          flash(res.error || 'Chatbot Error', 'error');
+          if (res.error === 'Blocked by Administrator') {
+            cbIsBlocked = true;
+            inputEl.disabled = true;
+            document.getElementById('cb-send-btn').disabled = true;
+            inputEl.placeholder = "Blocked by Administrator";
+          }
+        }
+      } catch (e) {
+        flash('Failed to connect to AI', 'error');
+      }
+    }
+
+    function renderChatLogs() {
+      const tbody = document.getElementById('admin-chatlogs-tbody');
+      if (!tbody) return;
+      
+      if (!DATA.chatbotLogs || DATA.chatbotLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">No chatbot activity.</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = DATA.chatbotLogs.slice().reverse().map(l => {
+        const isBlocked = DATA.blockedUsers && DATA.blockedUsers.includes(l.user_id);
+        const trHtml = `<tr>
+          <td><strong>${l.user_id}</strong><br><span style="font-size:0.75rem;color:var(--muted)">${l.timestamp}</span></td>
+          <td>${l.name} <span class="badge badge-primary">${l.role}</span></td>
+          <td style="max-width:300px; font-size:0.85rem">
+             <div style="margin-bottom:4px"><strong>U:</strong> ${l.message}</div>
+             <div style="color:var(--muted)"><strong>A:</strong> ${l.response}</div>
+          </td>
+          <td>${l.is_unnecessary ? '<span class="badge badge-danger">Unnecessary</span>' : '<span class="badge badge-success">Clean</span>'}</td>
+          <td>
+            ${isBlocked 
+              ? `<button class="btn btn-ghost btn-xs" style="color:var(--success); border-color:var(--success)" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'unblock')">Unblock Access</button>`
+              : `<button class="btn btn-danger btn-xs" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'block')">Block Access</button>`
+            }
+          </td>
+        </tr>`;
+        return trHtml;
+      }).join('');
+    }
+
+    async function toggleUserBlock(uId, role, action) {
+      if (!confirm(`Are you sure you want to ${action} this user's chatbot access?`)) return;
+      const res = await apiPost('/api/chatbot/block', { user_id: uId, role: role, action: action });
+      if (res && res.success) {
+        flash(`User access ${action}ed successfully.`, 'success');
+        if (action === 'block') {
+          if (!DATA.blockedUsers.includes(uId)) DATA.blockedUsers.push(uId);
+        } else {
+          DATA.blockedUsers = DATA.blockedUsers.filter(u => u !== uId);
+        }
+        renderChatLogs();
+      } else {
+        flash('Failed to modify access.', 'error');
+      }
+    }
+    
+    // Call renderChatLogs after data fetch hook or navigation
+    const origBootPortal = bootPortal;
+    bootPortal = function(role, name, msg) {
+       origBootPortal(role, name, msg);
+       document.getElementById('cb-fab').style.display = 'flex';
+       if (role === 'admin') renderChatLogs();
+    }
   </script>
 </body>
 

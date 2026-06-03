@@ -1,3 +1,5 @@
+-- Run this script in your Supabase SQL Editor to create all necessary tables
+
 CREATE TABLE IF NOT EXISTS students (
     reg TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -6,12 +8,12 @@ CREATE TABLE IF NOT EXISTS students (
     batch TEXT,
     email TEXT,
     phone TEXT,
-    cgpa REAL,
+    cgpa NUMERIC,
     sem INTEGER,
     credits INTEGER,
     pass INTEGER,
     disc INTEGER,
-    att REAL
+    att NUMERIC
 );
 
 CREATE TABLE IF NOT EXISTS faculty (
@@ -39,7 +41,7 @@ CREATE TABLE IF NOT EXISTS courses (
 );
 
 CREATE TABLE IF NOT EXISTS notifications (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     msg TEXT NOT NULL,
     date TEXT,
@@ -48,7 +50,7 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 CREATE TABLE IF NOT EXISTS disciplinary (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     student TEXT NOT NULL,
     name TEXT NOT NULL,
     severity TEXT,
@@ -56,21 +58,21 @@ CREATE TABLE IF NOT EXISTS disciplinary (
     date TEXT,
     faculty TEXT,
     notes TEXT,
-    FOREIGN KEY(student) REFERENCES students(reg)
+    FOREIGN KEY(student) REFERENCES students(reg) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS attendance_records (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     date TEXT,
     course TEXT,
     status TEXT,
     student_reg TEXT,
-    FOREIGN KEY(course) REFERENCES courses(code),
-    FOREIGN KEY(student_reg) REFERENCES students(reg)
+    FOREIGN KEY(course) REFERENCES courses(code) ON DELETE CASCADE,
+    FOREIGN KEY(student_reg) REFERENCES students(reg) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS od_requests (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     date TEXT,
     course TEXT,
     reason TEXT,
@@ -80,15 +82,15 @@ CREATE TABLE IF NOT EXISTS od_requests (
 );
 
 CREATE TABLE IF NOT EXISTS student_courses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     student_reg TEXT,
     course_code TEXT,
-    FOREIGN KEY(student_reg) REFERENCES students(reg),
-    FOREIGN KEY(course_code) REFERENCES courses(code)
+    FOREIGN KEY(student_reg) REFERENCES students(reg) ON DELETE CASCADE,
+    FOREIGN KEY(course_code) REFERENCES courses(code) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS chatbot_logs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     user_id TEXT,
     role TEXT,
     name TEXT,
@@ -102,4 +104,3 @@ CREATE TABLE IF NOT EXISTS blocked_users (
     user_id TEXT PRIMARY KEY,
     role TEXT
 );
-
