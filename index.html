@@ -2857,6 +2857,15 @@
    RESPONSIVE
 ═══════════════════════════════════════════════ */
     @media(max-width:1024px) {
+      html, body {
+        height: auto !important;
+        overflow-y: auto !important;
+      }
+
+      #app.visible {
+        display: block !important;
+      }
+
       .login-wrap {
         grid-template-columns: 1fr;
         max-width: 440px;
@@ -2908,6 +2917,22 @@
         padding: 1em;
       }
 
+      .topbar .btn-primary {
+        display: none !important;
+      }
+
+      .user-pill .up-name {
+        display: none !important;
+      }
+
+      .user-pill {
+        padding: .35em !important;
+      }
+
+      .topbar-title {
+        font-size: 1rem !important;
+      }
+
       .stats-row {
         grid-template-columns: 1fr 1fr;
       }
@@ -2946,7 +2971,7 @@
       }
 
       .ash-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr !important;
       }
 
       .profile-fields-grid {
@@ -2964,6 +2989,19 @@
 
       .flash {
         max-width: 100%;
+      }
+
+      #cb-widget {
+        width: calc(100% - 40px) !important;
+        right: 20px !important;
+        left: 20px !important;
+        bottom: 90px !important;
+        height: 70vh !important;
+      }
+
+      #cb-fab {
+        bottom: 20px !important;
+        right: 20px !important;
       }
     }
 
