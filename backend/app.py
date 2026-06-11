@@ -520,6 +520,12 @@ def index():
     html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'index.html')
     return send_file(html_path)
 
+@app.route('/favicon.ico')
+@app.route('/s360_logo.png')
+def favicon():
+    logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 's360_logo.png')
+    return send_file(logo_path)
+
 @app.route('/api/seed', methods=['POST'])
 def seed_database():
     if use_sqlite:
