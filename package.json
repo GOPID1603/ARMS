@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node build.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build -t",
     "login": "npm --prefix selenium-tests run login"
   }
 }
