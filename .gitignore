@@ -13,3 +13,5 @@ backend/database.db
 !build.js
 !selenium-tests/**
 selenium-tests/node_modules/
+!dump.json
+
