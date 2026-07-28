@@ -2,7 +2,6 @@ node_modules/
 build/
 backend/database.db
 *.js
-*.json
 *.txt
 !package.json
 !package-lock.json
