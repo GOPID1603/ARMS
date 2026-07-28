@@ -28,3 +28,7 @@ filesToCopy.forEach(file => {
     console.log(`Warning: File ${file} not found.`);
   }
 });
+
+// Write a blank .gitignore to the build folder to clear any inherited ignore rules on gh-pages branch
+fs.writeFileSync(path.join(destDir, '.gitignore'), '');
+console.log('Created empty .gitignore in build/');
