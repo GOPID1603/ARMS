@@ -367,8 +367,7 @@ def enroll_student():
             with get_db() as conn:
                 cur = conn.execute('SELECT * FROM student_courses WHERE student_reg=? AND course_code=?', (data['student_reg'], data['course_code'])).fetchone()
                 if not cur:
-                    conn.execute('INSERT INTO student_courses (student_reg, course_code) VALUES (?, ?)', (data['student_reg'], data['course_code']))
-                    conn.execute('UPDATE courses SET students = students + 1 WHERE code = ?', (data['course_code'],))
+                    conn.execute('INSERT INTO student_courses (student_reg, course_code, status) VALUES (?, ?, "Pending")', (data['student_reg'], data['course_code']))
                     conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -378,12 +377,42 @@ def enroll_student():
     try:
         cur = supabase.table('student_courses').select('*').eq('student_reg', data['student_reg']).eq('course_code', data['course_code']).execute().data
         if not cur:
-            supabase.table('student_courses').insert({'id': get_next_id_supabase('student_courses'), 'student_reg': data['student_reg'], 'course_code': data['course_code']}).execute()
-            course = supabase.table('courses').select('students').eq('code', data['course_code']).execute().data[0]
-            supabase.table('courses').update({'students': course['students'] + 1}).eq('code', data['course_code']).execute()
+            supabase.table('student_courses').insert({'id': get_next_id_supabase('student_courses'), 'student_reg': data['student_reg'], 'course_code': data['course_code'], 'status': 'Pending'}).execute()
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/enroll/approve', methods=['POST'])
+def approve_enrollment():
+    data = request.json
+    student_reg = data.get('student_reg')
+    course_code = data.get('course_code')
+    action = data.get('action') # 'approve' or 'reject'
+
+    if use_sqlite:
+        try:
+            with get_db() as conn:
+                if action == 'approve':
+                    conn.execute('UPDATE student_courses SET status = "Approved" WHERE student_reg = ? AND course_code = ?', (student_reg, course_code))
+                    conn.execute('UPDATE courses SET students = students + 1 WHERE code = ?', (course_code,))
+                elif action == 'reject':
+                    conn.execute('DELETE FROM student_courses WHERE student_reg = ? AND course_code = ?', (student_reg, course_code))
+                conn.commit()
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 400
+    else:
+        if not supabase: return jsonify({'success': False, 'error': 'Supabase not configured'}), 500
+        try:
+            if action == 'approve':
+                supabase.table('student_courses').update({'status': 'Approved'}).eq('student_reg', student_reg).eq('course_code', course_code).execute()
+                course = supabase.table('courses').select('students').eq('code', course_code).execute().data[0]
+                supabase.table('courses').update({'students': course['students'] + 1}).eq('code', course_code).execute()
+            elif action == 'reject':
+                supabase.table('student_courses').delete().eq('student_reg', student_reg).eq('course_code', course_code).execute()
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/attendance', methods=['POST'])
 def submit_bulk_attendance():

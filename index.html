@@ -567,7 +567,7 @@
       font-size: .95rem;
       color: var(--dark-text);
       outline: none;
-      background:var(--light-bg);
+      background: var(--light-bg);
       transition: all var(--transition);
     }
 
@@ -1558,7 +1558,7 @@
       font-size: .92rem;
       color: var(--dark-text);
       outline: none;
-      background:var(--light-bg);
+      background: var(--light-bg);
       transition: all var(--transition);
     }
 
@@ -1996,7 +1996,7 @@
       align-items: center;
       gap: 1em;
       padding: .9em 1em;
-      background:var(--light-bg);
+      background: var(--light-bg);
       border-radius: var(--radius-sm);
       border: 1px solid #f0f2fb;
       transition: all var(--transition);
@@ -2433,7 +2433,7 @@
       border-radius: 11px;
       font-family: 'Outfit', sans-serif;
       font-size: .9rem;
-      background:var(--light-bg);
+      background: var(--light-bg);
       outline: none;
       transition: all var(--transition);
     }
@@ -2458,7 +2458,7 @@
     }
 
     .att-student-row:hover {
-      background:var(--light-bg);
+      background: var(--light-bg);
     }
 
     .asr-avatar {
@@ -2775,7 +2775,7 @@
       align-items: center;
       gap: .9em;
       padding: .75em .9em;
-      background:var(--light-bg);
+      background: var(--light-bg);
       border-radius: var(--radius-sm);
       border: 1px solid #f0f2fb;
       transition: all var(--transition);
@@ -2857,7 +2857,9 @@
    RESPONSIVE
 ═══════════════════════════════════════════════ */
     @media(max-width:1024px) {
-      html, body {
+
+      html,
+      body {
         height: auto !important;
         overflow-y: auto !important;
       }
@@ -3208,7 +3210,7 @@
       background: #1e293b;
     }
 
-    
+
     body.dark-mode #cb-widget,
     body.dark-mode .cb-footer,
     body.dark-mode .cb-input {
@@ -3216,6 +3218,7 @@
       border-color: #334155;
       color: #f1f5f9;
     }
+
     body.dark-mode .cb-msg-bot {
       background: #0f172a;
       border-color: #334155;
@@ -3273,10 +3276,12 @@
       z-index: 9999;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
     #cb-fab:hover {
       transform: scale(1.1) translateY(-5px);
       box-shadow: 0 15px 40px rgba(196, 90, 168, 0.4);
     }
+
     #cb-widget {
       position: fixed;
       bottom: 110px;
@@ -3298,11 +3303,13 @@
       transform: scale(0.9) translateY(20px);
       pointer-events: none;
     }
+
     #cb-widget.active {
       opacity: 1;
       transform: scale(1) translateY(0);
       pointer-events: all;
     }
+
     .cb-header {
       background: linear-gradient(135deg, #1a1f36, #2b3643);
       color: #fff;
@@ -3310,8 +3317,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .cb-title {
       font-family: 'DM Serif Display', serif;
       font-size: 1.3rem;
@@ -3319,15 +3327,20 @@
       align-items: center;
       gap: 0.5em;
     }
+
     .cb-close {
       background: none;
       border: none;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       font-size: 1.2rem;
       cursor: pointer;
       transition: color 0.2s;
     }
-    .cb-close:hover { color: #fff; }
+
+    .cb-close:hover {
+      color: #fff;
+    }
+
     .cb-body {
       flex: 1;
       padding: 1.5em;
@@ -3337,6 +3350,7 @@
       gap: 1em;
       scroll-behavior: smooth;
     }
+
     .cb-msg {
       max-width: 85%;
       padding: 0.9em 1.2em;
@@ -3347,9 +3361,14 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     @keyframes cbMsgIn {
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
+
     .cb-msg-bot {
       background: #f7f9fc;
       color: var(--dark-text);
@@ -3357,6 +3376,7 @@
       border-bottom-left-radius: 4px;
       border: 1px solid #e8ecf4;
     }
+
     .cb-msg-user {
       background: linear-gradient(135deg, var(--accent), var(--secondary));
       color: #fff;
@@ -3364,6 +3384,7 @@
       border-bottom-right-radius: 4px;
       box-shadow: 0 4px 15px rgba(43, 54, 67, 0.2);
     }
+
     .cb-footer {
       padding: 1.2em;
       background: #fff;
@@ -3372,10 +3393,12 @@
       gap: 0.8em;
       align-items: center;
     }
+
     .cb-input-wrap {
       flex: 1;
       position: relative;
     }
+
     .cb-input {
       width: 100%;
       padding: 0.9em 1.2em;
@@ -3387,17 +3410,20 @@
       transition: all 0.3s;
       background: #fdfdfe;
     }
+
     .cb-input:focus {
       border-color: var(--accent);
       background: #fff;
       box-shadow: 0 0 0 4px rgba(196, 90, 168, 0.1);
     }
+
     .cb-input:disabled {
       background: #fee2e2;
       border-color: #fca5a5;
       color: #ef4444;
       cursor: not-allowed;
     }
+
     .cb-send {
       width: 45px;
       height: 45px;
@@ -3412,10 +3438,12 @@
       font-size: 1.1rem;
       transition: all 0.2s;
     }
+
     .cb-send:hover {
       transform: scale(1.05);
       background: var(--secondary);
     }
+
     .cb-send:disabled {
       background: #e2e8f0;
       color: #94a3b8;
@@ -3432,11 +3460,13 @@
       gap: 1.5em;
       align-items: start;
     }
+
     @media (max-width: 1024px) {
       .presentation-container {
         grid-template-columns: 1fr;
       }
     }
+
     .slide-deck-card {
       background: var(--card-bg);
       border-radius: var(--radius-xl);
@@ -3449,12 +3479,14 @@
       flex-direction: column;
       height: 520px;
     }
+
     .slide-viewport {
       flex: 1;
       position: relative;
       overflow: hidden;
       margin-bottom: 1em;
     }
+
     .slide-element {
       position: absolute;
       inset: 0;
@@ -3466,12 +3498,14 @@
       flex-direction: column;
       justify-content: center;
     }
+
     .slide-element.active {
       opacity: 1;
       transform: translateX(0) scale(1);
       pointer-events: auto;
       z-index: 10;
     }
+
     .slide-title {
       font-family: 'DM Serif Display', serif;
       font-size: 2rem;
@@ -3479,11 +3513,13 @@
       margin-bottom: 0.5em;
       line-height: 1.2;
     }
+
     .slide-body {
       font-size: 1rem;
       color: var(--body-text);
       line-height: 1.6;
     }
+
     .slide-body ul {
       margin-left: 1.2em;
       margin-top: 0.8em;
@@ -3491,12 +3527,15 @@
       flex-direction: column;
       gap: 0.5em;
     }
+
     .slide-body li {
       font-weight: 500;
     }
+
     .slide-body strong {
       color: var(--accent);
     }
+
     .slide-nav {
       display: flex;
       justify-content: space-between;
@@ -3504,10 +3543,12 @@
       padding-top: 1em;
       border-top: 1px solid #e8ecf4;
     }
+
     .slide-indicators {
       display: flex;
       gap: 0.5em;
     }
+
     .slide-dot {
       width: 10px;
       height: 10px;
@@ -3516,11 +3557,13 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .slide-dot.active {
       background: var(--accent);
       width: 24px;
       border-radius: 10px;
     }
+
     .slide-btn {
       padding: 0.6em 1.2em;
       background: linear-gradient(135deg, var(--accent), var(--accent-dark));
@@ -3535,10 +3578,12 @@
       gap: 0.5em;
       transition: all 0.2s;
     }
+
     .slide-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px var(--accent-glow);
     }
+
     .slide-btn:disabled {
       background: #e2e8f0;
       color: #94a3b8;
@@ -3556,23 +3601,27 @@
       padding: 1.5em;
       height: 100%;
     }
+
     .sim-bar-container {
       margin-top: 1.5em;
       display: flex;
       flex-direction: column;
       gap: 1.2em;
     }
+
     .sim-row {
       display: grid;
       grid-template-columns: 120px 1fr 80px;
       align-items: center;
       gap: 1em;
     }
+
     .sim-db-name {
       font-weight: 700;
       font-size: 0.9rem;
       color: var(--primary);
     }
+
     .sim-track {
       background: var(--light-bg);
       height: 24px;
@@ -3581,6 +3630,7 @@
       overflow: hidden;
       border: 1px solid #e8ecf4;
     }
+
     .sim-bar {
       height: 100%;
       width: 0;
@@ -3592,12 +3642,15 @@
       padding-right: 10px;
       box-sizing: border-box;
     }
+
     .sim-bar-sqlite {
       background: linear-gradient(90deg, #4b8bbe, #306998);
     }
+
     .sim-bar-supabase {
       background: linear-gradient(90deg, #10b981, #059669);
     }
+
     .sim-time-badge {
       color: #fff;
       font-size: 0.75rem;
@@ -3605,9 +3658,11 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
+
     .sim-time-badge.show {
       opacity: 1;
     }
+
     .sim-result {
       font-family: monospace;
       font-weight: 700;
@@ -3615,6 +3670,7 @@
       color: var(--dark-text);
       text-align: right;
     }
+
     .sim-stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -3623,10 +3679,12 @@
       padding-top: 1.2em;
       border-top: 1px solid #e8ecf4;
     }
+
     .sim-stat-value {
       font-size: 1.5rem;
       font-weight: 800;
     }
+
     .sim-stat-label {
       font-size: 0.75rem;
       color: var(--muted);
@@ -3641,19 +3699,22 @@
       gap: 1.5em;
       margin-top: 1.5em;
     }
+
     @media (max-width: 768px) {
       .showcase-info-row {
         grid-template-columns: 1fr;
       }
     }
+
     .speaker-notes-card {
       background: linear-gradient(135deg, #1e293b, #0f172a);
       color: #cbd5e1;
       border-radius: var(--radius-xl);
       padding: 1.5em;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
     }
+
     .notes-header {
       display: flex;
       align-items: center;
@@ -3662,15 +3723,17 @@
       font-size: 1.05rem;
       color: #fff;
       margin-bottom: 1em;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 0.5em;
     }
+
     .notes-body {
       font-size: 0.9rem;
       line-height: 1.6;
       font-style: italic;
       min-height: 160px;
     }
+
     .notes-body strong {
       color: #f87171;
     }
@@ -3682,6 +3745,7 @@
       box-shadow: var(--shadow);
       padding: 1.5em;
     }
+
     .qa-header {
       font-weight: 700;
       font-size: 1.05rem;
@@ -3693,6 +3757,7 @@
       align-items: center;
       gap: 0.5em;
     }
+
     .qa-item {
       border: 1px solid #e8ecf4;
       border-radius: 8px;
@@ -3700,6 +3765,7 @@
       overflow: hidden;
       transition: all var(--transition);
     }
+
     .qa-item-header {
       background: var(--light-bg);
       padding: 0.7em 1em;
@@ -3711,9 +3777,11 @@
       align-items: center;
       color: var(--dark-text);
     }
+
     .qa-item-header:hover {
       background: #e2e8f0;
     }
+
     .qa-item-body {
       padding: 0;
       max-height: 0;
@@ -3724,14 +3792,17 @@
       line-height: 1.5;
       background: #fff;
     }
+
     .qa-item.active .qa-item-body {
       padding: 0.8em 1em;
       max-height: 200px;
       border-top: 1px solid #e8ecf4;
     }
+
     .qa-item-header i {
       transition: transform 0.3s;
     }
+
     .qa-item.active .qa-item-header i {
       transform: rotate(180deg);
     }
@@ -3740,97 +3811,213 @@
   <!-- V3 ULTIMATE ANIMATION ENGINE -->
   <style id="v3-animations">
     @keyframes slideFadeUp {
-      0% { opacity: 0; transform: translateY(30px) scale(0.98); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
+
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+      }
     }
-    .section, #dashboard-content { animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    
-    .card { 
-      opacity: 0; 
-      animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-      animation-delay: var(--anim-delay, 0.05s); 
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease; 
-      background: rgba(255, 255, 255, 0.7) !important; 
-      backdrop-filter: blur(20px); 
-      -webkit-backdrop-filter: blur(20px); 
-      border: 1px solid rgba(255, 255, 255, 0.6) !important; 
+
+    .section,
+    #dashboard-content {
+      animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .card {
+      opacity: 0;
+      animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: var(--anim-delay, 0.05s);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+      background: rgba(255, 255, 255, 0.7) !important;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6) !important;
       box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.08) !important;
     }
-    .card:hover { 
-      transform: translateY(-6px); 
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15), 0 10px 20px -5px rgba(0,0,0,0.05) !important; 
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.05) !important;
       border-color: rgba(99, 102, 241, 0.4) !important;
     }
-    
-    .stat-card { 
-      opacity: 0; 
-      animation: slideFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-      animation-delay: var(--anim-delay, 0.05s); 
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      cursor: pointer; 
+
+    .stat-card {
+      opacity: 0;
+      animation: slideFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: var(--anim-delay, 0.05s);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
       position: relative;
       overflow: hidden;
-      background: rgba(255,255,255,0.85) !important;
+      background: rgba(255, 255, 255, 0.85) !important;
       backdrop-filter: blur(12px);
     }
+
     .stat-card::after {
-      content: ''; position: absolute; top:0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg); transition: none;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: skewX(-25deg);
+      transition: none;
     }
-    .stat-card:hover::after { animation: shine 0.8s; }
-    @keyframes shine { 100% { left: 200%; } }
-    .stat-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04) !important; z-index: 10; }
-    
-    table tbody tr { 
-      opacity: 0; 
-      animation: slideFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-      transition: all 0.3s ease; 
+
+    .stat-card:hover::after {
+      animation: shine 0.8s;
+    }
+
+    @keyframes shine {
+      100% {
+        left: 200%;
+      }
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+      z-index: 10;
+    }
+
+    table tbody tr {
+      opacity: 0;
+      animation: slideFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.3s ease;
       position: relative;
     }
+
     /* Dynamic row delays using nth-child up to 20 for pure CSS magic */
-    table tbody tr:nth-child(1) { animation-delay: 0.05s; }
-    table tbody tr:nth-child(2) { animation-delay: 0.10s; }
-    table tbody tr:nth-child(3) { animation-delay: 0.15s; }
-    table tbody tr:nth-child(4) { animation-delay: 0.20s; }
-    table tbody tr:nth-child(5) { animation-delay: 0.25s; }
-    table tbody tr:nth-child(6) { animation-delay: 0.30s; }
-    table tbody tr:nth-child(7) { animation-delay: 0.35s; }
-    table tbody tr:nth-child(8) { animation-delay: 0.40s; }
-    table tbody tr:nth-child(9) { animation-delay: 0.45s; }
-    table tbody tr:nth-child(10) { animation-delay: 0.50s; }
-    table tbody tr:hover { 
-      transform: scale(1.015) translateX(4px); 
-      background: rgba(255,255,255,0.95) !important; 
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); 
-      z-index: 10; 
+    table tbody tr:nth-child(1) {
+      animation-delay: 0.05s;
     }
-    
-    .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
-    .nav-item:hover { transform: translateX(8px); background: rgba(255,255,255,0.15); color: #fff; }
-    .nav-item.active { animation: pulseGlow 2s infinite; }
-    
-    .btn { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; position: relative; overflow: hidden; }
-    .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.1); }
-    .btn:active { transform: translateY(1px) scale(0.98); }
-    
+
+    table tbody tr:nth-child(2) {
+      animation-delay: 0.10s;
+    }
+
+    table tbody tr:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+
+    table tbody tr:nth-child(4) {
+      animation-delay: 0.20s;
+    }
+
+    table tbody tr:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+
+    table tbody tr:nth-child(6) {
+      animation-delay: 0.30s;
+    }
+
+    table tbody tr:nth-child(7) {
+      animation-delay: 0.35s;
+    }
+
+    table tbody tr:nth-child(8) {
+      animation-delay: 0.40s;
+    }
+
+    table tbody tr:nth-child(9) {
+      animation-delay: 0.45s;
+    }
+
+    table tbody tr:nth-child(10) {
+      animation-delay: 0.50s;
+    }
+
+    table tbody tr:hover {
+      transform: scale(1.015) translateX(4px);
+      background: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      z-index: 10;
+    }
+
+    .nav-item {
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-item:hover {
+      transform: translateX(8px);
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      animation: pulseGlow 2s infinite;
+    }
+
+    .btn {
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
     .page-header {
-      background: rgba(255, 255, 255, 0.65) !important; 
-      backdrop-filter: blur(24px); 
-      -webkit-backdrop-filter: blur(24px); 
-      border-bottom: 1px solid rgba(255,255,255,0.6);
-      border-top: 1px solid rgba(255,255,255,0.8);
+      background: rgba(255, 255, 255, 0.65) !important;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
     }
-    
+
     /* Global Ambient Glowing Orbs */
-    .dashboard-wrap::before { content: ''; position: fixed; top: -15%; left: -10%; width: 50vw; height: 50vh; background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(255,255,255,0) 70%); z-index: -1; pointer-events: none; }
-    .dashboard-wrap::after { content: ''; position: fixed; bottom: -15%; right: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(236,72,153,0.08) 0%, rgba(255,255,255,0) 70%); z-index: -1; pointer-events: none; }
+    .dashboard-wrap::before {
+      content: '';
+      position: fixed;
+      top: -15%;
+      left: -10%;
+      width: 50vw;
+      height: 50vh;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .dashboard-wrap::after {
+      content: '';
+      position: fixed;
+      bottom: -15%;
+      right: -10%;
+      width: 60vw;
+      height: 60vh;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
   </style>
 
 </head>
@@ -3841,7 +4028,9 @@
 
   <!-- LOADER -->
   <div id="loader">
-    <div class="loader-logo"><img src="s360_logo.png" style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 10px; vertical-align: middle; margin-right: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" alt="Student 360 Logo">Student <span>360°</span></div>
+    <div class="loader-logo"><img src="s360_logo.png"
+        style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 10px; vertical-align: middle; margin-right: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
+        alt="Student 360 Logo">Student <span>360°</span></div>
     <div class="loader-bar">
       <div class="loader-fill"></div>
     </div>
@@ -3861,7 +4050,10 @@
       <!-- LEFT -->
       <div class="login-left">
         <div class="login-brand">
-          <div class="login-brand-icon" style="background: transparent; box-shadow: none; width: auto; height: auto;"><img src="s360_logo.png" style="flex-shrink: 0; min-width: 54px; width: 54px; height: 54px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.2);" alt="Student 360 Logo"></div>
+          <div class="login-brand-icon" style="background: transparent; box-shadow: none; width: auto; height: auto;">
+            <img src="s360_logo.png"
+              style="flex-shrink: 0; min-width: 54px; width: 54px; height: 54px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.2);"
+              alt="Student 360 Logo"></div>
           <div class="login-brand-text">Student 360°<small>Unified Academic Platform</small></div>
         </div>
         <p class="login-tagline">A <strong>next-generation platform</strong> empowering students, faculty, and
@@ -3901,7 +4093,8 @@
       <!-- RIGHT -->
       <div class="login-right">
         <div class="mobile-logo-wrap" style="display:none; text-align:center; margin-bottom: 1.5em;">
-           <img src="s360_logo.png" style="width: 72px; height: 72px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+          <img src="s360_logo.png"
+            style="width: 72px; height: 72px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
         </div>
         <h2>Welcome Back</h2>
         <p>Sign in to your academic portal</p>
@@ -3909,18 +4102,23 @@
         <div class="tab-panel active" id="login-unified">
           <div class="fg">
             <label>Login ID</label>
-            <input type="text" id="u-id" placeholder="Reg No, Faculty ID, or Admin" autocomplete="off">
+            <input type="text" id="email" placeholder="Reg No, Faculty ID, or Admin" autocomplete="off">
             <i class="fa fa-user fg-icon"></i>
           </div>
           <div class="fg" style="position:relative">
             <label>Password</label>
-            <input type="password" id="u-pass" value="student123" autocomplete="current-password">
+            <input type="password" id="password" value="student123" autocomplete="current-password">
             <i class="fa fa-lock fg-icon"></i>
-            <button class="pw-toggle" onclick="togglePw('u-pass',this)" type="button"><i class="fa fa-eye"></i></button>
+            <button class="pw-toggle" onclick="togglePw('password',this)" type="button"><i class="fa fa-eye"></i></button>
           </div>
-          <button class="login-btn" onclick="doUnifiedLogin()"><i class="fa fa-right-to-bracket"></i> Sign In</button>
+          <button class="login-btn" id="login-button" onclick="doUnifiedLogin()"><i class="fa fa-right-to-bracket"></i> Sign In</button>
           <div class="login-demo" style="flex-wrap: wrap; text-align: center;"><i class="fa fa-circle-info"></i> Demo:
-            <code style="cursor:pointer" onclick="document.getElementById('u-id').value='202611001';document.getElementById('u-pass').value='student123'">202611001</code> / <code style="cursor:pointer" onclick="document.getElementById('u-id').value='DG11001';document.getElementById('u-pass').value='faculty123'">DG11001</code> / <code style="cursor:pointer" onclick="document.getElementById('u-id').value='admin';document.getElementById('u-pass').value='admin123'">admin</code>
+            <code style="cursor:pointer"
+              onclick="document.getElementById('email').value='202611001';document.getElementById('password').value='student123'">202611001</code>
+            / <code style="cursor:pointer"
+              onclick="document.getElementById('email').value='DG11001';document.getElementById('password').value='faculty123'">DG11001</code>
+            / <code style="cursor:pointer"
+              onclick="document.getElementById('email').value='admin';document.getElementById('password').value='admin123'">admin</code>
           </div>
         </div>
 
@@ -3932,12 +4130,15 @@
 
   <!-- ═══════════════ AI CHATBOT ═══════════════ -->
   <div id="cb-fab" onclick="toggleChatbot()" style="display:none">
-    <img src="zara_logo.jpg" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;" alt="ZARA Logo">
+    <img src="zara_logo.jpg"
+      style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;" alt="ZARA Logo">
   </div>
   <div id="cb-widget">
     <div class="cb-header">
       <div class="cb-title">
-        <img src="zara_logo.jpg" style="flex-shrink: 0; min-width: 24px; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-right: 8px;" alt="ZARA Logo"> ZARA
+        <img src="zara_logo.jpg"
+          style="flex-shrink: 0; min-width: 24px; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-right: 8px;"
+          alt="ZARA Logo"> ZARA
       </div>
       <button class="cb-close" onclick="toggleChatbot()"><i class="fa fa-times"></i></button>
     </div>
@@ -3946,7 +4147,8 @@
     </div>
     <div class="cb-footer">
       <div class="cb-input-wrap">
-        <input type="text" id="cb-input" class="cb-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatbotMsg()">
+        <input type="text" id="cb-input" class="cb-input" placeholder="Type a message..."
+          onkeypress="if(event.key==='Enter') sendChatbotMsg()">
       </div>
       <button class="cb-send" id="cb-send-btn" onclick="sendChatbotMsg()"><i class="fa fa-paper-plane"></i></button>
     </div>
@@ -3959,7 +4161,9 @@
     <!-- SIDEBAR -->
     <aside id="sidebar">
       <div class="sb-logo">
-        <img src="s360_logo.png" style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" alt="Student 360 Logo">
+        <img src="s360_logo.png"
+          style="flex-shrink: 0; min-width: 42px; width: 42px; height: 42px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
+          alt="Student 360 Logo">
         <div>
           <div class="sb-logo-text">Student 360°</div>
           <div class="sb-logo-sub" id="portal-label">Portal</div>
@@ -4018,10 +4222,27 @@
     async function loadBackendData() {
       try {
         const res = await fetch('/api/data');
+        if (!res.ok) throw new Error("API status " + res.status);
         DATA = await res.json();
+        if (currentRole === 'student' && currentUser) {
+          prepareStudentData(currentUser);
+        }
+        document.getElementById('loader').classList.add('hidden');
       } catch (e) {
-        console.error("Backend Error:", e);
-        flash('Backend server unreachable.', 'error');
+        console.warn("Backend API unreachable, trying fallback to dump.json:", e);
+        try {
+          const res = await fetch('dump.json');
+          if (!res.ok) throw new Error("Fallback status " + res.status);
+          DATA = await res.json();
+          if (currentRole === 'student' && currentUser) {
+            prepareStudentData(currentUser);
+          }
+          console.log("Loaded fallback dump.json successfully.");
+          document.getElementById('loader').classList.add('hidden');
+        } catch (err) {
+          console.error("Fallback Error:", err);
+          flash('Backend server unreachable.', 'error');
+        }
       }
     }
 
@@ -4087,10 +4308,10 @@
     /* ══════════════════════════════
        LOADER
     ══════════════════════════════ */
-    window.addEventListener('load', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         document.getElementById('loader').classList.add('hidden');
-      }, 2000);
+      }, 500);
     });
 
     /* ══════════════════════════════
@@ -4106,8 +4327,8 @@
     function doUnifiedLogin() {
       const errEl = document.getElementById('login-error');
       errEl.classList.remove('show');
-      const id = document.getElementById('u-id').value.trim();
-      const pass = document.getElementById('u-pass').value;
+      const id = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value;
 
       if (!id || !pass) { errEl.classList.add('show'); return; }
       if (!DATA) { flash('Loading data from backend, wait...', 'warning'); return; }
@@ -4146,7 +4367,7 @@
           buildSections(currentRole); // re-render UI
         }
         return ans;
-      } catch(e) { flash("API POST Failed", "error"); return null; }
+      } catch (e) { flash("API POST Failed", "error"); return null; }
     }
 
     async function apiDelete(endpoint) {
@@ -4155,15 +4376,15 @@
         const ans = await res.json();
         if (ans.success) {
           await loadBackendData();
-          buildSections(currentRole); 
+          buildSections(currentRole);
         }
         return ans;
-      } catch(e) { flash("API DELETE Failed", "error"); return null; }
+      } catch (e) { flash("API DELETE Failed", "error"); return null; }
     }
 
     async function enrollCourse(code, name) {
       const res = await apiPost('/api/enroll', { student_reg: currentUser.reg, course_code: code });
-      if(res && res.success) { flash(`Successfully enrolled in ${name} (${code})!`, 'success'); }
+      if (res && res.success) { flash(`Successfully enrolled in ${name} (${code})!`, 'success'); }
     }
 
     function bootPortal(role, name, label) {
@@ -4177,6 +4398,9 @@
       ['sb-uname', 'up-name'].forEach(id => document.getElementById(id).textContent = name);
       document.getElementById('sb-urole').textContent = label;
       ['sb-avatar', 'up-avatar'].forEach(id => document.getElementById(id).textContent = name[0]);
+      if (role === 'student' && currentUser) {
+        prepareStudentData(currentUser);
+      }
       buildSidebar(role);
       buildSections(role);
       const firstId = role === 'student' ? 'home' : role === 'faculty' ? 'fhome' : 'ahome';
@@ -4267,7 +4491,6 @@
             { id: 'addstudent', icon: 'fa-user-plus', label: 'Add Student' },
             { id: 'managestudents', icon: 'fa-users', label: 'Manage Students' },
             { id: 'alumni', icon: 'fa-graduation-cap', label: 'Alumni Network' },
-            { id: 'alumni', icon: 'fa-graduation-cap', label: 'Alumni Network' },
           ]
         },
         {
@@ -4275,7 +4498,6 @@
             { id: 'managefaculty', icon: 'fa-chalkboard-teacher', label: 'Manage Faculty' },
             { id: 'departments', icon: 'fa-building-columns', label: 'Departments' },
             { id: 'deptsearch', icon: 'fa-sitemap', label: 'Dept Student Search' },
-            { id: 'examhub', icon: 'fa-file-signature', label: 'Examination Hub' },
             { id: 'examhub', icon: 'fa-file-signature', label: 'Examination Hub' },
             { id: 'coursesmgmt', icon: 'fa-book', label: 'Courses' },
           ]
@@ -4287,7 +4509,7 @@
             { id: 'placement', icon: 'fa-briefcase', label: 'Placement Records' },
           ]
         },
-        
+
         {
           group: 'OPERATIONS', items: [
             { id: 'financials', icon: 'fa-wallet', label: 'Financial & Fees' },
@@ -4295,7 +4517,7 @@
             { id: 'approvals', icon: 'fa-check-double', label: 'Workflow & Approvals', badge: '5' },
           ]
         },
-        
+
         {
           group: 'PARENT VIEW', items: [
             { id: 'parentportal', icon: 'fa-children', label: 'Parent Dashboard' },
@@ -4314,7 +4536,8 @@
             { id: 'library', icon: 'fa-book', label: 'Library & Digital Repository' }
           ]
         },
-        { group: 'SYSTEM', items: [
+        {
+          group: 'SYSTEM', items: [
             { id: 'sendnotif', icon: 'fa-paper-plane', label: 'Notifications' },
             { id: 'auditlogs', icon: 'fa-shield-halved', label: 'Audit Logs & RBAC' },
             { id: 'settings', icon: 'fa-gear', label: 'Settings' },
@@ -4444,17 +4667,20 @@
     /* ═══════════════════════════════════════════
        ███ STUDENT SECTIONS ███
     ═══════════════════════════════════════════ */
+
+
     function buildStudentSections(area) {
       let __html = "";
       const st = currentUser;
-      const activeCourses = DATA.courses.filter(c => DATA.student_courses.find(sc => sc.course_code === c.code && sc.student_reg === currentUser.reg));
+      const activeCourses = DATA.courses.filter(c => DATA.student_courses.find(sc => sc.course_code === c.code && sc.student_reg === currentUser.reg && (sc.status === 'Approved' || !sc.status)));
+      const pendingCourses = DATA.courses.filter(c => DATA.student_courses.find(sc => sc.course_code === c.code && sc.student_reg === currentUser.reg && sc.status === 'Pending'));
 
       // ─── HOME ─────────────────────────────────
       __html += `<div class="section" id="sec-home">
   <div class="page-header">
     <div class="ph-title">
       <div class="ph-icon"><i class="fa fa-house"></i></div>
-      <div class="ph-text"><h1>Good Morning, ${st.name.split(' ')[0]}! 🌟</h1><p>Here's your academic snapshot for today</p></div>
+      <div class="ph-text"><h1>${getGreeting()}, ${st.name.split(' ')[0]}! 🌟</h1><p>Here's your academic snapshot for today</p></div>
     </div>
     <div class="ph-actions">
       <div class="streak-badge"><i class="fa fa-fire"></i> 14-day streak</div>
@@ -4481,19 +4707,19 @@
     </div>
     <div class="stat-card sc-orange">
       <div class="sc-header"><div class="sc-icon"><i class="fa fa-clock"></i></div><span class="sc-trend neutral">Today</span></div>
-      <div class="sc-value" style="font-size:1.3rem">10:30 AM</div>
-      <div class="sc-label">Next: ML Class</div>
+      <div class="sc-value" style="font-size:1.3rem">${activeCourses.length ? activeCourses[0].schedule.split(' ').slice(-1)[0] : 'None'}</div>
+      <div class="sc-label">Next: ${activeCourses.length ? activeCourses[0].name : 'No Class'}</div>
     </div>
   </div>
 
   <div class="grid-2" style="margin-bottom:1.3em">
     <div class="card">
-      <div class="card-header"><div class="card-title"><i class="fa fa-chart-line"></i> GPA Progress <span class="badge-count">6 sems</span></div></div>
-      ${DATA.semesterGrades.map(s => `<div class="gpa-bar-row">
+      <div class="card-header"><div class="card-title"><i class="fa fa-chart-line"></i> GPA Progress <span class="badge-count">${DATA.semesterGrades.length} sems</span></div></div>
+      ${DATA.semesterGrades.length ? DATA.semesterGrades.map(s => `<div class="gpa-bar-row" >
         <div class="gpa-bar-label">${s.sem}</div>
         <div class="gpa-bar-fill-wrap"><div class="gpa-bar-fill" data-width="${(s.gpa / 10) * 100}" style="width:0;background:${s.gpa >= 9 ? 'linear-gradient(90deg,#22c55e,#86efac)' : s.gpa >= 8 ? 'linear-gradient(90deg,var(--accent),var(--secondary))' : 'linear-gradient(90deg,#f59e0b,#fcd34d)'}"></div></div>
         <div class="gpa-bar-val">${s.gpa}</div>
-      </div>`).join('')}
+      </div> `).join('') : '<div style="text-align:center;padding:2.5em;color:var(--muted)">No GPA progress records yet.</div>'}
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title"><i class="fa fa-calendar"></i> Academic Calendar</div></div>
@@ -4509,19 +4735,22 @@
     <div class="card">
       <div class="card-header"><div class="card-title"><i class="fa fa-clock"></i> Today's Schedule</div><a class="btn btn-ghost btn-sm" onclick="navigateTo('mycourses')">View All</a></div>
       <div class="schedule-list">
-        <div class="schedule-item"><div class="si-time">9:00 AM</div><div><div class="si-name">Cloud Computing</div><div class="si-sub">CS602 · Prof. Deepa</div></div><div class="si-room">Lab 3</div></div>
-        <div class="schedule-item"><div class="si-time">10:30 AM</div><div><div class="si-name">Machine Learning</div><div class="si-sub">CS601 · Dr. Deepa</div></div><div class="si-room">Room 204</div></div>
-        <div class="schedule-item"><div class="si-time">1:00 PM</div><div><div class="si-name">Blockchain Tech</div><div class="si-sub">CS603 · Dr. Deepa</div></div><div class="si-room">Room 101</div></div>
+        ${activeCourses.length ? activeCourses.map(c => {
+          const timePart = c.schedule.split(' ').slice(-1)[0] || '10:30 AM';
+          const timeStr = timePart.includes('AM') || timePart.includes('PM') || timePart.includes(':') ? timePart : timePart + ' AM';
+          const facultyName = DATA.faculty.find(f => f.id === c.faculty)?.name || c.faculty;
+          return `<div class="schedule-item" ><div class="si-time">${timeStr}</div><div><div class="si-name">${c.name}</div><div class="si-sub">${c.code} · ${facultyName}</div></div><div class="si-room">${c.room || 'TBA'}</div></div> `;
+        }).join('') : '<div style="padding:2em;text-align:center;color:var(--muted)">No active courses in schedule.</div>'}
       </div>
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title"><i class="fa fa-bell"></i> Notifications <span class="badge-count">${DATA.notifications.filter(n => !n.read).length} new</span></div><a class="btn btn-ghost btn-sm" onclick="navigateTo('notifications')">See All</a></div>
       <div class="notif-feed">${DATA.notifications.slice(0, 3).map(n => `
-        <div class="notif-item ${n.priority} ${n.read ? '' : 'unread'}">
+        <div class="notif-item ${n.priority} ${n.read ? '' : 'unread'}" >
           <div class="ni-icon-wrap ni-icon-${n.priority}"><i class="fa ${iconMap[n.priority]}"></i></div>
           <div class="ni-body"><div class="ni-title">${n.title}</div><div class="ni-msg">${n.msg}</div><div class="ni-date">${n.date}</div></div>
-          ${n.read ? '' : '<div class="ni-unread-dot"></div>'}
-        </div>`).join('')}</div>
+          ${ n.read ? '' : '<div class="ni-unread-dot"></div>' }
+        </div> `).join('')}</div>
     </div>
   </div>
 </div>`;
@@ -4531,7 +4760,7 @@
   <div class="page-header"><div class="ph-title"><div class="ph-icon"><i class="fa fa-user"></i></div><div class="ph-text"><h1>My Profile</h1><p>Manage your personal & academic information</p></div></div></div>
   <div class="profile-hero">
     <button class="ph-edit-btn" onclick="toggleStudentEdit()"><i class="fa fa-pen"></i> Edit Profile</button>
-    <div class="ph-avatar">${st.name[0]}</div>
+    <div class="ph-avatar"><img src="student_avatar.png" alt="${st.name}"></div>
     <div class="ph-name">${st.name}</div>
     <div class="ph-role">${st.reg} · ${st.dept}</div>
     <div class="ph-chips">
@@ -4578,7 +4807,31 @@
       // ─── MY COURSES ──────────────────────────
       __html += `<div class="section" id="sec-mycourses">
   <div class="page-header"><div class="ph-title"><div class="ph-icon"><i class="fa fa-book-open"></i></div><div class="ph-text"><h1>My Courses</h1><p>Semester ${st.sem} · ${activeCourses.length} active courses</p></div></div></div>
-  <div class="courses-grid stagger-in">${activeCourses.map(c => `
+  
+  ${pendingCourses.length ? `
+        <h3 style="margin: 0 0 1em; font-size: 1.15rem; color: var(--warning); display: flex; align-items: center; gap: 0.5em;" >
+          <i class="fa fa-hourglass-half"></i> Pending Enrollment Requests(${ pendingCourses.length })
+    </h3>
+        <div class="courses-grid" style="margin-bottom: 2em; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+          ${pendingCourses.map(c => `
+        <div class="course-card" style="border-left: 4px solid var(--warning); opacity: 0.85;">
+          <div class="cc-code-pill" style="background:var(--warning); color:var(--accent-dark);">${c.code}</div>
+          <div class="cc-name">${c.name}</div>
+          <div class="cc-meta">
+            <span><i class="fa fa-user"></i> ${DATA.faculty.find(f => f.id === c.faculty)?.name.split(' ').slice(-1)[0] || c.faculty}</span>
+            <span><i class="fa fa-coins"></i> ${c.credits} Credits</span>
+          </div>
+          <div style="margin-top: 1.2em; font-size: 0.85rem; color: var(--warning); font-weight: 700; display: flex; align-items: center; gap: 0.4em;">
+            <i class="fa fa-spinner fa-spin"></i> Awaiting Faculty Approval
+          </div>
+        </div>
+      `).join('')}
+        </div>
+      ` : ''}
+
+  <h3 style="margin: 0 0 1em; font-size: 1.15rem; color: var(--primary);"><i class="fa fa-circle-check"></i> Enrolled Courses (${activeCourses.length})</h3>
+  ${activeCourses.length ? `<div class="courses-grid stagger-in" >${
+        activeCourses.map(c => `
     <div class="course-card">
       <div class="cc-code-pill">${c.code}</div>
       <div class="cc-name">${c.name}</div>
@@ -4591,14 +4844,15 @@
       <div class="cc-progress-label"><span>Syllabus coverage</span><span style="font-weight:700;color:var(--accent)">${c.progress}%</span></div>
       <div class="progress"><div class="progress-fill progress-accent" data-width="${c.progress}" style="width:0"></div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6em">
-        <span class="badge badge-purple"><i class="fa fa-star"></i> Grade: ${c.grade}</span>
+        <span class="badge badge-purple"><i class="fa fa-star"></i> Grade: ${c.grade || '—'}</span>
         <span style="font-size:.78rem;color:var(--muted)">${c.students} enrolled</span>
       </div>
       <div class="cc-actions">
         <button class="btn btn-primary btn-sm" onclick="navigateTo('attendance')"><i class="fa fa-calendar-check"></i> Attendance</button>
         <button class="btn btn-ghost btn-sm" onclick="flash('Course materials coming soon','info')"><i class="fa fa-file"></i> Materials</button>
       </div>
-    </div>`).join('')}</div>
+    </div>`).join('')
+      }</div> ` : '<div class="card" style="text-align:center;padding:2.5em;color:var(--muted)"><i class="fa fa-book-open fa-2x" style="display:block;margin-bottom:.5em;opacity:.3"></i>No approved courses yet.</div>'}
 </div>`;
 
       // ─── COMPLETED COURSES ───────────────────
@@ -4658,17 +4912,20 @@
         <div class="card-header"><div class="card-title"><i class="fa fa-clipboard-list"></i> Enrollment Summary</div></div>
         <div style="display:flex;flex-direction:column;gap:.8em">
           <div style="display:flex;justify-content:space-between;padding:.8em;background:var(--light-bg);border-radius:var(--radius-sm)">
-            <span style="font-weight:600;color:var(--primary)">Enrolled Courses</span><span class="badge badge-purple">4</span>
+            <span style="font-weight:600;color:var(--primary)">Approved Courses</span><span class="badge badge-success">${activeCourses.length}</span>
           </div>
           <div style="display:flex;justify-content:space-between;padding:.8em;background:var(--light-bg);border-radius:var(--radius-sm)">
-            <span style="font-weight:600;color:var(--primary)">Total Credits</span><span class="badge badge-success">14 / 20</span>
+            <span style="font-weight:600;color:var(--primary)">Pending Approval</span><span class="badge badge-warning">${pendingCourses.length}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:.8em;background:var(--light-bg);border-radius:var(--radius-sm)">
+            <span style="font-weight:600;color:var(--primary)">Total Approved Credits</span><span class="badge badge-success">${activeCourses.reduce((a, c) => a + c.credits, 0)} / 20</span>
           </div>
           <div style="display:flex;justify-content:space-between;padding:.8em;background:var(--light-bg);border-radius:var(--radius-sm)">
             <span style="font-weight:600;color:var(--primary)">Max Allowed</span><span class="badge badge-info">6 courses</span>
           </div>
         </div>
-        <div class="progress" style="margin-top:1em"><div class="progress-fill progress-accent" data-width="70" style="width:0"></div></div>
-        <div style="font-size:.78rem;color:var(--muted);margin-top:.3em;text-align:center">Credit load: 70%</div>
+        <div class="progress" style="margin-top:1em"><div class="progress-fill progress-accent" data-width="${(activeCourses.reduce((a, c) => a + c.credits, 0) / 20 * 100).toFixed(0)}" style="width:0"></div></div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.3em;text-align:center">Approved Credit load: ${(activeCourses.reduce((a, c) => a + c.credits, 0) / 20 * 100).toFixed(0)}%</div>
       </div>
     </div>
   </div>
@@ -4871,7 +5128,7 @@
     function saveStudentProfile() { toggleStudentEdit(); flash('Profile updated successfully!', 'success'); }
     async function enrollCourse(code, name) {
       const res = await apiPost('/api/enroll', { student_reg: currentUser.reg, course_code: code });
-      if(res && res.success) {
+      if (res && res.success) {
         flash(`Enrolled in "${name}" successfully! Check My Courses.`, 'success');
       }
     }
@@ -4897,10 +5154,10 @@
       const n = DATA.notifications.find(x => x.id === id); if (n) n.read = true;
       document.querySelectorAll('.notif-item').forEach((el, i) => { if (DATA.notifications[i] && DATA.notifications[i].id === id) el.classList.remove('unread'); });
     }
-    async function markAllRead() { 
-      DATA.notifications.forEach(n => n.read = true); 
-      document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread')); 
-      flash('All notifications marked as read locally', 'success'); 
+    async function markAllRead() {
+      DATA.notifications.forEach(n => n.read = true);
+      document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread'));
+      flash('All notifications marked as read locally', 'success');
     }
 
     /* ═══════════════════════════════════════════
@@ -4947,22 +5204,44 @@
         <div class="ni-body"><div class="ni-title">${n.title}</div><div class="ni-msg">${n.msg}</div><div class="ni-date">${n.date}</div></div>
       </div>`).join('')}</div>
   </div>
-  ${(function(){
-    const fReqs = DATA.odRequests.filter(r => r.faculty_status === 'Pending' && DATA.courses.some(c => c.code === r.course && c.faculty === fc.id));
-    return `
+  ${(function () {
+          const fReqs = DATA.odRequests.filter(r => r.faculty_status === 'Pending' && DATA.courses.some(c => c.code === r.course && c.faculty === fc.id));
+          const fEnrollReqs = DATA.student_courses ? DATA.student_courses.filter(sc =>
+            sc.status === 'Pending' &&
+            DATA.courses.some(c => c.code === sc.course_code && c.faculty === fc.id)
+          ) : [];
+
+          let cardHtml = `
   <div class="card" style="margin-top: 1em;">
     <div class="card-header"><div class="card-title"><i class="fa fa-file-lines"></i> Pending OD Approvals (${fReqs.length})</div></div>
     <div class="table-wrap">
       <table><thead><tr><th>Student</th><th>Course / Date</th><th>Reason</th><th>Actions</th></tr></thead>
       <tbody>
         ${fReqs.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No pending OD requests for your courses.</td></tr>' : fReqs.map(r => {
-          const st = DATA.students.find(s => s.reg === r.student_reg) || {name: 'Unknown', dept: 'Unknown'};
-          return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + '</span></td><td>' + r.course + '<br><span style="font-size:.75rem;color:var(--muted)">' + r.date + '</span></td><td style="font-size:.82rem;max-width:200px">' + r.reason + '</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Approved&apos;, &apos;faculty&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Rejected&apos;, &apos;faculty&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
-        }).join('')}
+            const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Unknown', dept: 'Unknown' };
+            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + '</span></td><td>' + r.course + '<br><span style="font-size:.75rem;color:var(--muted)">' + r.date + '</span></td><td style="font-size:.82rem;max-width:200px">' + r.reason + '</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Approved&apos;, &apos;faculty&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Rejected&apos;, &apos;faculty&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
+          }).join('')}
       </tbody></table>
     </div>
   </div>`;
-  })()}
+
+          cardHtml += `
+  <div class="card" style="margin-top: 1.3em;">
+    <div class="card-header"><div class="card-title"><i class="fa fa-user-plus"></i> Pending Course Enrollments (${fEnrollReqs.length})</div></div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Student</th><th>Course</th><th>Academic Profile</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${fEnrollReqs.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1.5em;">No pending course enrollment requests.</td></tr>' : fEnrollReqs.map(r => {
+            const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Unknown', dept: 'Unknown', spec: '', cgpa: '-', att: '-' };
+            const crs = DATA.courses.find(c => c.code === r.course_code) || { name: 'Unknown' };
+            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + ' · ' + st.dept + '</span></td><td><strong>' + r.course_code + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + crs.name + '</span></td><td><div style="font-size:.82rem">CGPA: <span class="badge badge-purple">' + st.cgpa + '</span></div><div style="font-size:.82rem;margin-top:2px">Att: <span class="badge badge-success">' + st.att + '%</span></div></td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;approve&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;reject&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
+          }).join('')}
+      </tbody></table>
+    </div>
+  </div>`;
+
+          return cardHtml;
+        })()}
 </div>`;
 
       // FACULTY PROFILE
@@ -4970,7 +5249,7 @@
   <div class="page-header"><div class="ph-title"><div class="ph-icon"><i class="fa fa-user"></i></div><div class="ph-text"><h1>My Profile</h1><p>Your faculty information</p></div></div></div>
   <div class="profile-hero">
     <button class="ph-edit-btn" onclick="flash('Profile editing enabled','info')"><i class="fa fa-pen"></i> Edit Profile</button>
-    <div class="ph-avatar">${fc.name[0]}</div>
+    <div class="ph-avatar"><img src="faculty_avatar.png" alt="${fc.name}"></div>
     <div class="ph-name">${fc.name}</div>
     <div class="ph-role">${fc.desig} · ${fc.dept} Department</div>
     <div class="ph-chips">
@@ -5157,36 +5436,196 @@
   <span class="badge badge-${d.severity === 'Minor' ? 'warning' : d.severity === 'Serious' ? 'danger' : 'purple'}">${d.severity}</span>
 </div>`;
     }
+    function getGreeting() {
+      const hr = new Date().getHours();
+      if (hr < 12) return "Good Morning";
+      if (hr < 17) return "Good Afternoon";
+      return "Good Evening";
+    }
+
+    function prepareStudentData(st) {
+      if (!DATA) return;
+
+      // 1. Semester Grades
+      const semGrades = [];
+      for (let i = 1; i < st.sem; i++) {
+        const seedVal = st.reg ? parseInt(st.reg.slice(-3)) : 5;
+        const offset = Math.sin(i + seedVal) * 0.3;
+        const gpa = Math.max(6.0, Math.min(10.0, parseFloat((st.cgpa + offset).toFixed(2))));
+        semGrades.push({ sem: `Sem ${i}`, gpa: gpa });
+      }
+      DATA.semesterGrades = semGrades;
+
+      // 2. Completed Courses
+      const allMockCompleted = [
+        { code: 'MA101', name: 'Engineering Mathematics I', credits: 4, grade: 'A', gp: 9, sem: 1 },
+        { code: 'PH101', name: 'Engineering Physics', credits: 3, grade: 'B+', gp: 8, sem: 1 },
+        { code: 'CS101', name: 'Fundamentals of Programming', credits: 4, grade: 'O', gp: 10, sem: 1 },
+
+        { code: 'MA201', name: 'Engineering Mathematics II', credits: 4, grade: 'A+', gp: 9, sem: 2 },
+        { code: 'CS201', name: 'Object Oriented Programming', credits: 3, grade: 'A', gp: 9, sem: 2 },
+        { code: 'EE201', name: 'Basic Electrical Engineering', credits: 3, grade: 'B', gp: 7, sem: 2 },
+
+        { code: 'MA301', name: 'Discrete Mathematics', credits: 4, grade: 'A', gp: 9, sem: 3 },
+        { code: 'CS301', name: 'Data Structures & Algorithms', credits: 4, grade: 'O', gp: 10, sem: 3 },
+        { code: 'CS302', name: 'Digital Electronics', credits: 3, grade: 'B+', gp: 8, sem: 3 },
+
+        { code: 'CS401', name: 'Operating Systems', credits: 4, grade: 'A', gp: 9, sem: 4 },
+        { code: 'CS402', name: 'Database Management Systems', credits: 3, grade: 'A+', gp: 9, sem: 4 },
+        { code: 'CS403', name: 'Theory of Computation', credits: 3, grade: 'B', gp: 7, sem: 4 },
+
+        { code: 'CS501', name: 'Computer Networks', credits: 4, grade: 'A', gp: 9, sem: 5 },
+        { code: 'CS502', name: 'Software Engineering', credits: 3, grade: 'B+', gp: 8, sem: 5 },
+        { code: 'CS503', name: 'Artificial Intelligence', credits: 3, grade: 'A', gp: 9, sem: 5 }
+      ];
+      DATA.completedCourses = allMockCompleted.filter(c => c.sem < st.sem);
+
+      // 3. Attendance
+      const enrolledCodes = DATA.student_courses
+        .filter(sc => sc.student_reg === st.reg && (sc.status === 'Approved' || !sc.status))
+        .map(sc => sc.course_code);
+
+      const subjectsAtt = [];
+      let totalPresent = 0;
+      let totalClasses = 0;
+
+      enrolledCodes.forEach(code => {
+        const course = DATA.courses.find(c => c.code === code);
+        if (!course) return;
+
+        const records = DATA.attendance_records.filter(r => r.student_reg === st.reg && r.course === code);
+        let present = 0;
+        let total = records.length;
+        records.forEach(r => {
+          if (r.status === 'Present' || r.status === 'Late') present++;
+        });
+
+        let pct = 100;
+        if (total > 0) {
+          pct = Math.round((present / total) * 100);
+          totalPresent += present;
+          totalClasses += total;
+        } else {
+          pct = st.att || 100;
+          if (st.sem > 1) {
+            total = 30;
+            present = Math.round(total * (pct / 100));
+            totalPresent += present;
+            totalClasses += total;
+          }
+        }
+
+        subjectsAtt.push({
+          code: code,
+          name: course.name,
+          present: present,
+          total: total,
+          pct: pct
+        });
+      });
+
+      const overallAtt = totalClasses > 0 ? Math.round((totalPresent / totalClasses) * 100) : (st.att || 100);
+      const studentRecords = DATA.attendance_records
+        .filter(r => r.student_reg === st.reg)
+        .map(r => ({
+          date: r.date,
+          course: r.course,
+          status: r.status
+        }));
+
+      DATA.attendance = {
+        overall: overallAtt,
+        subjects: subjectsAtt,
+        records: studentRecords
+      };
+
+      st.att = overallAtt;
+
+      // 4. Fees
+      const feeTotal = 75000;
+      let feePaid = 0;
+      let feeDue = 0;
+      const feeHistory = [];
+
+      for (let i = 1; i <= st.sem; i++) {
+        const isCurrent = (i === st.sem);
+        const paidAmount = isCurrent ? 50000 : 75000;
+        const dueAmount = isCurrent ? 25000 : 0;
+
+        feePaid += paidAmount;
+        feeDue += dueAmount;
+
+        feeHistory.push({
+          date: `2026-0${i}-05`,
+          desc: `Tuition Fee – Semester ${i}`,
+          amount: feeTotal,
+          status: isCurrent ? 'Pending' : 'Paid'
+        });
+      }
+
+      DATA.fees = {
+        total: feeTotal * st.sem,
+        paid: feePaid,
+        due: feeDue,
+        dueDate: '2026-06-30',
+        history: feeHistory
+      };
+    }
+
+    async function handleEnrollApproval(student_reg, course_code, action) {
+      const res = await apiPost('/api/enroll/approve', { student_reg, course_code, action });
+      if (res && res.success) {
+        flash(`Enrollment request ${action === 'approve' ? 'approved' : 'rejected'} successfully!`, 'success');
+      } else {
+        flash('Failed to process enrollment request.', 'error');
+      }
+    }
+
     function buildAttList() {
       const date = document.getElementById('att-date')?.value || new Date().toISOString().split('T')[0];
-      return DATA.students.slice(0, 50).map(s => {
+      const courseSel = document.getElementById('att-course-sel');
+      const courseCode = courseSel ? courseSel.value : '';
+      if (!courseCode) return '<div style="text-align:center;padding:2em;color:var(--muted)">No course selected.</div>';
+
+      const enrolledStudents = DATA.students.filter(s =>
+        DATA.student_courses.some(sc => sc.student_reg === s.reg && sc.course_code === courseCode && (sc.status === 'Approved' || !sc.status))
+      );
+
+      if (enrolledStudents.length === 0) {
+        return '<div style="text-align:center;padding:2em;color:var(--muted)">No approved students enrolled in this course.</div>';
+      }
+
+      return enrolledStudents.map(s => {
         const hasOD = DATA.odRequests.find(r => r.student_reg === s.reg && r.date === date && r.faculty_status === 'Approved' && r.admin_status === 'Approved');
         return `<div class="att-student-row">
-          <div class="asr-avatar">${s.name[0]}</div>
+          <div class="asr-avatar"><img src="student_avatar.png" alt="${s.name}"></div>
           <div class="asr-info"><div class="asr-name">${s.name}</div><div class="asr-reg">${s.reg}</div></div>
           ${hasOD ? `<div style="padding:.4em .8em;background:var(--success);color:white;border-radius:6px;font-size:.8rem;font-weight:700"><i class="fa fa-check-circle"></i> OD Approved</div>` : `<select class="asr-select" data-reg="${s.reg}"><option value="Present">✅ Present</option><option value="Absent">❌ Absent</option><option value="Late">⏰ Late</option></select>`}
         </div>`;
       }).join('');
     }
+
     setTimeout(() => {
       const dt = document.getElementById('att-date');
-      if(dt) dt.addEventListener('change', () => { document.getElementById('att-student-list').innerHTML = buildAttList(); });
+      if (dt) dt.addEventListener('change', () => { document.getElementById('att-student-list').innerHTML = buildAttList(); });
+      const cs = document.getElementById('att-course-sel');
+      if (cs) cs.addEventListener('change', () => { document.getElementById('att-student-list').innerHTML = buildAttList(); });
     }, 500);
     function markAllPresent() { document.querySelectorAll('.asr-select').forEach(s => s.value = 'Present'); flash('All students marked Present', 'success'); }
     function markAllAbsent() { document.querySelectorAll('.asr-select').forEach(s => s.value = 'Absent'); flash('All students marked Absent', 'warning'); }
-    async function submitAttendance() { 
+    async function submitAttendance() {
       const date = document.getElementById('att-date').value;
       const course = document.getElementById('att-course-sel').value;
       const selects = Array.from(document.querySelectorAll('.asr-select'));
-      if(selects.length === 0) { flash('No students to mark.', 'warning'); return; }
+      if (selects.length === 0) { flash('No students to mark.', 'warning'); return; }
       const records = selects.map(sel => ({ student_reg: sel.dataset.reg, date, course, status: sel.value }));
       const res = await apiPost('/api/attendance', { records });
-      if(res && res.success) { flash('Bulk attendance successfully recorded in database!', 'success'); }
+      if (res && res.success) { flash('Bulk attendance successfully recorded in database!', 'success'); }
     }
-    
+
     async function updateODStatus(id, newStatus, role) {
-      const res = await apiPost('/api/od/'+id, { status: newStatus, role }, 'PUT');
-      if(res && res.success) { flash('OD Request updated!', 'success'); loadBackendData(); }
+      const res = await apiPost('/api/od/' + id, { status: newStatus, role }, 'PUT');
+      if (res && res.success) { flash('OD Request updated!', 'success'); loadBackendData(); }
     }
     async function createCourse() {
       const code = document.getElementById('cc-code').value;
@@ -5194,7 +5633,7 @@
       if (!code || !name) { flash('Please fill all required fields', 'error'); return; }
       const creds = document.getElementById('cc-credits')?.value || 3;
       const res = await apiPost('/api/courses', { code, name, credits: creds, dept: currentUser.dept, sem: 6, faculty: currentUser.id, schedule: 'TBA' });
-      if(res && res.success) { flash(`Course "${name}" (${code}) officially created!`, 'success'); loadBackendData(); }
+      if (res && res.success) { flash(`Course "${name}" (${code}) officially created!`, 'success'); loadBackendData(); }
     }
     async function addDisc() {
       const reg = document.getElementById('disc-reg').value;
@@ -5203,10 +5642,10 @@
       if (!reg || !reason) { flash('Please fill all required fields', 'error'); return; }
       const st = DATA.students.find(s => s.reg === reg);
       if (!st) { flash('Student not found with that register number', 'error'); return; }
-      
+
       const d = { student: reg, name: st.name, severity: sev, reason, date: new Date().toISOString().split('T')[0], faculty: currentUser.id, notes: document.getElementById('disc-notes').value || '' };
       const res = await apiPost('/api/disciplinary', d);
-      if(res && res.success) {
+      if (res && res.success) {
         flash(`Disciplinary record saved to DB for ${st.name}`, 'success');
         document.getElementById('disc-reason').value = '';
       }
@@ -5217,7 +5656,7 @@
       const priority = document.getElementById('fn-p').value.toLowerCase();
       if (!title) { flash('Please enter a title', 'error'); return; }
       const res = await apiPost('/api/notifications', { title, msg, priority, date: new Date().toISOString().split('T')[0] });
-      if(res && res.success) {
+      if (res && res.success) {
         flash('Notification broadcasted to all students!', 'success');
         document.getElementById('fn-title').value = '';
         document.getElementById('fn-msg').value = '';
@@ -5232,7 +5671,7 @@
       if (!results.length) { el.innerHTML = '<p style="color:var(--muted);padding:.8em">No students found.</p>'; return; }
       el.innerHTML = `<div style="display:flex;flex-direction:column;gap:.5em;margin-top:.8em">${results.slice(0, 50).map(s => `
     <div class="schedule-item" style="cursor:pointer" onclick="show360Detail('${s.reg}')">
-      <div class="asr-avatar">${s.name[0]}</div>
+      <div class="asr-avatar"><img src="student_avatar.png" alt="${s.name}"></div>
       <div class="asr-info"><div class="asr-name">${s.name}</div><div class="asr-reg">${s.reg} · ${s.dept} · ${s.spec}</div></div>
       <span class="badge badge-${s.cgpa >= 8 ? 'success' : s.cgpa >= 6 ? 'warning' : 'danger'}">CGPA ${s.cgpa}</span>
       ${badgeStatus(s.att >= 75 ? 'Active' : 'Pending')}
@@ -5244,7 +5683,7 @@
       el.style.display = 'block';
       el.innerHTML = `<div class="profile-hero" style="margin-bottom:1.3em">
     <button class="ph-edit-btn" onclick="navigateTo('disciplinary')"><i class="fa fa-plus"></i> Add Record</button>
-    <div class="ph-avatar">${s.name[0]}</div>
+    <div class="ph-avatar"><img src="student_avatar.png" alt="${s.name}"></div>
     <div class="ph-name">${s.name}</div>
     <div class="ph-role">${s.reg} · ${s.dept} · ${s.spec}</div>
     <div class="ph-chips">
@@ -5502,9 +5941,9 @@
   <div id="dept-level-3" style="display:none"></div>
 </div>`;
 
-      
-    // DEPT STUDENT SEARCH
-    __html += `<div class="section" id="sec-deptsearch">
+
+      // DEPT STUDENT SEARCH
+      __html += `<div class="section" id="sec-deptsearch">
   <div class="page-header"><div class="ph-title"><div class="ph-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"><i class="fa fa-sitemap"></i></div><div class="ph-text"><h1>Department Student Search</h1><p>Filter by department, specialization or mentor</p></div></div></div>
   <div class="card" style="margin-bottom:1.5em">
     <div style="display:flex;gap:.8em;flex-wrap:wrap;align-items:center">
@@ -5573,7 +6012,7 @@
       <div class="card-header"><div class="card-title"><i class="fa fa-triangle-exclamation"></i> Low Attendance Alerts (Top 10)</div></div>
       <div style="display:flex;flex-direction:column;gap:.6em">
         ${DATA.students.filter(s => s.att < 75).slice(0, 10).map(s => `<div style="display:flex;align-items:center;gap:.8em;padding:.7em .9em;background:rgba(239,68,68,.04);border-radius:var(--radius-sm);border-left:3px solid var(--danger)">
-          <div class="asr-avatar">${s.name[0]}</div>
+          <div class="asr-avatar"><img src="student_avatar.png" alt="${s.name}"></div>
           <div class="asr-info"><div class="asr-name">${s.name}</div><div class="asr-reg">${s.reg} · ${s.dept}</div></div>
           <span class="badge badge-danger">${s.att}%</span>
         </div>`).join('')}
@@ -5720,7 +6159,7 @@
     </div>
   </div>
 </div>`;
-          
+
       // ======================================
       // ENTERPRISE MODULES
       // ======================================
@@ -5881,9 +6320,9 @@
       <table><thead><tr><th>Type</th><th>Requested By</th><th>Course / Date</th><th>Justification</th><th>Actions</th></tr></thead>
       <tbody>
         ${pReqs.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--muted)">No pending OD requests.</td></tr>' : pReqs.map(r => {
-          const st = DATA.students.find(s => s.reg === r.student_reg) || {name: 'Unknown', dept: 'Unknown'};
-          return `<tr><td><span class="badge badge-primary">Student OD</span></td><td><strong>${st.name}</strong><br><span style="font-size:.75rem;color:var(--muted)">${st.dept} (${r.student_reg})</span></td><td>${r.course}<br><span style="font-size:.75rem;color:var(--muted)">${r.date}</span></td><td style="font-size:.82rem;max-width:200px">${r.reason}</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(${r.id}, 'Approved', 'admin')"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(${r.id}, 'Rejected', 'admin')"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>`;
-        }).join('')}
+        const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Unknown', dept: 'Unknown' };
+        return `<tr><td><span class="badge badge-primary">Student OD</span></td><td><strong>${st.name}</strong><br><span style="font-size:.75rem;color:var(--muted)">${st.dept} (${r.student_reg})</span></td><td>${r.course}<br><span style="font-size:.75rem;color:var(--muted)">${r.date}</span></td><td style="font-size:.82rem;max-width:200px">${r.reason}</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(${r.id}, 'Approved', 'admin')"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(${r.id}, 'Rejected', 'admin')"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>`;
+      }).join('')}
       </tbody></table>
     </div>
   </div>
@@ -5907,7 +6346,7 @@
   </div>
 </div>`;
 
-      
+
       // ======================================
       // V3 ULTIMATE MODULES
       // ======================================
@@ -6197,7 +6636,7 @@
       const res = await apiDelete(`/api/students/${reg}`);
       if (res && res.success) {
         flash(`Student ${reg} permanently deleted from database.`, 'success');
-        if(currentRole === 'admin') filterStudents();
+        if (currentRole === 'admin') filterStudents();
       }
     }
     const specMap = { CSE: ['AI & ML', 'Cybersecurity', 'IoT'], AIDS: ['Data Science', 'Big Data Analytics'], AIML: ['Deep Learning', 'Natural Language Processing'] };
@@ -6285,7 +6724,7 @@
       document.getElementById('n-content').value = '';
     }
 
-    
+
     /* DEPT STUDENT SEARCH LOGIC */
     function initDeptSearch() {
       if (document.getElementById('ds-dept') && !document.getElementById('ds-dept').dataset.init) {
@@ -6293,7 +6732,7 @@
         clearDeptSearch();
       }
     }
-    
+
     function updateDsSpecs() {
       const dept = document.getElementById('ds-dept').value;
       const specSel = document.getElementById('ds-spec');
@@ -6307,11 +6746,11 @@
       const spec = document.getElementById('ds-spec').value;
       const mentor = document.getElementById('ds-mentor').value;
       const name = document.getElementById('ds-name').value.toLowerCase();
-      
+
       const res = DATA.students.filter(s => {
-        let match = (!dept || s.dept === dept) && 
-                    (!spec || s.spec === spec) && 
-                    (!name || s.name.toLowerCase().includes(name) || s.reg.includes(name));
+        let match = (!dept || s.dept === dept) &&
+          (!spec || s.spec === spec) &&
+          (!name || s.name.toLowerCase().includes(name) || s.reg.includes(name));
         if (match && mentor) {
           // Check if mentor mentors this student's dept
           const mentorData = DATA.faculty.find(f => f.id === mentor);
@@ -6438,7 +6877,7 @@
        AI CHATBOT LOGIC
     ═══════════════════════════════════════════════ */
     let cbIsBlocked = false;
-    
+
     function toggleChatbot() {
       const widget = document.getElementById('cb-widget');
       if (widget.classList.contains('active')) {
@@ -6463,7 +6902,7 @@
       if (!msg || cbIsBlocked || !currentUser) return;
 
       const bodyEl = document.getElementById('cb-body');
-      
+
       // Add user message to UI
       const userDiv = document.createElement('div');
       userDiv.className = 'cb-msg cb-msg-user';
@@ -6509,12 +6948,12 @@
     function renderChatLogs() {
       const tbody = document.getElementById('admin-chatlogs-tbody');
       if (!tbody) return;
-      
+
       if (!DATA.chatbotLogs || DATA.chatbotLogs.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">No chatbot activity.</td></tr>';
         return;
       }
-      
+
       tbody.innerHTML = DATA.chatbotLogs.slice().reverse().map(l => {
         const isBlocked = DATA.blockedUsers && DATA.blockedUsers.includes(l.user_id);
         const trHtml = `<tr>
@@ -6526,10 +6965,10 @@
           </td>
           <td>${l.is_unnecessary ? '<span class="badge badge-danger">Unnecessary</span>' : '<span class="badge badge-success">Clean</span>'}</td>
           <td>
-            ${isBlocked 
-              ? `<button class="btn btn-ghost btn-xs" style="color:var(--success); border-color:var(--success)" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'unblock')">Unblock Access</button>`
-              : `<button class="btn btn-danger btn-xs" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'block')">Block Access</button>`
-            }
+            ${isBlocked
+            ? `<button class="btn btn-ghost btn-xs" style="color:var(--success); border-color:var(--success)" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'unblock')">Unblock Access</button>`
+            : `<button class="btn btn-danger btn-xs" onclick="toggleUserBlock('${l.user_id}', '${l.role}', 'block')">Block Access</button>`
+          }
           </td>
         </tr>`;
         return trHtml;
@@ -6551,13 +6990,13 @@
         flash('Failed to modify access.', 'error');
       }
     }
-    
+
     // Call renderChatLogs after data fetch hook or navigation
     const origBootPortal = bootPortal;
-    bootPortal = function(role, name, msg) {
-       origBootPortal(role, name, msg);
-       document.getElementById('cb-fab').style.display = 'flex';
-       if (role === 'admin') renderChatLogs();
+    bootPortal = function (role, name, msg) {
+      origBootPortal(role, name, msg);
+      document.getElementById('cb-fab').style.display = 'flex';
+      if (role === 'admin') renderChatLogs();
     }
   </script>
 </body>

@@ -1,4 +1,5 @@
 node_modules/
+build/
 backend/database.db
 *.js
 *.json
@@ -9,3 +10,6 @@ backend/database.db
 !backend/database_schema.sql
 !index.html
 !requirements.txt
+!build.js
+!selenium-tests/**
+selenium-tests/node_modules/
