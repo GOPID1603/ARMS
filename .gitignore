@@ -1,0 +1,15 @@
+node_modules/
+build/
+backend/database.db
+*.js
+*.json
+*.txt
+!package.json
+!package-lock.json
+!backend/app.py
+!backend/database_schema.sql
+!index.html
+!requirements.txt
+!build.js
+!selenium-tests/**
+selenium-tests/node_modules/

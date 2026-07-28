@@ -1,0 +1,37 @@
+name: Selenium E2E Login Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install root dependencies
+      run: npm install
+
+    - name: Build static site
+      run: npm run build
+
+    - name: Install E2E test dependencies
+      run: |
+        cd selenium-tests
+        npm install
+
+    - name: Run E2E Selenium Tests
+      env:
+        HEADLESS: 'true'
+      run: npm run login
