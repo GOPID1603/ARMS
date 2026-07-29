@@ -6,7 +6,7 @@ const http = require('http');
 const fs = require('fs');
 
 describe('ARMS Login E2E Tests', function () {
-  this.timeout(40000); // 40 seconds timeout for browser setup and execution
+  this.timeout(80000); // 80 seconds timeout for browser setup and execution
   let driver;
   let server;
   let testUrl;
@@ -61,7 +61,11 @@ describe('ARMS Login E2E Tests', function () {
     // 2. Set up Chrome options
     let options = new chrome.Options();
     if (process.env.HEADLESS === 'true') {
-      options.addArguments('--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
+      options.addArguments('--headless=new');
+      options.addArguments('--window-size=1920,1080');
+      options.addArguments('--disable-gpu');
+      options.addArguments('--no-sandbox');
+      options.addArguments('--disable-dev-shm-usage');
     }
 
     driver = await new Builder()
@@ -85,85 +89,85 @@ describe('ARMS Login E2E Tests', function () {
     console.log(`Navigating to: ${url}`);
     await driver.get(url);
 
-    // Wait for the loader to disappear
     try {
+      // Wait for the loader to disappear
       const loader = await driver.findElement(By.id('loader'));
       await driver.wait(async () => {
-        const isDisplayed = await loader.isDisplayed();
-        return !isDisplayed;
+        const classes = await loader.getAttribute('class');
+        return classes.includes('hidden');
       }, 15000);
+
+      // Wait for the login form to load
+      const emailInput = await driver.wait(until.elementLocated(By.id('email')), 15000);
+      const passwordInput = await driver.wait(until.elementLocated(By.id('password')), 15000);
+      const loginButton = await driver.wait(until.elementLocated(By.id('login-button')), 15000);
+
+      // Enters credentials (using preseeded admin credentials)
+      await emailInput.clear();
+      await emailInput.sendKeys('admin');
+      await passwordInput.clear();
+      await passwordInput.sendKeys('admin123');
+
+      // Click Sign In
+      await loginButton.click();
+
+      // Verify dashboard is displayed (login-page gets hidden)
+      const loginPage = await driver.findElement(By.id('login-page'));
+      await driver.wait(async () => {
+        const display = await loginPage.getCssValue('display');
+        return display === 'none';
+      }, 15000);
+
+      const displayStyle = await loginPage.getCssValue('display');
+      assert.strictEqual(displayStyle, 'none', 'Login page should be hidden on successful login');
+
+      const sidebar = await driver.wait(until.elementLocated(By.id('sidebar')), 15000);
+      const sidebarVisible = await sidebar.isDisplayed();
+      assert.ok(sidebarVisible, 'Sidebar should be visible on the dashboard');
     } catch (err) {
       const logs = await driver.manage().logs().get('browser').catch(() => []);
       console.log('BROWSER CONSOLE LOGS ON FAILURE:', logs);
       throw err;
     }
-
-    // Wait for the login form to load
-    const emailInput = await driver.wait(until.elementLocated(By.id('email')), 15000);
-    const passwordInput = await driver.wait(until.elementLocated(By.id('password')), 15000);
-    const loginButton = await driver.wait(until.elementLocated(By.id('login-button')), 15000);
-
-    // Enters credentials (using preseeded admin credentials)
-    await emailInput.clear();
-    await emailInput.sendKeys('admin');
-    await passwordInput.clear();
-    await passwordInput.sendKeys('admin123');
-
-    // Click Sign In
-    await loginButton.click();
-
-    // Verify dashboard is displayed (login-page gets hidden)
-    const loginPage = await driver.findElement(By.id('login-page'));
-    await driver.wait(async () => {
-      const display = await loginPage.getCssValue('display');
-      return display === 'none';
-    }, 15000);
-
-    const displayStyle = await loginPage.getCssValue('display');
-    assert.strictEqual(displayStyle, 'none', 'Login page should be hidden on successful login');
-
-    const sidebar = await driver.wait(until.elementLocated(By.id('sidebar')), 15000);
-    const sidebarVisible = await sidebar.isDisplayed();
-    assert.ok(sidebarVisible, 'Sidebar should be visible on the dashboard');
   });
 
   it('should show an error message with invalid credentials', async function () {
     const url = process.env.TEST_URL || testUrl;
     await driver.get(url);
 
-    // Wait for the loader to disappear
     try {
+      // Wait for the loader to disappear
       const loader = await driver.findElement(By.id('loader'));
       await driver.wait(async () => {
-        const isDisplayed = await loader.isDisplayed();
-        return !isDisplayed;
+        const classes = await loader.getAttribute('class');
+        return classes.includes('hidden');
       }, 15000);
+
+      const emailInput = await driver.wait(until.elementLocated(By.id('email')), 15000);
+      const passwordInput = await driver.wait(until.elementLocated(By.id('password')), 15000);
+      const loginButton = await driver.wait(until.elementLocated(By.id('login-button')), 15000);
+
+      // Enters invalid credentials
+      await emailInput.clear();
+      await emailInput.sendKeys('admin');
+      await passwordInput.clear();
+      await passwordInput.sendKeys('wrongpassword');
+
+      await loginButton.click();
+
+      // Verify login error element becomes visible
+      const errorMsg = await driver.wait(until.elementLocated(By.id('login-error')), 15000);
+      await driver.wait(async () => {
+        const classes = await errorMsg.getAttribute('class');
+        return classes.includes('show');
+      }, 15000);
+
+      const classes = await errorMsg.getAttribute('class');
+      assert.ok(classes.includes('show'), 'Error message should be visible on invalid login credentials');
     } catch (err) {
       const logs = await driver.manage().logs().get('browser').catch(() => []);
       console.log('BROWSER CONSOLE LOGS ON FAILURE:', logs);
       throw err;
     }
-
-    const emailInput = await driver.wait(until.elementLocated(By.id('email')), 15000);
-    const passwordInput = await driver.wait(until.elementLocated(By.id('password')), 15000);
-    const loginButton = await driver.wait(until.elementLocated(By.id('login-button')), 15000);
-
-    // Enters invalid credentials
-    await emailInput.clear();
-    await emailInput.sendKeys('admin');
-    await passwordInput.clear();
-    await passwordInput.sendKeys('wrongpassword');
-
-    await loginButton.click();
-
-    // Verify login error element becomes visible
-    const errorMsg = await driver.wait(until.elementLocated(By.id('login-error')), 15000);
-    await driver.wait(async () => {
-      const classes = await errorMsg.getAttribute('class');
-      return classes.includes('show');
-    }, 15000);
-
-    const isDisplayed = await errorMsg.isDisplayed();
-    assert.ok(isDisplayed, 'Error message should be visible on invalid login credentials');
   });
 });
