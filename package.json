@@ -4,12 +4,17 @@
     "jsdom": "^29.0.1"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/cli": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
     "gh-pages": "^6.3.0"
   },
   "scripts": {
     "build": "node build.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build -t",
-    "login": "npm --prefix selenium-tests run login"
+    "login": "npm --prefix selenium-tests run login",
+    "mobile:build": "npm run build && npx cap sync",
+    "mobile:test": "npm --prefix appium-tests run test"
   }
 }
