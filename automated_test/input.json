@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://127.0.0.1:5000",
+  "admin": "admin:admin123",
+  "student": "202611001:student123",
+  "faculty": "DG11001:faculty123"
+}

@@ -1,0 +1,110 @@
+name: DAST Security Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  dast:
+    name: Run DAST Security Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Code checkout ─────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Python setup ──────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # ── 3. Install all Python deps ───────────────────────────────
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flask flask-cors supabase openpyxl requests
+
+      # ── 4. Start Flask backend in background ─────────────────────
+      - name: Start Flask backend
+        run: |
+          python backend/app.py &
+          echo "Flask PID=$!" >> $GITHUB_ENV
+          sleep 5
+
+      # ── 5. Verify server is up ───────────────────────────────────
+      - name: Verify backend is reachable
+        run: |
+          for i in {1..10}; do
+            curl -sf http://127.0.0.1:5000/api/data -o /dev/null && echo "Server up!" && break
+            echo "Waiting for server… ($i/10)"
+            sleep 3
+          done
+
+      # ── 6. Run DAST test suite ───────────────────────────────────
+      - name: Run DAST Security Tests
+        env:
+          PYTHONIOENCODING: "utf-8"
+        run: python automated_test/run_dast.py
+
+      # ── 7. Generate Excel report ─────────────────────────────────
+      - name: Generate DAST Excel Report
+        env:
+          PYTHONIOENCODING: "utf-8"
+        run: python automated_test/generate_dast_excel.py
+
+      # ── 8. Print summary to CI log ───────────────────────────────
+      - name: Print DAST Summary
+        run: |
+          python -c "
+          import json
+          data = json.loads(open('automated_test/report.json').read())
+          findings = [r for r in data if r['finding']]
+          by_sev = {}
+          for r in findings:
+              by_sev[r['severity']] = by_sev.get(r['severity'], 0) + 1
+          print('='*60)
+          print('DAST SUMMARY')
+          print('='*60)
+          print(f'Total tests : {len(data)}')
+          print(f'Findings    : {len(findings)}')
+          for sev in ['CRITICAL','HIGH','MEDIUM','LOW','INFO']:
+              if by_sev.get(sev,0):
+                  print(f'  {sev:10}: {by_sev[sev]}')
+          print('='*60)
+          "
+
+      # ── 9. Upload reports as artifacts ───────────────────────────
+      - name: Upload DAST JSON Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dast-json-report
+          path: automated_test/report.json
+
+      - name: Upload DAST Excel Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dast-excel-report
+          path: automated_test/DAST_Security_Report.xlsx
+
+      # ── 10. Fail build if CRITICAL findings exist ─────────────────
+      - name: Fail on CRITICAL findings
+        run: |
+          python -c "
+          import json, sys
+          data = json.loads(open('automated_test/report.json').read())
+          crits = [r for r in data if r['finding'] and r['severity'] == 'CRITICAL']
+          if crits:
+              print(f'FAIL: {len(crits)} CRITICAL security findings detected!')
+              for r in crits[:10]:
+                  print(f'  [{r[\"test_category\"]}] {r[\"method\"]} {r[\"endpoint\"]} -- {r[\"note\"][:80]}')
+              sys.exit(1)
+          else:
+              print('PASS: No CRITICAL findings.')
+          "
