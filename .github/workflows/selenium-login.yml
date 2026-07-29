@@ -35,3 +35,20 @@ jobs:
       env:
         HEADLESS: 'true'
       run: npm run login
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Python dependencies
+      run: pip install openpyxl
+
+    - name: Generate E2E Test Report
+      run: python generate_excel_report.py
+
+    - name: Upload Test Report Excel
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-execution-report
+        path: test_execution_report.xlsx
