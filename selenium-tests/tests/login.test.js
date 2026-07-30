@@ -14,6 +14,25 @@ describe('ARMS Login E2E Tests', function () {
   before(async function () {
     // 1. Start a simple static file server to serve index.html and dump.json to bypass file:// CORS restrictions
     server = http.createServer((req, res) => {
+      if (req.url.startsWith('/api/')) {
+        const proxyReq = http.request({
+          hostname: '127.0.0.1',
+          port: 5000,
+          path: req.url,
+          method: req.method,
+          headers: req.headers
+        }, (proxyRes) => {
+          res.writeHead(proxyRes.statusCode, proxyRes.headers);
+          proxyRes.pipe(res, { end: true });
+        });
+        proxyReq.on('error', () => {
+          res.statusCode = 502;
+          res.end(JSON.stringify({ error: 'Backend unreachable' }));
+        });
+        req.pipe(proxyReq, { end: true });
+        return;
+      }
+
       let reqPath = req.url.split('?')[0];
       if (reqPath === '/') {
         reqPath = '/index.html';
