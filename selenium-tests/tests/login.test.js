@@ -6,7 +6,7 @@ const http = require('http');
 const fs = require('fs');
 
 describe('ARMS Login E2E Tests', function () {
-  this.timeout(80000); // 80 seconds timeout for browser setup and execution
+  this.timeout(180000); // 180 seconds timeout for browser setup and execution
   let driver;
   let server;
   let testUrl;
@@ -169,5 +169,58 @@ describe('ARMS Login E2E Tests', function () {
       console.log('BROWSER CONSOLE LOGS ON FAILURE:', logs);
       throw err;
     }
+  });
+
+  // Load 200 dynamic test credentials from the database dump
+  const dumpData = JSON.parse(fs.readFileSync(path.join(__dirname, '../../dump.json'), 'utf8'));
+  const students = dumpData.students.slice(0, 150);
+  const faculty = dumpData.faculty.slice(0, 50);
+  const users = [
+    ...students.map(s => ({ id: s.reg, pass: 'student123', name: s.name, type: 'student' })),
+    ...faculty.map(f => ({ id: f.id, pass: 'faculty123', name: f.name, type: 'faculty' }))
+  ];
+
+  users.forEach((user, index) => {
+    it(`TC-SEL-USER-${String(index + 1).padStart(3, '0')}: should log in successfully as ${user.type} user: ${user.name} (${user.id})`, async function () {
+      try {
+        const emailInput = await driver.wait(until.elementLocated(By.id('email')), 5000);
+        const passwordInput = await driver.wait(until.elementLocated(By.id('password')), 5000);
+        const loginButton = await driver.wait(until.elementLocated(By.id('login-button')), 5000);
+
+        // Input credentials
+        await emailInput.clear();
+        await emailInput.sendKeys(user.id);
+        await passwordInput.clear();
+        await passwordInput.sendKeys(user.pass);
+
+        // Click Sign In
+        await loginButton.click();
+
+        // Verify successful login (login page gets hidden)
+        const loginPage = await driver.findElement(By.id('login-page'));
+        await driver.wait(async () => {
+          const display = await loginPage.getCssValue('display');
+          return display === 'none';
+        }, 5000);
+
+        // Validate dashboard sidebar is visible
+        const sidebar = await driver.wait(until.elementLocated(By.id('sidebar')), 5000);
+        const sidebarVisible = await sidebar.isDisplayed();
+        assert.ok(sidebarVisible, `Dashboard sidebar should be visible for ${user.name}`);
+
+        // Perform instant logout via JS execution to reset state for the next test
+        await driver.executeScript("logoutUser()");
+
+        // Wait for login page to reappear
+        await driver.wait(async () => {
+          const display = await loginPage.getCssValue('display');
+          return display === 'flex' || display === 'block' || display !== 'none';
+        }, 5000);
+      } catch (err) {
+        const logs = await driver.manage().logs().get('browser').catch(() => []);
+        console.log(`BROWSER CONSOLE LOGS ON FAILURE FOR USER ${user.id}:`, logs);
+        throw err;
+      }
+    });
   });
 });
