@@ -341,9 +341,16 @@ for col, w in [(1,5),(2,12),(3,20),(4,9),(5,35),(6,28),(7,13),(8,60),(9,70),(10,
 
 ws3.freeze_panes = "A3"
 
-# ── Save to both locations ─────────────────────────────────────────
+# ── Save to all locations ─────────────────────────────────────────
 wb.save(str(OUT_PATH))
 print(f"[OK] Report saved: {OUT_PATH}")
+
+ROOT_PATH = BASE.parent / "DAST_Security_Report.xlsx"
+try:
+    wb.save(str(ROOT_PATH))
+    print(f"[OK] Root copy: {ROOT_PATH}")
+except Exception as e:
+    print(f"[WARN] Could not save root copy: {e}")
 
 try:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
