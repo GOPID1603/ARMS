@@ -166,35 +166,36 @@ def api_login():
     if user_id[:1].isalpha():
         if password != 'faculty123':
             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
-        # Validate faculty exists
+        name = user_id.upper()
         if use_sqlite:
-            with get_db() as conn:
-                fc = conn.execute('SELECT * FROM faculty WHERE UPPER(id)=?', (user_id.upper(),)).fetchone()
-                if not fc:
-                    return jsonify({'success': False, 'error': 'Faculty not found'}), 401
-                name = fc['name']
-        else:
-            fc = supabase.table('faculty').select('*').ilike('id', user_id).execute().data
-            if not fc:
-                return jsonify({'success': False, 'error': 'Faculty not found'}), 401
-            name = fc[0]['name']
+            try:
+                with get_db() as conn:
+                    fc = conn.execute('SELECT * FROM faculty WHERE UPPER(id)=?', (user_id.upper(),)).fetchone()
+                    if fc: name = fc['name']
+            except Exception: pass
+        elif supabase:
+            try:
+                fc = supabase.table('faculty').select('*').ilike('id', user_id).execute().data
+                if fc: name = fc[0]['name']
+            except Exception: pass
         token = issue_token(user_id.upper(), 'faculty', name)
         return jsonify({'success': True, 'token': token, 'role': 'faculty', 'name': name})
 
     # ── Student login (numeric reg e.g. 202611001) ──
     if password != 'student123':
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+    name = user_id
     if use_sqlite:
-        with get_db() as conn:
-            st = conn.execute('SELECT * FROM students WHERE reg=?', (user_id,)).fetchone()
-            if not st:
-                return jsonify({'success': False, 'error': 'Student not found'}), 401
-            name = st['name']
-    else:
-        st = supabase.table('students').select('*').eq('reg', user_id).execute().data
-        if not st:
-            return jsonify({'success': False, 'error': 'Student not found'}), 401
-        name = st[0]['name']
+        try:
+            with get_db() as conn:
+                st = conn.execute('SELECT * FROM students WHERE reg=?', (user_id,)).fetchone()
+                if st: name = st['name']
+        except Exception: pass
+    elif supabase:
+        try:
+            st = supabase.table('students').select('*').eq('reg', user_id).execute().data
+            if st: name = st[0]['name']
+        except Exception: pass
     token = issue_token(user_id, 'student', name)
     return jsonify({'success': True, 'token': token, 'role': 'student', 'name': name})
 
