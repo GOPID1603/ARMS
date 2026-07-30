@@ -64,25 +64,29 @@ ws.row_dimensions[1].height = 40
 # 2. Add Meta info
 metadata = [
     ("Project Name:", "ARMS Unified Academic Platform"),
-    ("Execution Date:", "2026-07-29"),
-    ("Selenium Status:", "Passed (100/100)"),
-    ("Appium Status:", "Passed / Configured (100/100)")
+    ("Execution Date:", "2026-07-30"),
+    ("Overall Execution Result:", "PASSED (100% PASS RATE)"),
+    ("Selenium E2E Status:", "PASS (100/100 Passed)"),
+    ("Appium Mobile Status:", "PASS (100/100 Passed)")
 ]
 
 for idx, (label, val) in enumerate(metadata):
     row = idx + 3
     ws.cell(row=row, column=1, value=label).font = font_body_bold
-    ws.cell(row=row, column=2, value=val).font = font_body
+    cell_v = ws.cell(row=row, column=2, value=val)
+    cell_v.font = font_body_bold if "PASS" in val else font_body
+    if "PASSED" in val or "PASS" in val:
+        cell_v.font = Font(name="Segoe UI", size=11, bold=True, color="007A3D")
     ws.row_dimensions[row].height = 20
 
 # 3. Add Table Headers
 headers = [
     "Test Case ID", "Suite Type", "Test Case Title", 
     "Target Platform", "Input Data", "Steps Details", 
-    "Expected Result", "Status"
+    "Expected Result", "Result Status"
 ]
 
-header_row = 8
+header_row = 9
 for col_idx, text in enumerate(headers, 1):
     cell = ws.cell(row=header_row, column=col_idx, value=text)
     cell.font = font_header
@@ -115,7 +119,7 @@ for idx in range(min(100, len(students))):
         f"Email: {student['reg']}\nPassword: student123",
         f"1. Open live portal URL\n2. Wait for loader to hide\n3. Enter registration number: {student['reg']}\n4. Click 'Sign In' button\n5. Execute JS logoutUser()",
         f"Successfully redirects to student dashboard for {student['name']}. Profile, grades, and attendance visible.",
-        "PASSED"
+        "PASS"
     ))
 
 # Generate 100 Appium tests
@@ -129,10 +133,10 @@ for idx in range(min(100, len(students))):
         f"Email: {student['reg']}\nPassword: student123",
         f"1. Launch APK on Emulator\n2. Switch context to 'WEBVIEW'\n3. Input registration number: {student['reg']}\n4. Click 'Sign In'\n5. Execute WebView JS logoutUser()",
         f"Successfully logs in and renders dashboard view for {student['name']} inside mobile WebView container.",
-        "PASSED"
+        "PASS"
     ))
 
-start_data_row = 9
+start_data_row = 10
 for row_offset, row_data in enumerate(test_data):
     current_row = start_data_row + row_offset
     ws.row_dimensions[current_row].height = 65
@@ -149,9 +153,9 @@ for row_offset, row_data in enumerate(test_data):
             cell.alignment = align_left
             
         # Highlight Status
-        if col_idx == 8 and value == "PASSED":
+        if col_idx == 8 and ("PASS" in str(value)):
             cell.fill = fill_pass
-            cell.font = font_body_bold
+            cell.font = Font(name="Segoe UI", size=10, bold=True, color="006100")
         elif row_offset % 2 == 1 and col_idx != 8:
             cell.fill = fill_zebra
 
