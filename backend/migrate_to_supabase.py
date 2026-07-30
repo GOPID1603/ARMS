@@ -2,9 +2,8 @@ import sqlite3
 import os
 from supabase import create_client, Client
 
-# Use the credentials from your app.py
-SUPABASE_URL = "https://mihwjfgwjdkraxyceamj.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paHdqZmd3amRrcmF4eWNlYW1qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODU2NzgyNiwiZXhwIjoyMDk0MTQzODI2fQ.IGa0ajGxa1yR2KCDKUMkqCx-0SUnTHSvkHb5cdUZJNw"
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 DB_PATH = os.path.join(os.path.dirname(__file__), 'database.db')

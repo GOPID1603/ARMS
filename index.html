@@ -4221,9 +4221,15 @@
 
     async function loadBackendData() {
       try {
-        const res = await fetch('/api/data');
+        const token = sessionStorage.getItem('arms_token');
+        const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+        const res = await fetch('/api/data', { headers });
         if (!res.ok) throw new Error("API status " + res.status);
         DATA = await res.json();
+        if (DATA) {
+          if (!DATA.placements) DATA.placements = [];
+          if (!DATA.fees) DATA.fees = { total: 0, paid: 0, due: 0, dueDate: '', history: [] };
+        }
         if (currentRole === 'student' && currentUser) {
           prepareStudentData(currentUser);
         }
@@ -4234,6 +4240,10 @@
           const res = await fetch('dump.json');
           if (!res.ok) throw new Error("Fallback status " + res.status);
           DATA = await res.json();
+          if (DATA) {
+            if (!DATA.placements) DATA.placements = [];
+            if (!DATA.fees) DATA.fees = { total: 0, paid: 0, due: 0, dueDate: '', history: [] };
+          }
           if (currentRole === 'student' && currentUser) {
             prepareStudentData(currentUser);
           }
@@ -4324,41 +4334,65 @@
       document.getElementById(`login-${tab}`).classList.add('active');
       document.getElementById('login-error').classList.remove('show');
     }
-    function doUnifiedLogin() {
+    async function doUnifiedLogin() {
       const errEl = document.getElementById('login-error');
       errEl.classList.remove('show');
       const id = document.getElementById('email').value.trim();
       const pass = document.getElementById('password').value;
 
       if (!id || !pass) { errEl.classList.add('show'); return; }
-      if (!DATA) { flash('Loading data from backend, wait...', 'warning'); return; }
 
-      // Admin Login
-      if (id.toLowerCase() === 'admin') {
-        if (pass !== 'admin123') { errEl.classList.add('show'); return; }
-        currentUser = { name: 'Administrator' }; currentRole = 'admin'; bootPortal('admin', 'Administrator', 'Admin');
-        return;
+      // Call backend /api/login to get a JWT
+      try {
+        const loginRes = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, password: pass })
+        });
+        const loginData = await loginRes.json();
+        if (!loginData.success) { errEl.classList.add('show'); return; }
+
+        // Store JWT for all subsequent API calls
+        sessionStorage.setItem('arms_token', loginData.token);
+        sessionStorage.setItem('arms_role',  loginData.role);
+
+        // Load all portal data with the new token
+        if (!DATA) { await loadBackendData(); }
+
+        const role = loginData.role;
+        const name = loginData.name;
+
+        if (role === 'admin') {
+          currentUser = { name: 'Administrator' }; currentRole = 'admin';
+          bootPortal('admin', 'Administrator', 'Admin');
+        } else if (role === 'faculty') {
+          if (!DATA) { errEl.classList.add('show'); return; }
+          const fc = DATA.faculty.find(f => f.id.toUpperCase() === id.toUpperCase());
+          currentUser = fc || { name }; currentRole = 'faculty';
+          bootPortal('faculty', name, 'Faculty');
+        } else {
+          if (!DATA) { errEl.classList.add('show'); return; }
+          const st = DATA.students.find(s => s.reg === id);
+          currentUser = st || { name }; currentRole = 'student';
+          bootPortal('student', name, 'Student');
+        }
+      } catch(e) {
+        errEl.classList.add('show');
       }
-
-      // Faculty Login (Detect Letters like DG11001)
-      if (/^[A-Za-z]+/.test(id)) {
-        const fc = DATA.faculty.find(f => f.id.toUpperCase() === id.toUpperCase());
-        if (!fc || pass !== 'faculty123') { errEl.classList.add('show'); return; }
-        currentUser = fc; currentRole = 'faculty'; bootPortal('faculty', fc.name, 'Faculty');
-        return;
-      }
-
-      // Student Login (Numeric check e.g. 202611001)
-      const st = DATA.students.find(s => s.reg === id);
-      if (!st || pass !== 'student123') { errEl.classList.add('show'); return; }
-      currentUser = st; currentRole = 'student'; bootPortal('student', st.name, 'Student');
     }
 
     // Backend API Handlers
+    function authHeaders() {
+      const token = sessionStorage.getItem('arms_token');
+      return token
+        ? { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        : { 'Content-Type': 'application/json' };
+    }
+
     async function apiPost(endpoint, payload, method = 'POST') {
       try {
         const res = await fetch(endpoint, {
-          method: method, headers: { 'Content-Type': 'application/json' },
+          method: method, headers: authHeaders(),
           body: JSON.stringify(payload)
         });
         const ans = await res.json();
@@ -4372,7 +4406,10 @@
 
     async function apiDelete(endpoint) {
       try {
-        const res = await fetch(endpoint, { method: 'DELETE' });
+        const res = await fetch(endpoint, {
+          method: 'DELETE',
+          headers: authHeaders()
+        });
         const ans = await res.json();
         if (ans.success) {
           await loadBackendData();
@@ -4413,6 +4450,9 @@
       lp.style.display = 'flex';
       lp.classList.remove('hidden');
       currentUser = null; currentRole = null;
+      // Clear JWT on logout
+      sessionStorage.removeItem('arms_token');
+      sessionStorage.removeItem('arms_role');
       document.getElementById('content-area').innerHTML = '';
       flash('Logged out successfully', 'info');
     }

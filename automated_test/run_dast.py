@@ -100,7 +100,9 @@ def main():
         run_hardcoded(http, record, cfg, BASE_URL)
     else:
         print(f"[OK] Server reachable at {BASE_URL}\n")
-        print("[1] Authentication Bypass")
+        from dast_auth import login_all
+        login_all(http, BASE_URL)
+        print("\n[1] Authentication Bypass")
         run_authn(http, record, cfg, BASE_URL)
         time.sleep(0.5)
 

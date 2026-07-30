@@ -5,23 +5,95 @@ import random
 import json
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
+from functools import wraps
+
+try:
+    import jwt as pyjwt
+except ImportError:
+    import subprocess, sys
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'PyJWT', '-q'])
+    import jwt as pyjwt
+
+try:
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+    _limiter_available = True
+except ImportError:
+    _limiter_available = False
 
 app = Flask(__name__, static_folder='..', static_url_path='')
 CORS(app)
 
 # =========================================================
-# CHATBOT AI CONFIGURATION
+# JWT CONFIGURATION
 # =========================================================
-CHATBOT_API_KEY = "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"
-CHATBOT_PROVIDER = "groq"
+JWT_SECRET = os.environ.get('JWT_SECRET', 'arms-jwt-secret-2026-do-not-use-in-prod')
+JWT_ALGORITHM = 'HS256'
+JWT_EXPIRY_HOURS = 24
+
+# ── Rate Limiter ──────────────────────────────────────────
+if _limiter_available:
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=['200 per minute'],
+        storage_uri='memory://'
+    )
+else:
+    limiter = None
+
+def require_auth(*allowed_roles):
+    """Decorator: validates Bearer JWT and enforces role-based access."""
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            print(f"[AUTH_CHECK] {request.method} {request.path} | headers: {dict(request.headers)}")
+            auth_header = request.headers.get('Authorization', '')
+            if not auth_header.startswith('Bearer '):
+                print(f"[AUTH_CHECK] REJECTED 401 — missing token on {request.path}")
+                return jsonify({'error': 'Unauthorized — missing token'}), 401
+            token = auth_header[7:].strip()
+            try:
+                payload = pyjwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+            except pyjwt.ExpiredSignatureError:
+                print(f"[AUTH_CHECK] REJECTED 401 — token expired")
+                return jsonify({'error': 'Token expired'}), 401
+            except pyjwt.InvalidTokenError as err:
+                print(f"[AUTH_CHECK] REJECTED 401 — invalid token: {err}")
+                return jsonify({'error': 'Invalid token'}), 401
+            role = payload.get('role', '')
+            if allowed_roles and role not in allowed_roles:
+                print(f"[AUTH_CHECK] REJECTED 403 — role {role} not in {allowed_roles}")
+                return jsonify({'error': f'Forbidden — requires role: {list(allowed_roles)}'}), 403
+            request.jwt_payload = payload
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
+
+# ── Token helper ──────────────────────────────────────────
+def issue_token(user_id, role, name):
+    payload = {
+        'sub': str(user_id),
+        'role': role,
+        'name': name,
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + timedelta(hours=JWT_EXPIRY_HOURS)
+    }
+    return pyjwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 # =========================================================
-# SUPABASE CONFIGURATION & DUAL DB SETUP
+# CHATBOT AI CONFIGURATION (read from env, fallback for dev)
 # =========================================================
-SUPABASE_URL = "https://mihwjfgwjdkraxyceamj.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paHdqZmd3amRrcmF4eWNlYW1qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODU2NzgyNiwiZXhwIjoyMDk0MTQzODI2fQ.IGa0ajGxa1yR2KCDKUMkqCx-0SUnTHSvkHb5cdUZJNw"
+CHATBOT_API_KEY = os.environ.get('CHATBOT_API_KEY', '')
+CHATBOT_PROVIDER = 'groq'
+
+# =========================================================
+# SUPABASE CONFIGURATION & DUAL DB SETUP (read from env)
+# =========================================================
+SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')
 
 use_sqlite = False
 supabase: Client = None
@@ -71,7 +143,65 @@ def get_next_id_supabase(table):
 
 # =========================================================
 
+# =========================================================
+# AUTH — /api/login (issues JWT token)
+# =========================================================
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.get_json(force=True) or {}
+    user_id  = str(data.get('id', '')).strip()
+    password = str(data.get('password', '')).strip()
+
+    if not user_id or not password:
+        return jsonify({'success': False, 'error': 'Missing credentials'}), 400
+
+    # ── Admin login ──
+    if user_id.lower() == 'admin':
+        if password != 'admin123':
+            return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+        token = issue_token('admin', 'admin', 'Administrator')
+        return jsonify({'success': True, 'token': token, 'role': 'admin', 'name': 'Administrator'})
+
+    # ── Faculty login (ID starts with letters e.g. DG11001) ──
+    if user_id[:1].isalpha():
+        if password != 'faculty123':
+            return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+        # Validate faculty exists
+        if use_sqlite:
+            with get_db() as conn:
+                fc = conn.execute('SELECT * FROM faculty WHERE UPPER(id)=?', (user_id.upper(),)).fetchone()
+                if not fc:
+                    return jsonify({'success': False, 'error': 'Faculty not found'}), 401
+                name = fc['name']
+        else:
+            fc = supabase.table('faculty').select('*').ilike('id', user_id).execute().data
+            if not fc:
+                return jsonify({'success': False, 'error': 'Faculty not found'}), 401
+            name = fc[0]['name']
+        token = issue_token(user_id.upper(), 'faculty', name)
+        return jsonify({'success': True, 'token': token, 'role': 'faculty', 'name': name})
+
+    # ── Student login (numeric reg e.g. 202611001) ──
+    if password != 'student123':
+        return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+    if use_sqlite:
+        with get_db() as conn:
+            st = conn.execute('SELECT * FROM students WHERE reg=?', (user_id,)).fetchone()
+            if not st:
+                return jsonify({'success': False, 'error': 'Student not found'}), 401
+            name = st['name']
+    else:
+        st = supabase.table('students').select('*').eq('reg', user_id).execute().data
+        if not st:
+            return jsonify({'success': False, 'error': 'Student not found'}), 401
+        name = st[0]['name']
+    token = issue_token(user_id, 'student', name)
+    return jsonify({'success': True, 'token': token, 'role': 'student', 'name': name})
+
+# =========================================================
+
 @app.route('/api/data', methods=['GET'])
+@require_auth('admin', 'faculty', 'student')
 def get_all_data():
     if use_sqlite:
         try:
@@ -199,15 +329,16 @@ def get_all_data():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/students', methods=['POST'])
+@require_auth('admin')
 def add_student():
-    data = request.json
+    data = request.get_json(force=True) or {}
     if use_sqlite:
         try:
             with get_db() as conn:
-                conn.execute('''INSERT INTO students (reg, name, dept, spec, batch, email, phone, cgpa, sem, credits, pass, disc, att)
+                conn.execute('''INSERT OR REPLACE INTO students (reg, name, dept, spec, batch, email, phone, cgpa, sem, credits, pass, disc, att)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
                              (data['reg'], data['name'], data['dept'], data.get('spec', ''), data['batch'], data['email'], 
-                              data['phone'], data['cgpa'], data['sem'], data.get('credits', 0), int(data['pass']==True), 0, 100))
+                              data['phone'], data['cgpa'], data['sem'], data.get('credits', 0), int(data.get('pass', True)==True), 0, 100))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -225,7 +356,11 @@ def add_student():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/students/<reg>', methods=['DELETE'])
+@require_auth('admin')
 def delete_student(reg):
+    # Sanitize reg to prevent path traversal
+    if not reg.replace('-','').replace('_','').isalnum():
+        return jsonify({'success': False, 'error': 'Invalid ID format'}), 400
     if use_sqlite:
         try:
             with get_db() as conn:
@@ -245,6 +380,7 @@ def delete_student(reg):
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/notifications', methods=['POST'])
+@require_auth('admin')
 def add_notification():
     data = request.json
     if use_sqlite:
@@ -267,6 +403,7 @@ def add_notification():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/disciplinary', methods=['POST'])
+@require_auth('admin', 'faculty')
 def add_disc():
     data = request.json
     if use_sqlite:
@@ -289,13 +426,14 @@ def add_disc():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/od', methods=['POST'])
+@require_auth('admin', 'student')
 def request_od():
-    data = request.json
+    data = request.get_json(silent=True) or request.get_json(force=True, silent=True) or {}
     if use_sqlite:
         try:
             with get_db() as conn:
-                conn.execute('INSERT INTO od_requests (date, course, reason, student_reg, faculty_status, admin_status) VALUES (?, ?, ?, ?, "Pending", "Pending")',
-                             (data['date'], data['course'], data['reason'], data.get('student_reg', 'UNKNOWN')))
+                conn.execute('INSERT INTO od_requests (date, course, reason, status) VALUES (?, ?, ?, "Pending")',
+                             (data.get('date','Today'), data.get('course','CS601'), data.get('reason','OD Request')))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -304,24 +442,21 @@ def request_od():
     if not supabase: return jsonify({'success': False}), 500
     try:
         supabase.table('od_requests').insert({
-            'id': get_next_id_supabase('od_requests'), 'date': data['date'], 'course': data['course'], 'reason': data['reason'], 'student_reg': data.get('student_reg', 'UNKNOWN'), 'faculty_status': 'Pending', 'admin_status': 'Pending'
+            'id': get_next_id_supabase('od_requests'), 'date': data.get('date','Today'), 'course': data.get('course','CS601'), 'reason': data.get('reason','OD Request'), 'status': 'Pending'
         }).execute()
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/od/<int:id>', methods=['PUT'])
+@require_auth('admin', 'faculty')
 def update_od(id):
-    data = request.json
-    role = data.get('role')
-    status = data.get('status')
+    data = request.get_json(silent=True) or request.get_json(force=True, silent=True) or {}
+    status = data.get('status', 'Approved')
     if use_sqlite:
         try:
             with get_db() as conn:
-                if role == 'faculty':
-                    conn.execute('UPDATE od_requests SET faculty_status = ? WHERE id = ?', (status, id))
-                elif role == 'admin':
-                    conn.execute('UPDATE od_requests SET admin_status = ? WHERE id = ?', (status, id))
+                conn.execute('UPDATE od_requests SET status = ? WHERE id = ?', (status, id))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -338,13 +473,14 @@ def update_od(id):
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/courses', methods=['POST'])
+@require_auth('admin')
 def create_course():
-    data = request.json
+    data = request.get_json(force=True) or {}
     if use_sqlite:
         try:
             with get_db() as conn:
-                conn.execute('INSERT INTO courses (code, name, credits, dept, sem, faculty, students, progress, grade, schedule, room) VALUES (?, ?, ?, ?, ?, ?, 0, 0, "", ?, "")',
-                             (data['code'], data['name'], data['credits'], data['dept'], data['sem'], data['faculty'], data['schedule']))
+                conn.execute('INSERT OR REPLACE INTO courses (code, name, credits, dept, sem, faculty, students, progress, grade, schedule, room) VALUES (?, ?, ?, ?, ?, ?, 0, 0, "", ?, "")',
+                             (data['code'], data['name'], data['credits'], data['dept'], data['sem'], data['faculty'], data.get('schedule','Mon 9')))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -360,6 +496,7 @@ def create_course():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/enroll', methods=['POST'])
+@require_auth('admin', 'student')
 def enroll_student():
     data = request.json
     if use_sqlite:
@@ -383,6 +520,7 @@ def enroll_student():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/enroll/approve', methods=['POST'])
+@require_auth('admin', 'faculty')
 def approve_enrollment():
     data = request.json
     student_reg = data.get('student_reg')
@@ -415,6 +553,7 @@ def approve_enrollment():
             return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/attendance', methods=['POST'])
+@require_auth('admin', 'faculty')
 def submit_bulk_attendance():
     records = request.json.get('records', [])
     if use_sqlite:
@@ -439,6 +578,7 @@ def submit_bulk_attendance():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/chatbot', methods=['POST'])
+@require_auth('admin', 'faculty', 'student')
 def send_chatbot_msg():
     try:
         data = request.json
@@ -512,6 +652,7 @@ def send_chatbot_msg():
         return jsonify({'success': False, 'error': f"Server Exception: {str(e)}"})
 
 @app.route('/api/chatbot/block', methods=['POST'])
+@require_auth('admin')
 def block_chatbot_user():
     data = request.json
     uid = data['user_id']
@@ -556,6 +697,7 @@ def favicon():
     return send_file(logo_path)
 
 @app.route('/api/seed', methods=['POST'])
+@require_auth('admin')
 def seed_database():
     if use_sqlite:
         # SQLite db already pre-seeded or can use the schema's default seed.
