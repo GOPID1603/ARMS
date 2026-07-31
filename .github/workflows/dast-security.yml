@@ -34,23 +34,40 @@ jobs:
         run: |
           python backend/app.py &
           echo "Flask PID=$!" >> $GITHUB_ENV
-          sleep 5
+          sleep 8
 
       # ── 5. Verify server is up ───────────────────────────────────
       - name: Verify backend is reachable
         run: |
-          for i in {1..10}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/favicon.ico)
-            if [ "$STATUS" = "200" ]; then echo "Server up!"; break; fi
-            echo "Waiting for server… ($i/10)"
+          for i in {1..15}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/api/health)
+            if [ "$STATUS" = "200" ]; then echo "Server up! (status=$STATUS)"; break; fi
+            echo "Waiting for server… ($i/15) — got HTTP $STATUS"
             sleep 3
           done
+          # Final check — fail the job if still not up
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/api/health)
+          if [ "$STATUS" != "200" ]; then echo "ERROR: Flask backend not reachable after 45s (got $STATUS)"; exit 1; fi
 
       # ── 6. Run DAST test suite ───────────────────────────────────
       - name: Run DAST Security Tests
         env:
           PYTHONIOENCODING: "utf-8"
         run: python automated_test/run_dast.py
+
+      # ── 6b. Print raw report for debugging ───────────────────────
+      - name: Print DAST Report (raw JSON — findings only)
+        if: always()
+        run: |
+          python3 -c "
+          import json
+          data = json.loads(open('automated_test/report.json').read())
+          findings = [r for r in data if r['finding']]
+          print(f'Total tests: {len(data)} | Findings: {len(findings)}')
+          for r in findings:
+              print(f'  [FINDING] [{r[\"test_category\"]}] {r[\"method\"]} {r[\"endpoint\"]} role={r[\"role\"]} got={r[\"status\"]} exp={r[\"expected_status\"]}')
+              print(f'    Note: {r[\"note\"]}')
+          "
 
       # ── 7. Generate Excel report ─────────────────────────────────
       - name: Generate DAST Excel Report

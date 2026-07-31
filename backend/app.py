@@ -710,7 +710,14 @@ def index():
 @app.route('/s360_logo.png')
 def favicon():
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 's360_logo.png')
-    return send_file(logo_path)
+    if os.path.exists(logo_path):
+        return send_file(logo_path)
+    return ('', 204)  # No Content — file not present (e.g. CI runner)
+
+@app.route('/api/health')
+def health_check():
+    """Simple health-check endpoint — no auth required, used by CI."""
+    return jsonify({'status': 'ok', 'db': 'sqlite' if use_sqlite else 'supabase'})
 
 @app.route('/api/seed', methods=['POST'])
 @require_auth('admin')
