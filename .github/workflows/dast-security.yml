@@ -27,7 +27,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install flask flask-cors supabase openpyxl requests
+          pip install -r requirements.txt requests
 
       # ── 4. Start Flask backend in background ─────────────────────
       - name: Start Flask backend
@@ -94,18 +94,18 @@ jobs:
           name: dast-excel-report
           path: automated_test/DAST_Security_Report.xlsx
 
-      # ── 10. Fail build if CRITICAL findings exist ─────────────────
-      - name: Fail on CRITICAL findings
+      # ── 10. Fail build if ANY security findings exist ────────────
+      - name: Fail on any security findings
         run: |
           python -c "
           import json, sys
           data = json.loads(open('automated_test/report.json').read())
-          crits = [r for r in data if r['finding'] and r['severity'] == 'CRITICAL']
-          if crits:
-              print(f'FAIL: {len(crits)} CRITICAL security findings detected!')
-              for r in crits[:10]:
+          findings = [r for r in data if r['finding']]
+          if findings:
+              print(f'FAIL: {len(findings)} security findings detected in DAST scan!')
+              for r in findings[:10]:
                   print(f'  [{r[\"test_category\"]}] {r[\"method\"]} {r[\"endpoint\"]} -- {r[\"note\"][:80]}')
               sys.exit(1)
           else:
-              print('PASS: No CRITICAL findings.')
+              print('PASS: 0 security findings. 100% PASS RATE!')
           "
