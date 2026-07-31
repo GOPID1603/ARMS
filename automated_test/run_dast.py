@@ -5,6 +5,7 @@ Reads configuration from input.json, runs all security test categories,
 and writes results to report.json.
 """
 import json, time, datetime, sys, os, re, subprocess, socket
+import urllib.request, urllib.error, urllib.parse as up
 from pathlib import Path
 
 BASE = Path(__file__).parent
@@ -14,22 +15,30 @@ cfg = json.loads((BASE / "input.json").read_text())
 BASE_URL = cfg["baseUrl"].rstrip("/")
 
 # Parse host/port for availability check
-import urllib.parse as up
 parsed = up.urlparse(BASE_URL)
 HOST = parsed.hostname
 PORT = parsed.port or (443 if parsed.scheme == "https" else 80)
 
 # ─── Check server is reachable ────────────────────────────────────
-def server_up():
-    try:
-        s = socket.create_connection((HOST, PORT), timeout=3)
-        s.close()
-        return True
-    except Exception:
-        return False
+def server_up(retries=20, delay=2):
+    """HTTP-based health check — retries up to retries×delay seconds."""
+    for attempt in range(1, retries + 1):
+        try:
+            url = BASE_URL + "/api/health"
+            req = urllib.request.Request(url, method="GET")
+            req.add_header("Content-Type", "application/json")
+            with urllib.request.urlopen(req, timeout=5) as r:
+                if r.status == 200:
+                    print(f"  [OK] Server reachable at {BASE_URL} (attempt {attempt})")
+                    return True
+        except Exception as ex:
+            print(f"  [WAIT] Server not yet ready (attempt {attempt}/{retries}): {ex}")
+            import time as _t
+            _t.sleep(delay)
+    print(f"  [FAIL] Server at {BASE_URL} unreachable after {retries * delay}s")
+    return False
 
-# ─── HTTP helper (uses urllib — no external deps) ─────────────────
-import urllib.request, urllib.error
+
 
 def http(method, path, body=None, headers=None, timeout=10):
     url = BASE_URL + path

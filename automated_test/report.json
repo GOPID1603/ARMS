@@ -7,274 +7,14 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 17,
+    "response_time_ms": 4,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.050816Z"
+    "timestamp": "2026-07-31T06:22:17.308323Z"
   },
   {
     "endpoint": "/api/data",
     "method": "GET",
-    "role": "unauth/empty-bearer",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 13,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.064263Z"
-  },
-  {
-    "endpoint": "/api/data",
-    "method": "GET",
-    "role": "unauth/invalid-jwt",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 16,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.080490Z"
-  },
-  {
-    "endpoint": "/api/data",
-    "method": "GET",
-    "role": "authenticated/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 20,
-    "test_category": "AuthN-Bypass",
-    "note": "Authenticated admin access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.100964Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "unauth/no-token",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 26,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.127193Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "unauth/empty-bearer",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 16,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.143560Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "unauth/invalid-jwt",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 5,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.148321Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "authenticated/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 8,
-    "test_category": "AuthN-Bypass",
-    "note": "Authenticated admin access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.156206Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "unauth/no-token",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 4,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.160415Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "unauth/empty-bearer",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 4,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.164939Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "unauth/invalid-jwt",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 4,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.169270Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "authenticated/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 27,
-    "test_category": "AuthN-Bypass",
-    "note": "Authenticated admin access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.195874Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "unauth/no-token",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 3,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.198626Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "unauth/empty-bearer",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 3,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.201393Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "unauth/invalid-jwt",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 21,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.222918Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "authenticated/student",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 8,
-    "test_category": "AuthN-Bypass",
-    "note": "Authenticated student access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.230987Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "unauth/no-token",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 3,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.234040Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "unauth/empty-bearer",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 2,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.236498Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "unauth/invalid-jwt",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 17,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.253210Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "authenticated/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 5,
-    "test_category": "AuthN-Bypass",
-    "note": "Authenticated admin access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.257872Z"
-  },
-  {
-    "endpoint": "/api/courses",
-    "method": "POST",
-    "role": "unauth/no-token",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 3,
-    "test_category": "AuthN-Bypass",
-    "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.260945Z"
-  },
-  {
-    "endpoint": "/api/courses",
-    "method": "POST",
     "role": "unauth/empty-bearer",
     "status": 401,
     "expected_status": 401,
@@ -283,62 +23,166 @@
     "response_time_ms": 25,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.285586Z"
+    "timestamp": "2026-07-31T06:22:17.333828Z"
   },
   {
-    "endpoint": "/api/courses",
-    "method": "POST",
+    "endpoint": "/api/data",
+    "method": "GET",
     "role": "unauth/invalid-jwt",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 3,
+    "response_time_ms": 4,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.288461Z"
+    "timestamp": "2026-07-31T06:22:17.337486Z"
   },
   {
-    "endpoint": "/api/courses",
-    "method": "POST",
+    "endpoint": "/api/data",
+    "method": "GET",
     "role": "authenticated/admin",
     "status": 200,
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 17,
+    "response_time_ms": 15,
     "test_category": "AuthN-Bypass",
     "note": "Authenticated admin access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.305195Z"
+    "timestamp": "2026-07-31T06:22:17.352298Z"
   },
   {
-    "endpoint": "/api/enroll",
+    "endpoint": "/api/students",
     "method": "POST",
     "role": "unauth/no-token",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 3,
+    "response_time_ms": 12,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.307897Z"
+    "timestamp": "2026-07-31T06:22:17.363967Z"
   },
   {
-    "endpoint": "/api/enroll",
+    "endpoint": "/api/students",
     "method": "POST",
     "role": "unauth/empty-bearer",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 2,
+    "response_time_ms": 6,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.309714Z"
+    "timestamp": "2026-07-31T06:22:17.369689Z"
   },
   {
-    "endpoint": "/api/enroll",
+    "endpoint": "/api/students",
+    "method": "POST",
+    "role": "unauth/invalid-jwt",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 26,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
+    "timestamp": "2026-07-31T06:22:17.395955Z"
+  },
+  {
+    "endpoint": "/api/students",
+    "method": "POST",
+    "role": "authenticated/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 29,
+    "test_category": "AuthN-Bypass",
+    "note": "Authenticated admin access succeeded (200)",
+    "timestamp": "2026-07-31T06:22:17.425411Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "unauth/no-token",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 4,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=no-token",
+    "timestamp": "2026-07-31T06:22:17.429711Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "unauth/empty-bearer",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 4,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
+    "timestamp": "2026-07-31T06:22:17.433901Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "unauth/invalid-jwt",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 7,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
+    "timestamp": "2026-07-31T06:22:17.440787Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "authenticated/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 14,
+    "test_category": "AuthN-Bypass",
+    "note": "Authenticated admin access succeeded (200)",
+    "timestamp": "2026-07-31T06:22:17.454445Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "unauth/no-token",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 19,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=no-token",
+    "timestamp": "2026-07-31T06:22:17.473146Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "unauth/empty-bearer",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 4,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
+    "timestamp": "2026-07-31T06:22:17.476871Z"
+  },
+  {
+    "endpoint": "/api/od",
     "method": "POST",
     "role": "unauth/invalid-jwt",
     "status": 401,
@@ -348,23 +192,23 @@
     "response_time_ms": 5,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.314951Z"
+    "timestamp": "2026-07-31T06:22:17.482315Z"
   },
   {
-    "endpoint": "/api/enroll",
+    "endpoint": "/api/od",
     "method": "POST",
     "role": "authenticated/student",
     "status": 200,
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 6,
+    "response_time_ms": 12,
     "test_category": "AuthN-Bypass",
     "note": "Authenticated student access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.320673Z"
+    "timestamp": "2026-07-31T06:22:17.494717Z"
   },
   {
-    "endpoint": "/api/attendance",
+    "endpoint": "/api/chatbot",
     "method": "POST",
     "role": "unauth/no-token",
     "status": 401,
@@ -374,7 +218,163 @@
     "response_time_ms": 3,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=no-token",
-    "timestamp": "2026-07-30T05:17:03.323309Z"
+    "timestamp": "2026-07-31T06:22:17.497732Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "unauth/empty-bearer",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 22,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
+    "timestamp": "2026-07-31T06:22:17.520022Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "unauth/invalid-jwt",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 5,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
+    "timestamp": "2026-07-31T06:22:17.525498Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "authenticated/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 11,
+    "test_category": "AuthN-Bypass",
+    "note": "Authenticated admin access succeeded (200)",
+    "timestamp": "2026-07-31T06:22:17.536584Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "unauth/no-token",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 12,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=no-token",
+    "timestamp": "2026-07-31T06:22:17.548577Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "unauth/empty-bearer",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 16,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
+    "timestamp": "2026-07-31T06:22:17.564334Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "unauth/invalid-jwt",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 15,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
+    "timestamp": "2026-07-31T06:22:17.579364Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "authenticated/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 25,
+    "test_category": "AuthN-Bypass",
+    "note": "Authenticated admin access succeeded (200)",
+    "timestamp": "2026-07-31T06:22:17.604587Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "unauth/no-token",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 22,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=no-token",
+    "timestamp": "2026-07-31T06:22:17.626384Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "unauth/empty-bearer",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 17,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
+    "timestamp": "2026-07-31T06:22:17.643917Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "unauth/invalid-jwt",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 16,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
+    "timestamp": "2026-07-31T06:22:17.660482Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "authenticated/student",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 33,
+    "test_category": "AuthN-Bypass",
+    "note": "Authenticated student access succeeded (200)",
+    "timestamp": "2026-07-31T06:22:17.693888Z"
+  },
+  {
+    "endpoint": "/api/attendance",
+    "method": "POST",
+    "role": "unauth/no-token",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 27,
+    "test_category": "AuthN-Bypass",
+    "note": "Auth bypass blocked correctly (401) with token=no-token",
+    "timestamp": "2026-07-31T06:22:17.720794Z"
   },
   {
     "endpoint": "/api/attendance",
@@ -384,10 +384,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 2,
+    "response_time_ms": 30,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=empty-bearer",
-    "timestamp": "2026-07-30T05:17:03.325852Z"
+    "timestamp": "2026-07-31T06:22:17.750775Z"
   },
   {
     "endpoint": "/api/attendance",
@@ -397,10 +397,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 23,
+    "response_time_ms": 6,
     "test_category": "AuthN-Bypass",
     "note": "Auth bypass blocked correctly (401) with token=invalid-jwt",
-    "timestamp": "2026-07-30T05:17:03.349234Z"
+    "timestamp": "2026-07-31T06:22:17.756780Z"
   },
   {
     "endpoint": "/api/attendance",
@@ -410,10 +410,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 7,
+    "response_time_ms": 35,
     "test_category": "AuthN-Bypass",
     "note": "Authenticated faculty access succeeded (200)",
-    "timestamp": "2026-07-30T05:17:03.355835Z"
+    "timestamp": "2026-07-31T06:22:17.792168Z"
   },
   {
     "endpoint": "/api/students",
@@ -423,10 +423,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 4,
+    "response_time_ms": 16,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/students with 403",
-    "timestamp": "2026-07-30T05:17:03.860457Z"
+    "timestamp": "2026-07-31T06:22:18.308705Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -436,10 +436,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 20,
+    "response_time_ms": 5,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/notifications with 403",
-    "timestamp": "2026-07-30T05:17:03.880516Z"
+    "timestamp": "2026-07-31T06:22:18.313861Z"
   },
   {
     "endpoint": "/api/courses",
@@ -449,10 +449,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 28,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/courses with 403",
-    "timestamp": "2026-07-30T05:17:03.896639Z"
+    "timestamp": "2026-07-31T06:22:18.342291Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -462,10 +462,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 13,
+    "response_time_ms": 29,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/chatbot/block with 403",
-    "timestamp": "2026-07-30T05:17:03.910400Z"
+    "timestamp": "2026-07-31T06:22:18.371256Z"
   },
   {
     "endpoint": "/api/seed",
@@ -475,10 +475,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 5,
+    "response_time_ms": 4,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/seed with 403",
-    "timestamp": "2026-07-30T05:17:03.915426Z"
+    "timestamp": "2026-07-31T06:22:18.375149Z"
   },
   {
     "endpoint": "/api/disciplinary",
@@ -488,10 +488,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 26,
+    "response_time_ms": 30,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/disciplinary with 403",
-    "timestamp": "2026-07-30T05:17:03.941833Z"
+    "timestamp": "2026-07-31T06:22:18.405274Z"
   },
   {
     "endpoint": "/api/od/1",
@@ -501,10 +501,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 31,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 PUT /api/od/1 with 403",
-    "timestamp": "2026-07-30T05:17:03.957957Z"
+    "timestamp": "2026-07-31T06:22:18.436035Z"
   },
   {
     "endpoint": "/api/attendance",
@@ -514,10 +514,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 13,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/attendance with 403",
-    "timestamp": "2026-07-30T05:17:03.974140Z"
+    "timestamp": "2026-07-31T06:22:18.449620Z"
   },
   {
     "endpoint": "/api/enroll/approve",
@@ -527,10 +527,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 4,
+    "response_time_ms": 6,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected student \u2192 POST /api/enroll/approve with 403",
-    "timestamp": "2026-07-30T05:17:03.978021Z"
+    "timestamp": "2026-07-31T06:22:18.456104Z"
   },
   {
     "endpoint": "/api/students",
@@ -540,10 +540,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 4,
+    "response_time_ms": 26,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected faculty \u2192 POST /api/students with 403",
-    "timestamp": "2026-07-30T05:17:03.981662Z"
+    "timestamp": "2026-07-31T06:22:18.482612Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -553,10 +553,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 5,
+    "response_time_ms": 7,
     "test_category": "AuthZ-Privesc",
     "note": "Correctly rejected faculty \u2192 POST /api/chatbot/block with 403",
-    "timestamp": "2026-07-30T05:17:03.986667Z"
+    "timestamp": "2026-07-31T06:22:18.489807Z"
   },
   {
     "endpoint": "/api/data",
@@ -566,10 +566,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 19,
+    "response_time_ms": 5,
     "test_category": "IDOR",
     "note": "IDOR blocked: /api/data requires auth, got 401",
-    "timestamp": "2026-07-30T05:17:04.506572Z"
+    "timestamp": "2026-07-31T06:22:18.995053Z"
   },
   {
     "endpoint": "/api/data",
@@ -579,10 +579,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 43,
+    "response_time_ms": 17,
     "test_category": "IDOR",
     "note": "Authenticated /api/data returns data (status=200)",
-    "timestamp": "2026-07-30T05:17:04.549630Z"
+    "timestamp": "2026-07-31T06:22:19.012276Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -592,10 +592,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 19,
+    "response_time_ms": 3,
     "test_category": "IDOR",
     "note": "IDOR blocked: DELETE without auth returned 401",
-    "timestamp": "2026-07-30T05:17:04.568516Z"
+    "timestamp": "2026-07-31T06:22:19.015070Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -605,10 +605,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 14,
+    "response_time_ms": 27,
     "test_category": "IDOR",
     "note": "IDOR blocked: DELETE without auth returned 405",
-    "timestamp": "2026-07-30T05:17:04.582379Z"
+    "timestamp": "2026-07-31T06:22:19.042063Z"
   },
   {
     "endpoint": "/api/od/{id}",
@@ -618,10 +618,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 15,
+    "response_time_ms": 4,
     "test_category": "IDOR",
     "note": "IDOR blocked: PUT /api/od/1 without auth returned 401",
-    "timestamp": "2026-07-30T05:17:04.597434Z"
+    "timestamp": "2026-07-31T06:22:19.045797Z"
   },
   {
     "endpoint": "/api/od/{id}",
@@ -631,10 +631,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 26,
     "test_category": "IDOR",
     "note": "IDOR blocked: PUT /api/od/9999 without auth returned 401",
-    "timestamp": "2026-07-30T05:17:04.613256Z"
+    "timestamp": "2026-07-31T06:22:19.072109Z"
   },
   {
     "endpoint": "/api/enroll",
@@ -644,10 +644,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 15,
+    "response_time_ms": 4,
     "test_category": "IDOR",
     "note": "IDOR blocked: enroll without auth returned 401",
-    "timestamp": "2026-07-30T05:17:04.628521Z"
+    "timestamp": "2026-07-31T06:22:19.077013Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -657,10 +657,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 3,
     "test_category": "IDOR",
     "note": "IDOR blocked: /api/chatbot/block without auth returned 401",
-    "timestamp": "2026-07-30T05:17:04.644980Z"
+    "timestamp": "2026-07-31T06:22:19.080265Z"
   },
   {
     "endpoint": "/api/data",
@@ -670,10 +670,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 34,
+    "response_time_ms": 30,
     "test_category": "RBAC-Matrix",
     "note": "Role=admin correctly allowed on GET /api/data (got 200)",
-    "timestamp": "2026-07-30T05:17:05.179805Z"
+    "timestamp": "2026-07-31T06:22:19.611417Z"
   },
   {
     "endpoint": "/api/data",
@@ -683,10 +683,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 30,
+    "response_time_ms": 19,
     "test_category": "RBAC-Matrix",
     "note": "Role=faculty correctly allowed on GET /api/data (got 200)",
-    "timestamp": "2026-07-30T05:17:05.209660Z"
+    "timestamp": "2026-07-31T06:22:19.630450Z"
   },
   {
     "endpoint": "/api/data",
@@ -696,10 +696,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 12,
+    "response_time_ms": 27,
     "test_category": "RBAC-Matrix",
     "note": "Role=student correctly allowed on GET /api/data (got 200)",
-    "timestamp": "2026-07-30T05:17:05.221418Z"
+    "timestamp": "2026-07-31T06:22:19.657364Z"
   },
   {
     "endpoint": "/api/students",
@@ -709,10 +709,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 20,
+    "response_time_ms": 29,
     "test_category": "RBAC-Matrix",
     "note": "Role=admin correctly allowed on POST /api/students (got 200)",
-    "timestamp": "2026-07-30T05:17:05.241320Z"
+    "timestamp": "2026-07-31T06:22:19.686475Z"
   },
   {
     "endpoint": "/api/students",
@@ -722,10 +722,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 27,
+    "response_time_ms": 21,
     "test_category": "RBAC-Matrix",
     "note": "Role=faculty correctly blocked (403) on POST /api/students",
-    "timestamp": "2026-07-30T05:17:05.268293Z"
+    "timestamp": "2026-07-31T06:22:19.707969Z"
   },
   {
     "endpoint": "/api/students",
@@ -735,10 +735,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 5,
+    "response_time_ms": 18,
     "test_category": "RBAC-Matrix",
     "note": "Role=student correctly blocked (403) on POST /api/students",
-    "timestamp": "2026-07-30T05:17:05.273263Z"
+    "timestamp": "2026-07-31T06:22:19.725886Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -746,25 +746,25 @@
     "role": "rbac/allowed/admin",
     "status": 200,
     "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 45,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/notifications (got 200)",
+    "timestamp": "2026-07-31T06:22:19.771314Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "rbac/forbidden/faculty",
+    "status": 403,
+    "expected_status": 403,
     "finding": false,
     "severity": "INFO",
     "response_time_ms": 31,
     "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/notifications (got 200)",
-    "timestamp": "2026-07-30T05:17:05.304689Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "rbac/forbidden/faculty",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 28,
-    "test_category": "RBAC-Matrix",
     "note": "Role=faculty correctly blocked (403) on POST /api/notifications",
-    "timestamp": "2026-07-30T05:17:05.332727Z"
+    "timestamp": "2026-07-31T06:22:19.802840Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -774,10 +774,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 7,
+    "response_time_ms": 16,
     "test_category": "RBAC-Matrix",
     "note": "Role=student correctly blocked (403) on POST /api/notifications",
-    "timestamp": "2026-07-30T05:17:05.339472Z"
+    "timestamp": "2026-07-31T06:22:19.819134Z"
   },
   {
     "endpoint": "/api/disciplinary",
@@ -787,10 +787,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 27,
+    "response_time_ms": 43,
     "test_category": "RBAC-Matrix",
     "note": "Role=admin correctly allowed on POST /api/disciplinary (got 200)",
-    "timestamp": "2026-07-30T05:17:05.366855Z"
+    "timestamp": "2026-07-31T06:22:19.861833Z"
   },
   {
     "endpoint": "/api/disciplinary",
@@ -800,10 +800,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 11,
+    "response_time_ms": 28,
     "test_category": "RBAC-Matrix",
     "note": "Role=faculty correctly allowed on POST /api/disciplinary (got 200)",
-    "timestamp": "2026-07-30T05:17:05.377833Z"
+    "timestamp": "2026-07-31T06:22:19.890278Z"
   },
   {
     "endpoint": "/api/disciplinary",
@@ -813,10 +813,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 5,
+    "response_time_ms": 19,
     "test_category": "RBAC-Matrix",
     "note": "Role=student correctly blocked (403) on POST /api/disciplinary",
-    "timestamp": "2026-07-30T05:17:05.382645Z"
+    "timestamp": "2026-07-31T06:22:19.909475Z"
   },
   {
     "endpoint": "/api/od",
@@ -826,13 +826,260 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 31,
+    "response_time_ms": 29,
     "test_category": "RBAC-Matrix",
     "note": "Role=admin correctly allowed on POST /api/od (got 200)",
-    "timestamp": "2026-07-30T05:17:05.413561Z"
+    "timestamp": "2026-07-31T06:22:19.938386Z"
   },
   {
     "endpoint": "/api/od",
+    "method": "POST",
+    "role": "rbac/allowed/student",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 31,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly allowed on POST /api/od (got 200)",
+    "timestamp": "2026-07-31T06:22:19.969277Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "rbac/forbidden/faculty",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 20,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly blocked (403) on POST /api/od",
+    "timestamp": "2026-07-31T06:22:19.989534Z"
+  },
+  {
+    "endpoint": "/api/od/1",
+    "method": "PUT",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 17,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on PUT /api/od/1 (got 200)",
+    "timestamp": "2026-07-31T06:22:20.006523Z"
+  },
+  {
+    "endpoint": "/api/od/1",
+    "method": "PUT",
+    "role": "rbac/allowed/faculty",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 37,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly allowed on PUT /api/od/1 (got 200)",
+    "timestamp": "2026-07-31T06:22:20.043383Z"
+  },
+  {
+    "endpoint": "/api/od/1",
+    "method": "PUT",
+    "role": "rbac/forbidden/student",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 9,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly blocked (403) on PUT /api/od/1",
+    "timestamp": "2026-07-31T06:22:20.052756Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 40,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/courses (got 200)",
+    "timestamp": "2026-07-31T06:22:20.093362Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "rbac/forbidden/faculty",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 19,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly blocked (403) on POST /api/courses",
+    "timestamp": "2026-07-31T06:22:20.112860Z"
+  },
+  {
+    "endpoint": "/api/courses",
+    "method": "POST",
+    "role": "rbac/forbidden/student",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 5,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly blocked (403) on POST /api/courses",
+    "timestamp": "2026-07-31T06:22:20.117853Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 32,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/enroll (got 200)",
+    "timestamp": "2026-07-31T06:22:20.150233Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "rbac/allowed/student",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 11,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly allowed on POST /api/enroll (got 200)",
+    "timestamp": "2026-07-31T06:22:20.161281Z"
+  },
+  {
+    "endpoint": "/api/enroll",
+    "method": "POST",
+    "role": "rbac/forbidden/faculty",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 16,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly blocked (403) on POST /api/enroll",
+    "timestamp": "2026-07-31T06:22:20.177460Z"
+  },
+  {
+    "endpoint": "/api/enroll/approve",
+    "method": "POST",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 25,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/enroll/approve (got 200)",
+    "timestamp": "2026-07-31T06:22:20.202723Z"
+  },
+  {
+    "endpoint": "/api/enroll/approve",
+    "method": "POST",
+    "role": "rbac/allowed/faculty",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 33,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly allowed on POST /api/enroll/approve (got 200)",
+    "timestamp": "2026-07-31T06:22:20.235877Z"
+  },
+  {
+    "endpoint": "/api/enroll/approve",
+    "method": "POST",
+    "role": "rbac/forbidden/student",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 21,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly blocked (403) on POST /api/enroll/approve",
+    "timestamp": "2026-07-31T06:22:20.256890Z"
+  },
+  {
+    "endpoint": "/api/attendance",
+    "method": "POST",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 45,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/attendance (got 200)",
+    "timestamp": "2026-07-31T06:22:20.301912Z"
+  },
+  {
+    "endpoint": "/api/attendance",
+    "method": "POST",
+    "role": "rbac/allowed/faculty",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 28,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly allowed on POST /api/attendance (got 200)",
+    "timestamp": "2026-07-31T06:22:20.330211Z"
+  },
+  {
+    "endpoint": "/api/attendance",
+    "method": "POST",
+    "role": "rbac/forbidden/student",
+    "status": 403,
+    "expected_status": 403,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 6,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=student correctly blocked (403) on POST /api/attendance",
+    "timestamp": "2026-07-31T06:22:20.336221Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "rbac/allowed/admin",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 32,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=admin correctly allowed on POST /api/chatbot (got 200)",
+    "timestamp": "2026-07-31T06:22:20.368228Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "rbac/allowed/faculty",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 30,
+    "test_category": "RBAC-Matrix",
+    "note": "Role=faculty correctly allowed on POST /api/chatbot (got 200)",
+    "timestamp": "2026-07-31T06:22:20.397946Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
     "method": "POST",
     "role": "rbac/allowed/student",
     "status": 200,
@@ -841,255 +1088,8 @@
     "severity": "INFO",
     "response_time_ms": 32,
     "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly allowed on POST /api/od (got 200)",
-    "timestamp": "2026-07-30T05:17:05.445822Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "rbac/forbidden/faculty",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 25,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly blocked (403) on POST /api/od",
-    "timestamp": "2026-07-30T05:17:05.471011Z"
-  },
-  {
-    "endpoint": "/api/od/1",
-    "method": "PUT",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 20,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on PUT /api/od/1 (got 200)",
-    "timestamp": "2026-07-30T05:17:05.491275Z"
-  },
-  {
-    "endpoint": "/api/od/1",
-    "method": "PUT",
-    "role": "rbac/allowed/faculty",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 28,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly allowed on PUT /api/od/1 (got 200)",
-    "timestamp": "2026-07-30T05:17:05.519481Z"
-  },
-  {
-    "endpoint": "/api/od/1",
-    "method": "PUT",
-    "role": "rbac/forbidden/student",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 28,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly blocked (403) on PUT /api/od/1",
-    "timestamp": "2026-07-30T05:17:05.547745Z"
-  },
-  {
-    "endpoint": "/api/courses",
-    "method": "POST",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 7,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/courses (got 200)",
-    "timestamp": "2026-07-30T05:17:05.554391Z"
-  },
-  {
-    "endpoint": "/api/courses",
-    "method": "POST",
-    "role": "rbac/forbidden/faculty",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 4,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly blocked (403) on POST /api/courses",
-    "timestamp": "2026-07-30T05:17:05.558673Z"
-  },
-  {
-    "endpoint": "/api/courses",
-    "method": "POST",
-    "role": "rbac/forbidden/student",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 4,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly blocked (403) on POST /api/courses",
-    "timestamp": "2026-07-30T05:17:05.563190Z"
-  },
-  {
-    "endpoint": "/api/enroll",
-    "method": "POST",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 15,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/enroll (got 200)",
-    "timestamp": "2026-07-30T05:17:05.578007Z"
-  },
-  {
-    "endpoint": "/api/enroll",
-    "method": "POST",
-    "role": "rbac/allowed/student",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 15,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly allowed on POST /api/enroll (got 200)",
-    "timestamp": "2026-07-30T05:17:05.592931Z"
-  },
-  {
-    "endpoint": "/api/enroll",
-    "method": "POST",
-    "role": "rbac/forbidden/faculty",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 14,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly blocked (403) on POST /api/enroll",
-    "timestamp": "2026-07-30T05:17:05.606558Z"
-  },
-  {
-    "endpoint": "/api/enroll/approve",
-    "method": "POST",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 18,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/enroll/approve (got 200)",
-    "timestamp": "2026-07-30T05:17:05.624888Z"
-  },
-  {
-    "endpoint": "/api/enroll/approve",
-    "method": "POST",
-    "role": "rbac/allowed/faculty",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 38,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly allowed on POST /api/enroll/approve (got 200)",
-    "timestamp": "2026-07-30T05:17:05.663314Z"
-  },
-  {
-    "endpoint": "/api/enroll/approve",
-    "method": "POST",
-    "role": "rbac/forbidden/student",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 24,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly blocked (403) on POST /api/enroll/approve",
-    "timestamp": "2026-07-30T05:17:05.686995Z"
-  },
-  {
-    "endpoint": "/api/attendance",
-    "method": "POST",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 11,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/attendance (got 200)",
-    "timestamp": "2026-07-30T05:17:05.697867Z"
-  },
-  {
-    "endpoint": "/api/attendance",
-    "method": "POST",
-    "role": "rbac/allowed/faculty",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 8,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly allowed on POST /api/attendance (got 200)",
-    "timestamp": "2026-07-30T05:17:05.706345Z"
-  },
-  {
-    "endpoint": "/api/attendance",
-    "method": "POST",
-    "role": "rbac/forbidden/student",
-    "status": 403,
-    "expected_status": 403,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 25,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=student correctly blocked (403) on POST /api/attendance",
-    "timestamp": "2026-07-30T05:17:05.731752Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "rbac/allowed/admin",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 18,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=admin correctly allowed on POST /api/chatbot (got 200)",
-    "timestamp": "2026-07-30T05:17:05.750158Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "rbac/allowed/faculty",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 6,
-    "test_category": "RBAC-Matrix",
-    "note": "Role=faculty correctly allowed on POST /api/chatbot (got 200)",
-    "timestamp": "2026-07-30T05:17:05.756399Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "rbac/allowed/student",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 23,
-    "test_category": "RBAC-Matrix",
     "note": "Role=student correctly allowed on POST /api/chatbot (got 200)",
-    "timestamp": "2026-07-30T05:17:05.779836Z"
+    "timestamp": "2026-07-31T06:22:20.429752Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -1099,10 +1099,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 15,
+    "response_time_ms": 29,
     "test_category": "RBAC-Matrix",
     "note": "Role=admin correctly allowed on POST /api/chatbot/block (got 200)",
-    "timestamp": "2026-07-30T05:17:05.795434Z"
+    "timestamp": "2026-07-31T06:22:20.459161Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -1112,10 +1112,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 15,
+    "response_time_ms": 30,
     "test_category": "RBAC-Matrix",
     "note": "Role=faculty correctly blocked (403) on POST /api/chatbot/block",
-    "timestamp": "2026-07-30T05:17:05.810347Z"
+    "timestamp": "2026-07-31T06:22:20.489313Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -1125,10 +1125,10 @@
     "expected_status": 403,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 5,
+    "response_time_ms": 30,
     "test_category": "RBAC-Matrix",
     "note": "Role=student correctly blocked (403) on POST /api/chatbot/block",
-    "timestamp": "2026-07-30T05:17:05.815913Z"
+    "timestamp": "2026-07-31T06:22:20.519211Z"
   },
   {
     "endpoint": "/api/data",
@@ -1138,166 +1138,166 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 8,
+    "response_time_ms": 27,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.324759Z"
+    "timestamp": "2026-07-31T06:22:21.046694Z"
   },
   {
     "endpoint": "/api/students",
     "method": "POST",
     "role": "tampered-jwt/admin-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 7,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.332402Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "tampered-jwt/admin-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 6,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.338257Z"
-  },
-  {
-    "endpoint": "/api/chatbot/block",
-    "method": "POST",
-    "role": "tampered-jwt/admin-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 14,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.352681Z"
-  },
-  {
-    "endpoint": "/api/data",
-    "method": "GET",
-    "role": "tampered-jwt/faculty-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 16,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.368366Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "tampered-jwt/faculty-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 16,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.384771Z"
-  },
-  {
-    "endpoint": "/api/notifications",
-    "method": "POST",
-    "role": "tampered-jwt/faculty-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 2,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.387264Z"
-  },
-  {
-    "endpoint": "/api/chatbot/block",
-    "method": "POST",
-    "role": "tampered-jwt/faculty-role-tamper",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 5,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
-    "timestamp": "2026-07-30T05:17:06.392428Z"
-  },
-  {
-    "endpoint": "/api/data",
-    "method": "GET",
-    "role": "tampered-jwt/alg-none",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 24,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
-    "timestamp": "2026-07-30T05:17:06.416533Z"
-  },
-  {
-    "endpoint": "/api/students",
-    "method": "POST",
-    "role": "tampered-jwt/alg-none",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
     "response_time_ms": 15,
     "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
-    "timestamp": "2026-07-30T05:17:06.431482Z"
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.062255Z"
   },
   {
     "endpoint": "/api/notifications",
     "method": "POST",
-    "role": "tampered-jwt/alg-none",
+    "role": "tampered-jwt/admin-role-tamper",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 16,
+    "response_time_ms": 17,
     "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
-    "timestamp": "2026-07-30T05:17:06.447675Z"
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.079763Z"
   },
   {
     "endpoint": "/api/chatbot/block",
     "method": "POST",
-    "role": "tampered-jwt/alg-none",
+    "role": "tampered-jwt/admin-role-tamper",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 12,
+    "response_time_ms": 17,
     "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
-    "timestamp": "2026-07-30T05:17:06.459750Z"
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=admin-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.096583Z"
   },
   {
     "endpoint": "/api/data",
     "method": "GET",
-    "role": "tampered-jwt/empty-sig",
+    "role": "tampered-jwt/faculty-role-tamper",
     "status": 401,
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
     "response_time_ms": 6,
     "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.102894Z"
+  },
+  {
+    "endpoint": "/api/students",
+    "method": "POST",
+    "role": "tampered-jwt/faculty-role-tamper",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 8,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.111380Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "tampered-jwt/faculty-role-tamper",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 28,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.139608Z"
+  },
+  {
+    "endpoint": "/api/chatbot/block",
+    "method": "POST",
+    "role": "tampered-jwt/faculty-role-tamper",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 15,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=faculty-role-tamper",
+    "timestamp": "2026-07-31T06:22:21.154539Z"
+  },
+  {
+    "endpoint": "/api/data",
+    "method": "GET",
+    "role": "tampered-jwt/alg-none",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 17,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
+    "timestamp": "2026-07-31T06:22:21.171910Z"
+  },
+  {
+    "endpoint": "/api/students",
+    "method": "POST",
+    "role": "tampered-jwt/alg-none",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 17,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
+    "timestamp": "2026-07-31T06:22:21.188995Z"
+  },
+  {
+    "endpoint": "/api/notifications",
+    "method": "POST",
+    "role": "tampered-jwt/alg-none",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 6,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
+    "timestamp": "2026-07-31T06:22:21.195034Z"
+  },
+  {
+    "endpoint": "/api/chatbot/block",
+    "method": "POST",
+    "role": "tampered-jwt/alg-none",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 26,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=alg-none",
+    "timestamp": "2026-07-31T06:22:21.220879Z"
+  },
+  {
+    "endpoint": "/api/data",
+    "method": "GET",
+    "role": "tampered-jwt/empty-sig",
+    "status": 401,
+    "expected_status": 401,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 31,
+    "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=empty-sig",
-    "timestamp": "2026-07-30T05:17:06.465708Z"
+    "timestamp": "2026-07-31T06:22:21.252497Z"
   },
   {
     "endpoint": "/api/students",
@@ -1307,10 +1307,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 28,
+    "response_time_ms": 29,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=empty-sig",
-    "timestamp": "2026-07-30T05:17:06.493461Z"
+    "timestamp": "2026-07-31T06:22:21.281863Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1320,10 +1320,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 7,
+    "response_time_ms": 14,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=empty-sig",
-    "timestamp": "2026-07-30T05:17:06.500859Z"
+    "timestamp": "2026-07-31T06:22:21.296453Z"
   },
   {
     "endpoint": "/api/chatbot/block",
@@ -1333,10 +1333,10 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 22,
+    "response_time_ms": 17,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=empty-sig",
-    "timestamp": "2026-07-30T05:17:06.523237Z"
+    "timestamp": "2026-07-31T06:22:21.313618Z"
   },
   {
     "endpoint": "/api/data",
@@ -1346,26 +1346,13 @@
     "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 14,
+    "response_time_ms": 29,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=random-garbage",
-    "timestamp": "2026-07-30T05:17:06.537751Z"
+    "timestamp": "2026-07-31T06:22:21.342647Z"
   },
   {
     "endpoint": "/api/students",
-    "method": "POST",
-    "role": "tampered-jwt/random-garbage",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 16,
-    "test_category": "Token-Tampering",
-    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=random-garbage",
-    "timestamp": "2026-07-30T05:17:06.554029Z"
-  },
-  {
-    "endpoint": "/api/notifications",
     "method": "POST",
     "role": "tampered-jwt/random-garbage",
     "status": 401,
@@ -1375,10 +1362,10 @@
     "response_time_ms": 4,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=random-garbage",
-    "timestamp": "2026-07-30T05:17:06.557878Z"
+    "timestamp": "2026-07-31T06:22:21.347295Z"
   },
   {
-    "endpoint": "/api/chatbot/block",
+    "endpoint": "/api/notifications",
     "method": "POST",
     "role": "tampered-jwt/random-garbage",
     "status": 401,
@@ -1388,20 +1375,20 @@
     "response_time_ms": 26,
     "test_category": "Token-Tampering",
     "note": "Tampered JWT correctly rejected (401) \u2014 token_type=random-garbage",
-    "timestamp": "2026-07-30T05:17:06.583837Z"
+    "timestamp": "2026-07-31T06:22:21.373605Z"
   },
   {
-    "endpoint": "/api/students/{reg}",
-    "method": "DELETE",
-    "role": "injection/path",
-    "status": 400,
-    "expected_status": 400,
+    "endpoint": "/api/chatbot/block",
+    "method": "POST",
+    "role": "tampered-jwt/random-garbage",
+    "status": 401,
+    "expected_status": 401,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 30,
-    "test_category": "Injection",
-    "note": "No anomaly detected for payload: ' OR '1'='1",
-    "timestamp": "2026-07-30T05:17:07.114143Z"
+    "response_time_ms": 17,
+    "test_category": "Token-Tampering",
+    "note": "Tampered JWT correctly rejected (401) \u2014 token_type=random-garbage",
+    "timestamp": "2026-07-31T06:22:21.390300Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -1413,8 +1400,8 @@
     "severity": "INFO",
     "response_time_ms": 5,
     "test_category": "Injection",
-    "note": "No anomaly detected for payload: '; DROP TABLE students; --",
-    "timestamp": "2026-07-30T05:17:07.119774Z"
+    "note": "No anomaly detected for payload: ' OR '1'='1",
+    "timestamp": "2026-07-31T06:22:21.896237Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -1424,10 +1411,23 @@
     "expected_status": 400,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 25,
+    "response_time_ms": 7,
+    "test_category": "Injection",
+    "note": "No anomaly detected for payload: '; DROP TABLE students; --",
+    "timestamp": "2026-07-31T06:22:21.903023Z"
+  },
+  {
+    "endpoint": "/api/students/{reg}",
+    "method": "DELETE",
+    "role": "injection/path",
+    "status": 400,
+    "expected_status": 400,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 8,
     "test_category": "Injection",
     "note": "No anomaly detected for payload: 1 UNION SELECT null,null,null-",
-    "timestamp": "2026-07-30T05:17:07.144642Z"
+    "timestamp": "2026-07-31T06:22:21.911733Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -1437,10 +1437,10 @@
     "expected_status": 400,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 28,
+    "response_time_ms": 19,
     "test_category": "Injection",
     "note": "No anomaly detected for payload: ' AND 1=SLEEP(2)--",
-    "timestamp": "2026-07-30T05:17:07.173156Z"
+    "timestamp": "2026-07-31T06:22:21.931269Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -1453,7 +1453,7 @@
     "response_time_ms": 16,
     "test_category": "Injection",
     "note": "No anomaly detected for payload: \" OR \"1\"=\"1",
-    "timestamp": "2026-07-30T05:17:07.188942Z"
+    "timestamp": "2026-07-31T06:22:21.946978Z"
   },
   {
     "endpoint": "/api/students/{reg}",
@@ -1463,101 +1463,88 @@
     "expected_status": 400,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 14,
-    "test_category": "Injection",
-    "note": "No anomaly detected for payload: admin'--",
-    "timestamp": "2026-07-30T05:17:07.203383Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
     "response_time_ms": 15,
     "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: ' OR '1'='1",
-    "timestamp": "2026-07-30T05:17:07.218031Z"
+    "note": "No anomaly detected for payload: admin'--",
+    "timestamp": "2026-07-31T06:22:21.962396Z"
   },
   {
     "endpoint": "/api/od",
     "method": "POST",
     "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 11,
-    "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: '; DROP TABLE students; --",
-    "timestamp": "2026-07-30T05:17:07.229036Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 29,
-    "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: 1 UNION SELECT null,null,null-",
-    "timestamp": "2026-07-30T05:17:07.258205Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 32,
-    "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: ' AND 1=SLEEP(2)--",
-    "timestamp": "2026-07-30T05:17:07.290230Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 32,
-    "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: \" OR \"1\"=\"1",
-    "timestamp": "2026-07-30T05:17:07.322506Z"
-  },
-  {
-    "endpoint": "/api/od",
-    "method": "POST",
-    "role": "injection/body",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 30,
-    "test_category": "Injection",
-    "note": "No anomaly on POST /api/od with payload: admin'--",
-    "timestamp": "2026-07-30T05:17:07.352881Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "injection/chatbot",
     "status": 200,
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
     "response_time_ms": 26,
     "test_category": "Injection",
-    "note": "No anomaly on chatbot with payload: ' OR '1'='1",
-    "timestamp": "2026-07-30T05:17:07.378899Z"
+    "note": "No anomaly on POST /api/od with payload: ' OR '1'='1",
+    "timestamp": "2026-07-31T06:22:21.988501Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "injection/body",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 23,
+    "test_category": "Injection",
+    "note": "No anomaly on POST /api/od with payload: '; DROP TABLE students; --",
+    "timestamp": "2026-07-31T06:22:22.011856Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "injection/body",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 45,
+    "test_category": "Injection",
+    "note": "No anomaly on POST /api/od with payload: 1 UNION SELECT null,null,null-",
+    "timestamp": "2026-07-31T06:22:22.057191Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "injection/body",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 47,
+    "test_category": "Injection",
+    "note": "No anomaly on POST /api/od with payload: ' AND 1=SLEEP(2)--",
+    "timestamp": "2026-07-31T06:22:22.104511Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "injection/body",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 45,
+    "test_category": "Injection",
+    "note": "No anomaly on POST /api/od with payload: \" OR \"1\"=\"1",
+    "timestamp": "2026-07-31T06:22:22.150106Z"
+  },
+  {
+    "endpoint": "/api/od",
+    "method": "POST",
+    "role": "injection/body",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 28,
+    "test_category": "Injection",
+    "note": "No anomaly on POST /api/od with payload: admin'--",
+    "timestamp": "2026-07-31T06:22:22.177898Z"
   },
   {
     "endpoint": "/api/chatbot",
@@ -1567,36 +1554,23 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 30,
+    "response_time_ms": 23,
+    "test_category": "Injection",
+    "note": "No anomaly on chatbot with payload: ' OR '1'='1",
+    "timestamp": "2026-07-31T06:22:22.201108Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "injection/chatbot",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 29,
     "test_category": "Injection",
     "note": "No anomaly on chatbot with payload: '; DROP TABLE students; --",
-    "timestamp": "2026-07-30T05:17:07.409497Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "injection/chatbot",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 8,
-    "test_category": "Injection",
-    "note": "No anomaly on chatbot with payload: 1 UNION SELECT null,null,null-",
-    "timestamp": "2026-07-30T05:17:07.418131Z"
-  },
-  {
-    "endpoint": "/api/chatbot",
-    "method": "POST",
-    "role": "injection/chatbot",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "INFO",
-    "response_time_ms": 21,
-    "test_category": "Injection",
-    "note": "No anomaly on chatbot with payload: ' AND 1=SLEEP(2)--",
-    "timestamp": "2026-07-30T05:17:07.439396Z"
+    "timestamp": "2026-07-31T06:22:22.230248Z"
   },
   {
     "endpoint": "/api/chatbot",
@@ -1608,8 +1582,8 @@
     "severity": "INFO",
     "response_time_ms": 32,
     "test_category": "Injection",
-    "note": "No anomaly on chatbot with payload: \" OR \"1\"=\"1",
-    "timestamp": "2026-07-30T05:17:07.471456Z"
+    "note": "No anomaly on chatbot with payload: 1 UNION SELECT null,null,null-",
+    "timestamp": "2026-07-31T06:22:22.262227Z"
   },
   {
     "endpoint": "/api/chatbot",
@@ -1619,10 +1593,36 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 7,
+    "response_time_ms": 31,
+    "test_category": "Injection",
+    "note": "No anomaly on chatbot with payload: ' AND 1=SLEEP(2)--",
+    "timestamp": "2026-07-31T06:22:22.293802Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "injection/chatbot",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 35,
+    "test_category": "Injection",
+    "note": "No anomaly on chatbot with payload: \" OR \"1\"=\"1",
+    "timestamp": "2026-07-31T06:22:22.328955Z"
+  },
+  {
+    "endpoint": "/api/chatbot",
+    "method": "POST",
+    "role": "injection/chatbot",
+    "status": 200,
+    "expected_status": 200,
+    "finding": false,
+    "severity": "INFO",
+    "response_time_ms": 30,
     "test_category": "Injection",
     "note": "No anomaly on chatbot with payload: admin'--",
-    "timestamp": "2026-07-30T05:17:07.478683Z"
+    "timestamp": "2026-07-31T06:22:22.359392Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1632,10 +1632,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 8,
+    "response_time_ms": 18,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: ' OR '1'='1",
-    "timestamp": "2026-07-30T05:17:07.486361Z"
+    "timestamp": "2026-07-31T06:22:22.377505Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1645,10 +1645,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 7,
+    "response_time_ms": 35,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: '; DROP TABLE students; --",
-    "timestamp": "2026-07-30T05:17:07.492965Z"
+    "timestamp": "2026-07-31T06:22:22.412991Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1658,10 +1658,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 29,
+    "response_time_ms": 31,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: 1 UNION SELECT null,null,null-",
-    "timestamp": "2026-07-30T05:17:07.521970Z"
+    "timestamp": "2026-07-31T06:22:22.444561Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1671,10 +1671,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 25,
+    "response_time_ms": 33,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: ' AND 1=SLEEP(2)--",
-    "timestamp": "2026-07-30T05:17:07.547481Z"
+    "timestamp": "2026-07-31T06:22:22.478088Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1684,10 +1684,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 34,
+    "response_time_ms": 32,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: \" OR \"1\"=\"1",
-    "timestamp": "2026-07-30T05:17:07.581359Z"
+    "timestamp": "2026-07-31T06:22:22.510253Z"
   },
   {
     "endpoint": "/api/notifications",
@@ -1697,10 +1697,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 34,
+    "response_time_ms": 22,
     "test_category": "Injection",
     "note": "No anomaly in notifications with payload: admin'--",
-    "timestamp": "2026-07-30T05:17:07.615157Z"
+    "timestamp": "2026-07-31T06:22:22.532665Z"
   },
   {
     "endpoint": "/api/data",
@@ -1710,10 +1710,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 21,
+    "response_time_ms": 33,
     "test_category": "Rate-Limiting",
     "note": "Rate limiting / burst handling verified (30 succeeded, rate_limited=False)",
-    "timestamp": "2026-07-30T05:17:09.075149Z"
+    "timestamp": "2026-07-31T06:22:24.354881Z"
   },
   {
     "endpoint": "/api/chatbot",
@@ -1723,10 +1723,10 @@
     "expected_status": 200,
     "finding": false,
     "severity": "INFO",
-    "response_time_ms": 13,
+    "response_time_ms": 20,
     "test_category": "Rate-Limiting",
     "note": "Rate limiting / burst handling verified (30 succeeded, rate_limited=False)",
-    "timestamp": "2026-07-30T05:17:09.788522Z"
+    "timestamp": "2026-07-31T06:22:25.296431Z"
   },
   {
     "endpoint": "codebase",
@@ -1739,6 +1739,6 @@
     "response_time_ms": 0,
     "test_category": "Hardcoded-Secrets",
     "note": "No obvious hardcoded secrets found in codebase scan.",
-    "timestamp": "2026-07-30T05:17:10.348082Z"
+    "timestamp": "2026-07-31T06:22:25.861658Z"
   }
 ]

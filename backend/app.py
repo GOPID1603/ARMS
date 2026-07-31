@@ -98,14 +98,15 @@ SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')
 use_sqlite = False
 supabase: Client = None
 
-if SUPABASE_URL != "YOUR_SUPABASE_URL":
+if SUPABASE_URL and SUPABASE_URL != "YOUR_SUPABASE_URL":
     try:
         import urllib.request
         from urllib.parse import urlparse
         import socket
         parsed_url = urlparse(SUPABASE_URL)
-        socket.setdefaulttimeout(3)
-        socket.gethostbyname(parsed_url.hostname)
+        # Quick DNS check with explicit timeout (does NOT set global default)
+        sock = socket.create_connection((parsed_url.hostname, 443), timeout=3)
+        sock.close()
         supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
         # Attempt a quick check
         supabase.table('students').select('count', count='exact').limit(1).execute()
@@ -115,6 +116,8 @@ if SUPABASE_URL != "YOUR_SUPABASE_URL":
         use_sqlite = True
 else:
     use_sqlite = True
+
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
 
 def init_db_if_needed(conn):
     try:
