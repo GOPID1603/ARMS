@@ -121,13 +121,13 @@ def init_db_if_needed(conn):
         conn.execute('CREATE TABLE IF NOT EXISTS students (reg TEXT PRIMARY KEY, name TEXT, dept TEXT, spec TEXT, batch TEXT, email TEXT, phone TEXT, cgpa REAL, sem INT, credits INT, pass INT, disc INT, att REAL)')
         conn.execute('CREATE TABLE IF NOT EXISTS faculty (id TEXT PRIMARY KEY, name TEXT, dept TEXT, desig TEXT, email TEXT, phone TEXT, courses INT)')
         conn.execute('CREATE TABLE IF NOT EXISTS courses (code TEXT PRIMARY KEY, name TEXT, credits INT, dept TEXT, sem INT, faculty TEXT, students INT, progress INT, grade TEXT, schedule TEXT, room TEXT)')
-        conn.execute('CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, msg TEXT, date TEXT, priority TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, msg TEXT, date TEXT, priority TEXT, read INTEGER DEFAULT 0)')
         conn.execute('CREATE TABLE IF NOT EXISTS disciplinary (id INTEGER PRIMARY KEY AUTOINCREMENT, student TEXT, name TEXT, severity TEXT, reason TEXT, date TEXT, faculty TEXT, notes TEXT)')
         conn.execute('CREATE TABLE IF NOT EXISTS od_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, course TEXT, reason TEXT, status TEXT)')
         conn.execute('CREATE TABLE IF NOT EXISTS attendance_records (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, course TEXT, status TEXT, student_reg TEXT)')
-        conn.execute('CREATE TABLE IF NOT EXISTS student_courses (id INTEGER PRIMARY KEY AUTOINCREMENT, student_reg TEXT, course_code TEXT)')
-        conn.execute('CREATE TABLE IF NOT EXISTS chatbot_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, role TEXT, name TEXT, message TEXT, timestamp TEXT)')
-        conn.execute('CREATE TABLE IF NOT EXISTS blocked_users (user_id TEXT PRIMARY KEY)')
+        conn.execute('CREATE TABLE IF NOT EXISTS student_courses (id INTEGER PRIMARY KEY AUTOINCREMENT, student_reg TEXT, course_code TEXT, status TEXT DEFAULT "Pending")')
+        conn.execute('CREATE TABLE IF NOT EXISTS chatbot_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, role TEXT, name TEXT, message TEXT, response TEXT, timestamp TEXT, is_unnecessary INTEGER DEFAULT 0)')
+        conn.execute('CREATE TABLE IF NOT EXISTS blocked_users (user_id TEXT PRIMARY KEY, role TEXT DEFAULT "student")')
         conn.commit()
     except Exception:
         pass
