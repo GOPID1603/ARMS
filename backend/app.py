@@ -116,11 +116,26 @@ if SUPABASE_URL != "YOUR_SUPABASE_URL":
 else:
     use_sqlite = True
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
+def init_db_if_needed(conn):
+    try:
+        conn.execute('CREATE TABLE IF NOT EXISTS students (reg TEXT PRIMARY KEY, name TEXT, dept TEXT, spec TEXT, batch TEXT, email TEXT, phone TEXT, cgpa REAL, sem INT, credits INT, pass INT, disc INT, att REAL)')
+        conn.execute('CREATE TABLE IF NOT EXISTS faculty (id TEXT PRIMARY KEY, name TEXT, dept TEXT, desig TEXT, email TEXT, phone TEXT, courses INT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS courses (code TEXT PRIMARY KEY, name TEXT, credits INT, dept TEXT, sem INT, faculty TEXT, students INT, progress INT, grade TEXT, schedule TEXT, room TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, msg TEXT, date TEXT, priority TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS disciplinary (id INTEGER PRIMARY KEY AUTOINCREMENT, student TEXT, name TEXT, severity TEXT, reason TEXT, date TEXT, faculty TEXT, notes TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS od_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, course TEXT, reason TEXT, status TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS attendance_records (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, course TEXT, status TEXT, student_reg TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS student_courses (id INTEGER PRIMARY KEY AUTOINCREMENT, student_reg TEXT, course_code TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS chatbot_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, role TEXT, name TEXT, message TEXT, timestamp TEXT)')
+        conn.execute('CREATE TABLE IF NOT EXISTS blocked_users (user_id TEXT PRIMARY KEY)')
+        conn.commit()
+    except Exception:
+        pass
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    init_db_if_needed(conn)
     return conn
 
 # Helper for SQLite auto-increment IDs if needed
