@@ -13,4 +13,7 @@ backend/database.db
 !selenium-tests/**
 selenium-tests/node_modules/
 !dump.json
+__pycache__/
+*.pyc
+
 
