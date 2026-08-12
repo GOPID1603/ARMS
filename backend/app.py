@@ -246,32 +246,7 @@ def get_all_data():
                     'attendance_records': attendance_records,
                     'student_courses': student_courses,
                     'chatbotLogs': chatbotLogs,
-                    'blockedUsers': blockedUsers,
-                    'semesterGrades': [
-                        { 'sem': 'Sem 1', 'gpa': 8.2 }, { 'sem': 'Sem 2', 'gpa': 8.5 }, { 'sem': 'Sem 3', 'gpa': 8.9 }, { 'sem': 'Sem 4', 'gpa': 9.0 }, { 'sem': 'Sem 5', 'gpa': 8.7 }, { 'sem': 'Sem 6', 'gpa': 8.7 }
-                    ],
-                    'completedCourses': [
-                        { 'code': 'CS501', 'name': 'Operating Systems', 'credits': 4, 'grade': 'A', 'gp': 9, 'sem': 5 },
-                        { 'code': 'CS502', 'name': 'Computer Networks', 'credits': 3, 'grade': 'B+', 'gp': 8, 'sem': 5 },
-                        { 'code': 'CS401', 'name': 'Data Structures & Algorithms', 'credits': 4, 'grade': 'O', 'gp': 10, 'sem': 4 },
-                        { 'code': 'CS402', 'name': 'Database Management Systems', 'credits': 3, 'grade': 'A+', 'gp': 9, 'sem': 4 }
-                    ],
-                    'attendance': {
-                        'overall': 82, 
-                        'subjects': [
-                            { 'code': 'CS601', 'name': 'Machine Learning', 'present': 34, 'total': 42, 'pct': 81 },
-                            { 'code': 'CS602', 'name': 'Cloud Computing', 'present': 28, 'total': 32, 'pct': 87 }
-                        ],
-                        'records': [
-                          { 'date': '2026-03-13', 'course': 'CS601', 'status': 'Present' },
-                          { 'date': '2026-03-12', 'course': 'CS602', 'status': 'Absent' }
-                        ]
-                    },
-                    'fees': {
-                        'total': 75000, 'paid': 50000, 'due': 25000, 'dueDate': '2026-03-31', 
-                        'history': [ { 'date': '2026-01-05', 'desc': 'Tuition Fee – Semester I', 'amount': 25000, 'status': 'Paid' } ]
-                    },
-                    'placements': []
+                    'blockedUsers': blockedUsers
                 })
         except Exception as e:
             return jsonify({'error': f"SQLite Error: {str(e)}"}), 500
@@ -317,47 +292,47 @@ def get_all_data():
             'attendance_records': attendance_records,
             'student_courses': student_courses,
             'chatbotLogs': chatbotLogs,
-            'blockedUsers': blockedUsers,
-            'semesterGrades': [
-                { 'sem': 'Sem 1', 'gpa': 8.2 }, { 'sem': 'Sem 2', 'gpa': 8.5 }, { 'sem': 'Sem 3', 'gpa': 8.9 }, { 'sem': 'Sem 4', 'gpa': 9.0 }, { 'sem': 'Sem 5', 'gpa': 8.7 }, { 'sem': 'Sem 6', 'gpa': 8.7 }
-            ],
-            'completedCourses': [
-                { 'code': 'CS501', 'name': 'Operating Systems', 'credits': 4, 'grade': 'A', 'gp': 9, 'sem': 5 },
-                { 'code': 'CS502', 'name': 'Computer Networks', 'credits': 3, 'grade': 'B+', 'gp': 8, 'sem': 5 },
-                { 'code': 'CS401', 'name': 'Data Structures & Algorithms', 'credits': 4, 'grade': 'O', 'gp': 10, 'sem': 4 },
-                { 'code': 'CS402', 'name': 'Database Management Systems', 'credits': 3, 'grade': 'A+', 'gp': 9, 'sem': 4 }
-            ],
-            'attendance': {
-                'overall': 82, 
-                'subjects': [
-                    { 'code': 'CS601', 'name': 'Machine Learning', 'present': 34, 'total': 42, 'pct': 81 },
-                    { 'code': 'CS602', 'name': 'Cloud Computing', 'present': 28, 'total': 32, 'pct': 87 }
-                ],
-                'records': [
-                  { 'date': '2026-03-13', 'course': 'CS601', 'status': 'Present' },
-                  { 'date': '2026-03-12', 'course': 'CS602', 'status': 'Absent' }
-                ]
-            },
-            'fees': {
-                'total': 75000, 'paid': 50000, 'due': 25000, 'dueDate': '2026-03-31', 
-                'history': [ { 'date': '2026-01-05', 'desc': 'Tuition Fee – Semester I', 'amount': 25000, 'status': 'Paid' } ]
-            },
-            'placements': []
+            'blockedUsers': blockedUsers
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+import re
+EMAIL_REGEX = re.compile(r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
+PHONE_REGEX = re.compile(r'^\d{10}$')
+
 @app.route('/api/students', methods=['POST'])
 @require_auth('admin')
 def add_student():
-    data = request.get_json(force=True) or {}
+    data = request.get_json(silent=True) or request.get_json(force=True, silent=True) or {}
+    reg = str(data.get('reg', '')).strip()
+    name = str(data.get('name', '')).strip()
+    email = str(data.get('email', '')).strip()
+    phone = str(data.get('phone', '')).strip()
+    dept = str(data.get('dept', '')).strip()
+    sem = data.get('sem', 1)
+    batch = str(data.get('batch') or '2026').strip()
+    spec = str(data.get('spec') or '').strip()
+
+    if not reg or not name or not dept:
+        return jsonify({'success': False, 'error': 'Missing required fields: Name, Register Number, and Department'}), 400
+
+    if email and not EMAIL_REGEX.match(email):
+        return jsonify({'success': False, 'error': 'Invalid email address format'}), 400
+
+    if phone and not PHONE_REGEX.match(phone):
+        return jsonify({'success': False, 'error': 'Phone number must be a valid 10-digit number'}), 400
+
     if use_sqlite:
         try:
             with get_db() as conn:
-                conn.execute('''INSERT OR REPLACE INTO students (reg, name, dept, spec, batch, email, phone, cgpa, sem, credits, pass, disc, att)
+                existing = conn.execute('SELECT reg FROM students WHERE reg=?', (reg,)).fetchone()
+                if existing:
+                    return jsonify({'success': False, 'error': f'Register number "{reg}" is already registered'}), 400
+                conn.execute('''INSERT INTO students (reg, name, dept, spec, batch, email, phone, cgpa, sem, credits, pass, disc, att)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                             (data['reg'], data['name'], data['dept'], data.get('spec', ''), data['batch'], data['email'], 
-                              data['phone'], data['cgpa'], data['sem'], data.get('credits', 0), int(data.get('pass', True)==True), 0, 100))
+                             (reg, name, dept, spec, batch, email, 
+                              phone, float(data.get('cgpa', 8.0)), int(sem), int(data.get('credits', 0)), int(data.get('pass', True)==True), 0, 100.0))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -365,38 +340,91 @@ def add_student():
 
     if not supabase: return jsonify({'success': False, 'error': 'Supabase not configured'}), 500
     try:
+        existing = supabase.table('students').select('reg').eq('reg', reg).execute().data
+        if existing:
+            return jsonify({'success': False, 'error': f'Register number "{reg}" is already registered'}), 400
         supabase.table('students').insert({
-            'reg': data['reg'], 'name': data['name'], 'dept': data['dept'], 'spec': data.get('spec', ''), 
-            'batch': data['batch'], 'email': data['email'], 'phone': data['phone'], 'cgpa': data['cgpa'], 
-            'sem': data['sem'], 'credits': data.get('credits', 0), 'pass': int(data['pass']==True), 'disc': 0, 'att': 100
+            'reg': reg, 'name': name, 'dept': dept, 'spec': spec, 
+            'batch': batch, 'email': email, 'phone': phone, 'cgpa': float(data.get('cgpa', 8.0)), 
+            'sem': int(sem), 'credits': int(data.get('credits', 0)), 'pass': int(data.get('pass', True)==True), 'disc': 0, 'att': 100.0
         }).execute()
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
-@app.route('/api/students/<reg>', methods=['DELETE'])
-@require_auth('admin')
-def delete_student(reg):
-    # Sanitize reg to prevent path traversal
-    if not reg.replace('-','').replace('_','').isalnum():
-        return jsonify({'success': False, 'error': 'Invalid ID format'}), 400
-    if use_sqlite:
+@app.route('/api/students/<reg>', methods=['DELETE', 'PUT'])
+@require_auth('admin', 'student')
+def manage_student_item(reg):
+    if request.method == 'DELETE':
+        if not reg.replace('-','').replace('_','').isalnum():
+            return jsonify({'success': False, 'error': 'Invalid ID format'}), 400
+        if use_sqlite:
+            try:
+                with get_db() as conn:
+                    conn.execute('DELETE FROM student_courses WHERE student_reg=?', (reg,))
+                    conn.execute('DELETE FROM attendance_records WHERE student_reg=?', (reg,))
+                    try: conn.execute('DELETE FROM od_requests WHERE student_reg=?', (reg,))
+                    except Exception: pass
+                    try: conn.execute('DELETE FROM disciplinary WHERE student=?', (reg,))
+                    except Exception: pass
+                    conn.execute('DELETE FROM students WHERE reg=?', (reg,))
+                    conn.commit()
+                return jsonify({'success': True})
+            except Exception as e:
+                return jsonify({'success': False, 'error': str(e)}), 400
+
+        if not supabase: return jsonify({'success': False, 'error': 'Supabase not configured'}), 500
         try:
-            with get_db() as conn:
-                conn.execute('DELETE FROM disciplinary WHERE student=?', (reg,))
-                conn.execute('DELETE FROM students WHERE reg=?', (reg,))
-                conn.commit()
+            supabase.table('student_courses').delete().eq('student_reg', reg).execute()
+            supabase.table('attendance_records').delete().eq('student_reg', reg).execute()
+            supabase.table('od_requests').delete().eq('student_reg', reg).execute()
+            supabase.table('disciplinary').delete().eq('student', reg).execute()
+            supabase.table('students').delete().eq('reg', reg).execute()
             return jsonify({'success': True})
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)}), 400
 
-    if not supabase: return jsonify({'success': False, 'error': 'Supabase not configured'}), 500
-    try:
-        supabase.table('disciplinary').delete().eq('student', reg).execute()
-        supabase.table('students').delete().eq('reg', reg).execute()
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
+    elif request.method == 'PUT':
+        data = request.get_json(silent=True) or request.get_json(force=True, silent=True) or {}
+        email = str(data.get('email', '')).strip()
+        phone = str(data.get('phone', '')).strip()
+
+        if email and not EMAIL_REGEX.match(email):
+            return jsonify({'success': False, 'error': 'Invalid email address format'}), 400
+        if phone and not PHONE_REGEX.match(phone):
+            return jsonify({'success': False, 'error': 'Phone number must be a valid 10-digit number'}), 400
+
+        if use_sqlite:
+            try:
+                with get_db() as conn:
+                    st_row = conn.execute('SELECT * FROM students WHERE reg=?', (reg,)).fetchone()
+                    if not st_row:
+                        return jsonify({'success': False, 'error': 'Student not found'}), 404
+                    st = dict(st_row)
+                    name = data.get('name', st.get('name', ''))
+                    dept = data.get('dept', st.get('dept', ''))
+                    spec = data.get('spec', st.get('spec', ''))
+                    batch = data.get('batch', st.get('batch', '2026'))
+                    cgpa = float(data.get('cgpa', st.get('cgpa', 8.0)))
+                    sem = int(data.get('sem', st.get('sem', 1)))
+                    pass_val = int(data.get('pass', st.get('pass', True))==True)
+                    
+                    conn.execute('''UPDATE students SET name=?, dept=?, spec=?, batch=?, email=?, phone=?, cgpa=?, sem=?, pass=? WHERE reg=?''',
+                                 (name, dept, spec, batch, email or st.get('email', ''), phone or st.get('phone', ''), cgpa, sem, pass_val, reg))
+                    conn.commit()
+                return jsonify({'success': True})
+            except Exception as e:
+                return jsonify({'success': False, 'error': str(e)}), 400
+
+        if not supabase: return jsonify({'success': False}), 500
+        try:
+            supabase.table('students').update({
+                'name': data.get('name'), 'dept': data.get('dept'), 'spec': data.get('spec'),
+                'email': email, 'phone': phone, 'cgpa': data.get('cgpa'), 'sem': data.get('sem')
+            }).eq('reg', reg).execute()
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/notifications', methods=['POST'])
 @require_auth('admin')
@@ -517,23 +545,31 @@ def create_course():
 @app.route('/api/enroll', methods=['POST'])
 @require_auth('admin', 'student')
 def enroll_student():
-    data = request.json
+    data = request.get_json(silent=True) or request.get_json(force=True, silent=True) or {}
+    student_reg = data.get('student_reg')
+    course_code = data.get('course_code')
+
+    if not student_reg or not course_code:
+        return jsonify({'success': False, 'error': 'Missing student_reg or course_code'}), 400
+
     if use_sqlite:
         try:
             with get_db() as conn:
-                cur = conn.execute('SELECT * FROM student_courses WHERE student_reg=? AND course_code=?', (data['student_reg'], data['course_code'])).fetchone()
-                if not cur:
-                    conn.execute('INSERT INTO student_courses (student_reg, course_code, status) VALUES (?, ?, "Pending")', (data['student_reg'], data['course_code']))
-                    conn.commit()
+                cur = conn.execute('SELECT * FROM student_courses WHERE student_reg=? AND course_code=?', (student_reg, course_code)).fetchone()
+                if cur:
+                    return jsonify({'success': False, 'error': f'Already enrolled or pending approval for {course_code}'}), 400
+                conn.execute('INSERT INTO student_courses (student_reg, course_code, status) VALUES (?, ?, "Pending")', (student_reg, course_code))
+                conn.commit()
             return jsonify({'success': True})
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)}), 400
 
     if not supabase: return jsonify({'success': False, 'error': 'Supabase not configured'}), 500
     try:
-        cur = supabase.table('student_courses').select('*').eq('student_reg', data['student_reg']).eq('course_code', data['course_code']).execute().data
-        if not cur:
-            supabase.table('student_courses').insert({'id': get_next_id_supabase('student_courses'), 'student_reg': data['student_reg'], 'course_code': data['course_code'], 'status': 'Pending'}).execute()
+        cur = supabase.table('student_courses').select('*').eq('student_reg', student_reg).eq('course_code', course_code).execute().data
+        if cur:
+            return jsonify({'success': False, 'error': f'Already enrolled or pending approval for {course_code}'}), 400
+        supabase.table('student_courses').insert({'id': get_next_id_supabase('student_courses'), 'student_reg': student_reg, 'course_code': course_code, 'status': 'Pending'}).execute()
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
@@ -571,6 +607,27 @@ def approve_enrollment():
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)}), 400
 
+@app.route('/api/courses/<code>', methods=['DELETE'])
+@require_auth('admin')
+def delete_course(code):
+    if use_sqlite:
+        try:
+            with get_db() as conn:
+                conn.execute('DELETE FROM student_courses WHERE course_code=?', (code,))
+                conn.execute('DELETE FROM courses WHERE code=?', (code,))
+                conn.commit()
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 400
+
+    if not supabase: return jsonify({'success': False}), 500
+    try:
+        supabase.table('student_courses').delete().eq('course_code', code).execute()
+        supabase.table('courses').delete().eq('code', code).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
 @app.route('/api/attendance', methods=['POST'])
 @require_auth('admin', 'faculty')
 def submit_bulk_attendance():
@@ -578,9 +635,19 @@ def submit_bulk_attendance():
     if use_sqlite:
         try:
             with get_db() as conn:
+                affected = set()
                 for r in records:
                     conn.execute('INSERT INTO attendance_records (date, course, status, student_reg) VALUES (?, ?, ?, ?)',
                                  (r['date'], r['course'], r['status'], r['student_reg']))
+                    affected.add(r['student_reg'])
+                
+                # Dynamic Attendance Recalculation per student
+                for reg in affected:
+                    tot = conn.execute('SELECT COUNT(*) FROM attendance_records WHERE student_reg=?', (reg,)).fetchone()[0]
+                    pres = conn.execute("SELECT COUNT(*) FROM attendance_records WHERE student_reg=? AND status='Present'", (reg,)).fetchone()[0]
+                    if tot > 0:
+                        new_att = round((pres / tot) * 100.0, 1)
+                        conn.execute('UPDATE students SET att=? WHERE reg=?', (new_att, reg))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:

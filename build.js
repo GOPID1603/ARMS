@@ -3,13 +3,9 @@ const path = require('path');
 
 const filesToCopy = [
   'index.html',
-  'admin_avatar.png',
   's360_logo.png',
   'student_avatar.png',
   'zara_logo.jpg',
-  'dataset.csv',
-  'final_dataset.csv',
-  'student360_dataset.csv',
   'dump.json'
 ];
 

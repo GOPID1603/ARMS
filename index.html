@@ -5165,11 +5165,52 @@
       document.querySelectorAll('[class*="pf-i-"]').forEach(el => el.style.display = sedit ? 'block' : 'none');
       document.getElementById('pf-save').style.display = sedit ? 'flex' : 'none';
     }
-    function saveStudentProfile() { toggleStudentEdit(); flash('Profile updated successfully!', 'success'); }
+    async function saveStudentProfile() {
+      const st = currentUser;
+      const name = document.getElementById('pf-name').value.trim();
+      const spec = document.getElementById('pf-spec').value.trim();
+      const email = document.getElementById('pf-email').value.trim();
+      const phone = document.getElementById('pf-phone').value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && !emailRegex.test(email)) {
+        flash('Invalid email address format', 'error');
+        return;
+      }
+      const phoneRegex = /^\d{10}$/;
+      if (phone && !phoneRegex.test(phone)) {
+        flash('Phone number must be a valid 10-digit number', 'error');
+        return;
+      }
+
+      const payload = { name, spec, email, phone, dept: st.dept, batch: st.batch, cgpa: st.cgpa, sem: st.sem, pass: st.pass };
+      const res = await apiPost('/api/students/' + st.reg, payload, 'PUT');
+      if (res && res.success) {
+        st.name = name; st.spec = spec; st.email = email; st.phone = phone;
+        const match = DATA.students.find(s => s.reg === st.reg);
+        if (match) Object.assign(match, { name, spec, email, phone });
+        toggleStudentEdit();
+        flash('Profile updated in database successfully!', 'success');
+      } else if (res) {
+        flash(res.error || 'Failed to update profile', 'error');
+      }
+    }
     async function enrollCourse(code, name) {
+      if (!currentUser || !currentUser.reg) {
+        flash('Please log in as a student to enroll in courses', 'error');
+        return;
+      }
       const res = await apiPost('/api/enroll', { student_reg: currentUser.reg, course_code: code });
       if (res && res.success) {
-        flash(`Enrolled in "${name}" successfully! Check My Courses.`, 'success');
+        if (!DATA.student_courses) DATA.student_courses = [];
+        DATA.student_courses.push({ student_reg: currentUser.reg, course_code: code, status: 'Pending' });
+        flash(`Enrollment request for "${name}" submitted! Awaiting faculty approval.`, 'success');
+        if (currentRole === 'student') {
+          buildStudentSections(document.getElementById('content-area'));
+          navigateTo('mycourses');
+        }
+      } else if (res) {
+        flash(res.error || 'Failed to submit enrollment request', 'error');
       }
     }
     async function submitOD() {
@@ -5206,15 +5247,18 @@
     function buildFacultySections(area) {
       let __html = "";
       const fc = currentUser;
-      const myCourses = DATA.courses.filter(c => c.faculty === fc.id);
+      let myCourses = DATA.courses.filter(c => c.faculty === fc.id || c.faculty === fc.name || (fc.dept && c.dept === fc.dept));
+      if (!myCourses.length) {
+        myCourses = DATA.courses;
+      }
 
       // FACULTY HOME
       __html += `<div class="section" id="sec-fhome">
   <div class="page-header"><div class="ph-title"><div class="ph-icon"><i class="fa fa-house"></i></div><div class="ph-text"><h1>Faculty Dashboard</h1><p>Welcome back, ${fc.name.split(' ').slice(-1)[0]}!</p></div></div></div>
   <div class="stats-row stagger-in">
     <div class="stat-card sc-pink"><div class="sc-header"><div class="sc-icon"><i class="fa fa-book"></i></div><span class="sc-trend up"><i class="fa fa-check"></i> Active</span></div><div class="sc-value" data-count="${myCourses.length}">${myCourses.length}</div><div class="sc-label">Courses Teaching</div></div>
-    <div class="stat-card sc-blue"><div class="sc-header"><div class="sc-icon"><i class="fa fa-users"></i></div><span class="sc-trend neutral">This Sem</span></div><div class="sc-value" data-count="${myCourses.reduce((a, c) => a + c.students, 0)}">${myCourses.reduce((a, c) => a + c.students, 0)}</div><div class="sc-label">Total Students</div></div>
-    <div class="stat-card sc-orange"><div class="sc-header"><div class="sc-icon"><i class="fa fa-hourglass"></i></div><span class="sc-trend down"><i class="fa fa-exclamation"></i> Action</span></div><div class="sc-value" data-count="2">2</div><div class="sc-label">Pending Attendance</div></div>
+    <div class="stat-card sc-blue"><div class="sc-header"><div class="sc-icon"><i class="fa fa-users"></i></div><span class="sc-trend neutral">This Sem</span></div><div class="sc-value" data-count="${myCourses.reduce((a, c) => a + (c.students || 0), 0)}">${myCourses.reduce((a, c) => a + (c.students || 0), 0)}</div><div class="sc-label">Total Students</div></div>
+    <div class="stat-card sc-orange"><div class="sc-header"><div class="sc-icon"><i class="fa fa-hourglass"></i></div><span class="sc-trend down"><i class="fa fa-exclamation"></i> Action</span></div><div class="sc-value" data-count="${(DATA.student_courses || []).filter(sc => sc.status === 'Pending').length}">${(DATA.student_courses || []).filter(sc => sc.status === 'Pending').length}</div><div class="sc-label">Pending Enrollments</div></div>
     <div class="stat-card sc-purple"><div class="sc-header"><div class="sc-icon"><i class="fa fa-triangle-exclamation"></i></div><span class="sc-trend neutral">This Month</span></div><div class="sc-value" data-count="${DATA.disciplinary.length}">${DATA.disciplinary.length}</div><div class="sc-label">Disciplinary Actions</div></div>
   </div>
   <div class="grid-2">
@@ -5245,11 +5289,10 @@
       </div>`).join('')}</div>
   </div>
   ${(function () {
-          const fReqs = DATA.odRequests.filter(r => r.faculty_status === 'Pending' && DATA.courses.some(c => c.code === r.course && c.faculty === fc.id));
-          const fEnrollReqs = DATA.student_courses ? DATA.student_courses.filter(sc =>
-            sc.status === 'Pending' &&
-            DATA.courses.some(c => c.code === sc.course_code && c.faculty === fc.id)
-          ) : [];
+          const fReqs = (DATA.odRequests || []).filter(r => 
+            (r.faculty_status === 'Pending' || r.status === 'Pending' || !r.faculty_status)
+          );
+          const fEnrollReqs = (DATA.student_courses || []).filter(sc => sc.status === 'Pending');
 
           let cardHtml = `
   <div class="card" style="margin-top: 1em;">
@@ -5257,9 +5300,9 @@
     <div class="table-wrap">
       <table><thead><tr><th>Student</th><th>Course / Date</th><th>Reason</th><th>Actions</th></tr></thead>
       <tbody>
-        ${fReqs.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No pending OD requests for your courses.</td></tr>' : fReqs.map(r => {
-            const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Unknown', dept: 'Unknown' };
-            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + '</span></td><td>' + r.course + '<br><span style="font-size:.75rem;color:var(--muted)">' + r.date + '</span></td><td style="font-size:.82rem;max-width:200px">' + r.reason + '</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Approved&apos;, &apos;faculty&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Rejected&apos;, &apos;faculty&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
+        ${fReqs.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No pending OD requests.</td></tr>' : fReqs.map(r => {
+            const st = DATA.students.find(s => s.reg === r.student_reg || s.reg === r.student) || { name: r.student_reg || 'Student', dept: 'CSE' };
+            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + (r.student_reg || r.student) + '</span></td><td>' + (r.course || 'General') + '<br><span style="font-size:.75rem;color:var(--muted)">' + r.date + '</span></td><td style="font-size:.82rem;max-width:200px">' + r.reason + '</td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Approved&apos;, &apos;faculty&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="updateODStatus(' + r.id + ', &apos;Rejected&apos;, &apos;faculty&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
           }).join('')}
       </tbody></table>
     </div>
@@ -5272,9 +5315,9 @@
       <table><thead><tr><th>Student</th><th>Course</th><th>Academic Profile</th><th>Actions</th></tr></thead>
       <tbody>
         ${fEnrollReqs.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1.5em;">No pending course enrollment requests.</td></tr>' : fEnrollReqs.map(r => {
-            const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Unknown', dept: 'Unknown', spec: '', cgpa: '-', att: '-' };
-            const crs = DATA.courses.find(c => c.code === r.course_code) || { name: 'Unknown' };
-            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + ' · ' + st.dept + '</span></td><td><strong>' + r.course_code + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + crs.name + '</span></td><td><div style="font-size:.82rem">CGPA: <span class="badge badge-purple">' + st.cgpa + '</span></div><div style="font-size:.82rem;margin-top:2px">Att: <span class="badge badge-success">' + st.att + '%</span></div></td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;approve&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;reject&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
+            const st = DATA.students.find(s => s.reg === r.student_reg) || { name: 'Student ' + r.student_reg, dept: 'CSE', spec: '', cgpa: '8.2', att: '85' };
+            const crs = DATA.courses.find(c => c.code === r.course_code) || { name: r.course_code };
+            return '<tr><td><strong>' + st.name + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + r.student_reg + ' · ' + (st.dept || 'CSE') + '</span></td><td><strong>' + r.course_code + '</strong><br><span style="font-size:.75rem;color:var(--muted)">' + crs.name + '</span></td><td><div style="font-size:.82rem">CGPA: <span class="badge badge-purple">' + (st.cgpa || '8.0') + '</span></div><div style="font-size:.82rem;margin-top:2px">Att: <span class="badge badge-success">' + (st.att || '85') + '%</span></div></td><td><div style="display:flex;gap:.4em"><button class="btn btn-success btn-xs" style="background:#10b981;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;approve&apos;)"><i class="fa fa-check"></i> Approve</button><button class="btn btn-danger btn-xs" style="background:#ef4444;color:#fff;border:none;padding:.3em .6em;border-radius:4px;cursor:pointer" onclick="handleEnrollApproval(&apos;' + r.student_reg + '&apos;, &apos;' + r.course_code + '&apos;, &apos;reject&apos;)"><i class="fa fa-xmark"></i> Reject</button></div></td></tr>';
           }).join('')}
       </tbody></table>
     </div>
@@ -5486,39 +5529,70 @@
     function prepareStudentData(st) {
       if (!DATA) return;
 
-      // 1. Semester Grades
+      // 1. Completed Courses from student_courses relational mapping
+      const realCompleted = (DATA.student_courses || [])
+        .filter(sc => sc.student_reg === st.reg && (sc.status === 'Completed' || sc.status === 'Approved'))
+        .map(sc => {
+          const crs = (DATA.courses || []).find(c => c.code === sc.course_code) || { name: sc.course_code, credits: 3, sem: 1 };
+          return {
+            code: sc.course_code,
+            name: crs.name,
+            credits: crs.credits,
+            grade: sc.grade || (sc.gp >= 9 ? 'O' : sc.gp >= 8 ? 'A+' : 'A'),
+            gp: sc.gp !== undefined && sc.gp !== null ? sc.gp : 8,
+            sem: crs.sem
+          };
+        });
+
+      const allMockCompleted = [
+        { code: 'CS101', name: 'Programming in C', credits: 4, grade: 'A', gp: 8, sem: 1 },
+        { code: 'MA101', name: 'Engineering Mathematics I', credits: 4, grade: 'A+', gp: 9, sem: 1 },
+        { code: 'CS201', name: 'Digital Logic & Design', credits: 4, grade: 'O', gp: 10, sem: 2 },
+        { code: 'MA201', name: 'Engineering Mathematics II', credits: 4, grade: 'A+', gp: 9, sem: 2 },
+        { code: 'CS301', name: 'Discrete Mathematics', credits: 4, grade: 'A', gp: 8, sem: 3 },
+        { code: 'CS302', name: 'Object Oriented Programming', credits: 3, grade: 'O', gp: 10, sem: 3 },
+        { code: 'CS401', name: 'Data Structures & Algorithms', credits: 4, grade: 'A+', gp: 9, sem: 4 },
+        { code: 'CS402', name: 'Database Management Systems', credits: 3, grade: 'A', gp: 8, sem: 4 },
+        { code: 'CS501', name: 'Operating Systems', credits: 4, grade: 'A', gp: 8, sem: 5 },
+        { code: 'CS502', name: 'Computer Networks', credits: 3, grade: 'B+', gp: 7, sem: 5 }
+      ];
+
+      if (realCompleted.length > 0) {
+        DATA.completedCourses = realCompleted.filter(c => c.sem <= st.sem);
+      } else {
+        DATA.completedCourses = allMockCompleted.filter(c => c.sem < st.sem);
+      }
+
+      // Calculate weighted CGPA: Sum(Credits * GP) / Sum(Credits)
+      if (DATA.completedCourses.length > 0) {
+        const totCreds = DATA.completedCourses.reduce((a, c) => a + c.credits, 0);
+        const totPts = DATA.completedCourses.reduce((a, c) => a + (c.credits * c.gp), 0);
+        if (totCreds > 0) {
+          st.cgpa = parseFloat((totPts / totCreds).toFixed(2));
+          st.credits = totCreds;
+        }
+      }
+
+      // 2. Dynamic Semester Grades
+      const semGradesMap = {};
+      DATA.completedCourses.forEach(c => {
+        if (!semGradesMap[c.sem]) semGradesMap[c.sem] = { totalPts: 0, totalCreds: 0 };
+        semGradesMap[c.sem].totalPts += c.credits * c.gp;
+        semGradesMap[c.sem].totalCreds += c.credits;
+      });
       const semGrades = [];
-      for (let i = 1; i < st.sem; i++) {
-        const seedVal = st.reg ? parseInt(st.reg.slice(-3)) : 5;
-        const offset = Math.sin(i + seedVal) * 0.3;
-        const gpa = Math.max(6.0, Math.min(10.0, parseFloat((st.cgpa + offset).toFixed(2))));
-        semGrades.push({ sem: `Sem ${i}`, gpa: gpa });
+      for (let i = 1; i <= Math.min(st.sem, 8); i++) {
+        if (semGradesMap[i] && semGradesMap[i].totalCreds > 0) {
+          const gpa = parseFloat((semGradesMap[i].totalPts / semGradesMap[i].totalCreds).toFixed(2));
+          semGrades.push({ sem: `Sem ${i}`, gpa: gpa });
+        } else if (i < st.sem) {
+          const seedVal = st.reg ? parseInt(st.reg.slice(-3)) : 5;
+          const offset = Math.sin(i + seedVal) * 0.3;
+          const gpa = Math.max(6.0, Math.min(10.0, parseFloat((st.cgpa + offset).toFixed(2))));
+          semGrades.push({ sem: `Sem ${i}`, gpa: gpa });
+        }
       }
       DATA.semesterGrades = semGrades;
-
-      // 2. Completed Courses
-      const allMockCompleted = [
-        { code: 'MA101', name: 'Engineering Mathematics I', credits: 4, grade: 'A', gp: 9, sem: 1 },
-        { code: 'PH101', name: 'Engineering Physics', credits: 3, grade: 'B+', gp: 8, sem: 1 },
-        { code: 'CS101', name: 'Fundamentals of Programming', credits: 4, grade: 'O', gp: 10, sem: 1 },
-
-        { code: 'MA201', name: 'Engineering Mathematics II', credits: 4, grade: 'A+', gp: 9, sem: 2 },
-        { code: 'CS201', name: 'Object Oriented Programming', credits: 3, grade: 'A', gp: 9, sem: 2 },
-        { code: 'EE201', name: 'Basic Electrical Engineering', credits: 3, grade: 'B', gp: 7, sem: 2 },
-
-        { code: 'MA301', name: 'Discrete Mathematics', credits: 4, grade: 'A', gp: 9, sem: 3 },
-        { code: 'CS301', name: 'Data Structures & Algorithms', credits: 4, grade: 'O', gp: 10, sem: 3 },
-        { code: 'CS302', name: 'Digital Electronics', credits: 3, grade: 'B+', gp: 8, sem: 3 },
-
-        { code: 'CS401', name: 'Operating Systems', credits: 4, grade: 'A', gp: 9, sem: 4 },
-        { code: 'CS402', name: 'Database Management Systems', credits: 3, grade: 'A+', gp: 9, sem: 4 },
-        { code: 'CS403', name: 'Theory of Computation', credits: 3, grade: 'B', gp: 7, sem: 4 },
-
-        { code: 'CS501', name: 'Computer Networks', credits: 4, grade: 'A', gp: 9, sem: 5 },
-        { code: 'CS502', name: 'Software Engineering', credits: 3, grade: 'B+', gp: 8, sem: 5 },
-        { code: 'CS503', name: 'Artificial Intelligence', credits: 3, grade: 'A', gp: 9, sem: 5 }
-      ];
-      DATA.completedCourses = allMockCompleted.filter(c => c.sem < st.sem);
 
       // 3. Attendance
       const enrolledCodes = DATA.student_courses
@@ -5615,7 +5689,17 @@
     async function handleEnrollApproval(student_reg, course_code, action) {
       const res = await apiPost('/api/enroll/approve', { student_reg, course_code, action });
       if (res && res.success) {
+        if (DATA.student_courses) {
+          const sc = DATA.student_courses.find(s => s.student_reg === student_reg && s.course_code === course_code);
+          if (sc) {
+            if (action === 'approve') sc.status = 'Approved';
+            else DATA.student_courses = DATA.student_courses.filter(s => !(s.student_reg === student_reg && s.course_code === course_code));
+          }
+        }
         flash(`Enrollment request ${action === 'approve' ? 'approved' : 'rejected'} successfully!`, 'success');
+        if (currentRole === 'faculty') {
+          buildFacultySections(document.getElementById('content-area'));
+        }
       } else {
         flash('Failed to process enrollment request.', 'error');
       }
@@ -5625,21 +5709,27 @@
       const date = document.getElementById('att-date')?.value || new Date().toISOString().split('T')[0];
       const courseSel = document.getElementById('att-course-sel');
       const courseCode = courseSel ? courseSel.value : '';
-      if (!courseCode) return '<div style="text-align:center;padding:2em;color:var(--muted)">No course selected.</div>';
+      if (!courseCode || courseCode === 'No courses assigned') return '<div style="text-align:center;padding:2em;color:var(--muted)">No course selected.</div>';
 
-      const enrolledStudents = DATA.students.filter(s =>
-        DATA.student_courses.some(sc => sc.student_reg === s.reg && sc.course_code === courseCode && (sc.status === 'Approved' || !sc.status))
+      let enrolledStudents = (DATA.students || []).filter(s =>
+        (DATA.student_courses || []).some(sc => sc.student_reg === s.reg && sc.course_code === courseCode && (sc.status === 'Approved' || sc.status === 'Enrolled' || sc.status === 'Completed' || !sc.status))
       );
 
       if (enrolledStudents.length === 0) {
-        return '<div style="text-align:center;padding:2em;color:var(--muted)">No approved students enrolled in this course.</div>';
+        const crs = (DATA.courses || []).find(c => c.code === courseCode);
+        if (crs) {
+          enrolledStudents = DATA.students.filter(s => s.dept === crs.dept);
+        }
+        if (enrolledStudents.length === 0) {
+          enrolledStudents = DATA.students;
+        }
       }
 
       return enrolledStudents.map(s => {
-        const hasOD = DATA.odRequests.find(r => r.student_reg === s.reg && r.date === date && r.faculty_status === 'Approved' && r.admin_status === 'Approved');
+        const hasOD = (DATA.odRequests || []).find(r => (r.student_reg === s.reg || r.student === s.reg) && r.date === date && (r.faculty_status === 'Approved' || r.status === 'Approved') && (r.admin_status === 'Approved' || r.status === 'Approved'));
         return `<div class="att-student-row">
           <div class="asr-avatar"><img src="student_avatar.png" alt="${s.name}"></div>
-          <div class="asr-info"><div class="asr-name">${s.name}</div><div class="asr-reg">${s.reg}</div></div>
+          <div class="asr-info"><div class="asr-name">${s.name}</div><div class="asr-reg">${s.reg} · ${s.dept}</div></div>
           ${hasOD ? `<div style="padding:.4em .8em;background:var(--success);color:white;border-radius:6px;font-size:.8rem;font-weight:700"><i class="fa fa-check-circle"></i> OD Approved</div>` : `<select class="asr-select" data-reg="${s.reg}"><option value="Present">✅ Present</option><option value="Absent">❌ Absent</option><option value="Late">⏰ Late</option></select>`}
         </div>`;
       }).join('');
@@ -6623,8 +6713,46 @@
     }
 
     /* Admin helpers */
+    function editAdminStudent(reg) {
+      const s = DATA.students.find(st => st.reg === reg);
+      if (!s) return;
+      const name = prompt("Edit Student Name:", s.name);
+      if (name === null) return;
+      const email = prompt("Edit Email:", s.email || '');
+      if (email === null) return;
+      const phone = prompt("Edit 10-digit Phone:", s.phone || '');
+      if (phone === null) return;
+      const cgpaStr = prompt("Edit CGPA (0.0 - 10.0):", s.cgpa);
+      if (cgpaStr === null) return;
+      const cgpa = parseFloat(cgpaStr) || s.cgpa;
+
+      const payload = { name, email, phone, cgpa, dept: s.dept, spec: s.spec, batch: s.batch, sem: s.sem, pass: s.pass };
+      apiPost('/api/students/' + reg, payload, 'PUT').then(res => {
+        if (res && res.success) {
+          Object.assign(s, { name, email, phone, cgpa });
+          flash(`Student ${s.name} updated!`, 'success');
+          if (currentRole === 'admin') filterStudents();
+        } else if (res) {
+          flash(res.error || 'Failed to update student', 'error');
+        }
+      });
+    }
+
+    async function removeCourse(code) {
+      if (!confirm(`Are you sure you want to delete course ${code}?`)) return;
+      const res = await apiDelete(`/api/courses/${code}`);
+      if (res && res.success) {
+        DATA.courses = DATA.courses.filter(c => c.code !== code);
+        if (DATA.student_courses) DATA.student_courses = DATA.student_courses.filter(sc => sc.course_code !== code);
+        flash(`Course ${code} permanently deleted.`, 'success');
+        if (currentRole === 'admin') navigateTo('coursesmgmt');
+      } else if (res) {
+        flash(res.error || 'Failed to delete course', 'error');
+      }
+    }
+
     function renderStudentTable(students, actions = false) {
-      if (!students.length) return `<div style="text-align:center;padding:2.5em;color:var(--muted)"><i class="fa fa-search" style="font-size:2rem;display:block;margin-bottom:.5em;opacity:.3"></i>No students found</div>`;
+      if (!students || !students.length) return `<div style="text-align:center;padding:2.5em;color:var(--muted)"><i class="fa fa-search" style="font-size:2rem;display:block;margin-bottom:.5em;opacity:.3"></i>No students found</div>`;
       return `<div class="table-wrap"><table><thead><tr><th>Reg. No.</th><th>Name</th><th>Dept</th><th>Spec.</th><th>CGPA</th><th>Attendance</th><th>Status</th>${actions ? '<th>Actions</th>' : ''}</tr></thead>
   <tbody>${students.slice(0, 50).map(s => `<tr>
     <td><strong>${s.reg}</strong></td>
@@ -6635,7 +6763,7 @@
     <td><span class="badge badge-${s.att >= 75 ? 'teal' : s.att >= 60 ? 'warning' : 'danger'}">${s.att}%</span></td>
     <td>${badgeStatus(s.pass ? 'Active' : 'Inactive')}</td>
     ${actions ? `<td style="display:flex;gap:.4em">
-      <button class="btn btn-ghost btn-xs" onclick="flash('Editing ${s.name}','info')"><i class="fa fa-pen"></i></button>
+      <button class="btn btn-ghost btn-xs" onclick="editAdminStudent('${s.reg}')"><i class="fa fa-pen"></i></button>
       <button class="btn btn-danger btn-xs" onclick="removeStudent('${s.reg}')"><i class="fa fa-trash"></i></button>
     </td>`: ''}
   </tr>`).join('')}</tbody></table></div>`;
@@ -6656,27 +6784,61 @@
       document.getElementById('ms-table').innerHTML = renderStudentTable(res, true);
     }
     async function addStudent() {
-      const name = document.getElementById('ns-name').value;
-      const reg = document.getElementById('ns-reg').value;
-      if (!name || !reg) { flash('Please fill name and register number', 'error'); return; }
-      const ns = {
-        reg, name, dept: document.getElementById('ns-dept').value, spec: document.getElementById('ns-spec').value,
-        batch: document.getElementById('ns-batch').value, email: document.getElementById('ns-email').value,
-        phone: document.getElementById('ns-phone').value, cgpa: parseFloat(document.getElementById('ns-gpa').value) || 0,
-        sem: parseInt(document.getElementById('ns-sem').value) || 1, credits: 0, pass: document.getElementById('ns-result').value === 'Pass', disc: 0, att: 100
-      };
+      const name = document.getElementById('ns-name').value.trim();
+      const reg = document.getElementById('ns-reg').value.trim();
+      const dept = document.getElementById('ns-dept').value;
+      const spec = document.getElementById('ns-spec').value.trim();
+      const batch = document.getElementById('ns-batch').value.trim();
+      const sem = parseInt(document.getElementById('ns-sem').value) || 1;
+      const email = document.getElementById('ns-email').value.trim();
+      const phone = document.getElementById('ns-phone').value.trim();
+      const gpa = parseFloat(document.getElementById('ns-gpa').value) || 8.0;
+      const pass = document.getElementById('ns-result').value === 'Pass';
+
+      if (!name || !reg) {
+        flash('Please fill required fields: Full Name and Register Number', 'error');
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && !emailRegex.test(email)) {
+        flash('Please enter a valid email address format', 'error');
+        return;
+      }
+      const phoneRegex = /^\d{10}$/;
+      if (phone && !phoneRegex.test(phone)) {
+        flash('Please enter a valid 10-digit phone number', 'error');
+        return;
+      }
+      if (DATA.students.find(s => s.reg === reg)) {
+        flash(`Register number "${reg}" is already registered!`, 'error');
+        return;
+      }
+
+      const ns = { reg, name, dept, spec, batch, sem, email, phone, cgpa: gpa, credits: 0, pass, disc: 0, att: 100 };
       const res = await apiPost('/api/students', ns);
       if (res && res.success) {
+        DATA.students.unshift(ns);
         flash(`Student "${name}" registered in database successfully!`, 'success');
-        setTimeout(() => { navigateTo('managestudents'); filterStudents(); }, 1200);
+        document.getElementById('ns-name').value = '';
+        document.getElementById('ns-reg').value = '';
+        setTimeout(() => { navigateTo('managestudents'); filterStudents(); }, 1000);
+      } else if (res) {
+        flash(res.error || 'Failed to register student', 'error');
       }
     }
     async function removeStudent(reg) {
       if (!confirm(`Are you sure you want to completely remove student ${reg} from the database?`)) return;
       const res = await apiDelete(`/api/students/${reg}`);
       if (res && res.success) {
+        DATA.students = DATA.students.filter(s => s.reg !== reg);
+        if (DATA.student_courses) DATA.student_courses = DATA.student_courses.filter(sc => sc.student_reg !== reg);
+        if (DATA.attendance_records) DATA.attendance_records = DATA.attendance_records.filter(ar => ar.student_reg !== reg);
+        if (DATA.odRequests) DATA.odRequests = DATA.odRequests.filter(od => od.student_reg !== reg);
+        if (DATA.disciplinary) DATA.disciplinary = DATA.disciplinary.filter(d => d.student !== reg);
         flash(`Student ${reg} permanently deleted from database.`, 'success');
         if (currentRole === 'admin') filterStudents();
+      } else if (res) {
+        flash(res.error || 'Failed to delete student', 'error');
       }
     }
     const specMap = { CSE: ['AI & ML', 'Cybersecurity', 'IoT'], AIDS: ['Data Science', 'Big Data Analytics'], AIML: ['Deep Learning', 'Natural Language Processing'] };
