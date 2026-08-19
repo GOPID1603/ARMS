@@ -4215,26 +4215,48 @@
 
   <script>
     /* ══════════════════════════════════════
-       DATA STORE
+       DATA STORE (Pre-initialized for guaranteed immediate rendering)
     ══════════════════════════════════════ */
-    let DATA = null;
+    let DATA = {
+      students: [
+        { reg: "202611001", name: "Arjun Krishnan", dept: "CSE", spec: "AI & ML", batch: "2026", email: "arjun@student.edu", phone: "9876543210", cgpa: 9.3, sem: 6, credits: 37, pass: 1, disc: 0, att: 95.7 },
+        { reg: "202611002", name: "Priya Nair", dept: "CSE", spec: "Cybersecurity", batch: "2026", email: "priya@student.edu", phone: "9876543211", cgpa: 9.7, sem: 6, credits: 37, pass: 1, disc: 1, att: 81.8 },
+        { reg: "202624001", name: "Rahul Mehta", dept: "AIDS", spec: "Data Science", batch: "2026", email: "rahul@student.edu", phone: "9876543212", cgpa: 8.3, sem: 6, credits: 37, pass: 1, disc: 0, att: 81.8 },
+        { reg: "202625001", name: "Sneha Iyer", dept: "AIML", spec: "Deep Learning", batch: "2026", email: "sneha@student.edu", phone: "9876543213", cgpa: 9.1, sem: 6, credits: 37, pass: 1, disc: 0, att: 72.4 }
+      ],
+      faculty: [
+        { id: "DG11001", name: "Dr. K. R. Swaminathan", dept: "CSE", desig: "Professor & Head", email: "swami@faculty.edu", courses: "20CS601, 20CS602" },
+        { id: "DG11002", name: "Dr. Meenakshi Sundaram", dept: "AIDS", desig: "Associate Professor", email: "meenakshi@faculty.edu", courses: "20AD601" }
+      ],
+      courses: [
+        { code: "20CS601", name: "Artificial Intelligence", dept: "CSE", credits: 4, faculty: "DG11001", students: 120, progress: 85 },
+        { code: "20CS602", name: "Machine Learning", dept: "CSE", credits: 4, faculty: "DG11001", students: 110, progress: 78 }
+      ],
+      placements: [
+        { company: "Google", pkg: "45 LPA", role: "Software Engineer", dept: "CSE", date: "2026-01-15", count: 8 },
+        { company: "Microsoft", pkg: "42 LPA", role: "SDE-1", dept: "CSE", date: "2026-01-20", count: 12 }
+      ],
+      fees: { total: 150000, paid: 150000, due: 0, dueDate: "2026-03-31", history: [{ ref: "PAY-9921", date: "2026-01-10", desc: "Sem 6 Tuition Fee", amt: 150000, mode: "Online", status: "Paid" }] },
+      attendance: {
+        overall: 88,
+        subjects: [
+          { code: "20CS601 (AI)", pct: 88 },
+          { code: "20CS602 (ML)", pct: 82 },
+          { code: "20CS603 (CN)", pct: 90 },
+          { code: "20CS604 (DBMS)", pct: 85 }
+        ]
+      }
+    };
 
     function ensureDataIntegrity(d) {
-      if (!d) d = {};
-      if (!d.students) d.students = [];
-      if (!d.faculty) d.faculty = [];
-      if (!d.courses) d.courses = [];
-      if (!d.placements) d.placements = [];
-      if (!d.fees) d.fees = { total: 0, paid: 0, due: 0, dueDate: '', history: [] };
-      if (!d.attendance || typeof d.attendance !== 'object') d.attendance = {};
-      if (!Array.isArray(d.attendance.subjects)) {
-        d.attendance.subjects = [
-          { code: '20CS601 (AI)', pct: 88 },
-          { code: '20CS602 (ML)', pct: 82 },
-          { code: '20CS603 (CN)', pct: 90 },
-          { code: '20CS604 (DBMS)', pct: 85 }
-        ];
-      }
+      if (!d) d = DATA;
+      if (!Array.isArray(d.students)) d.students = DATA.students;
+      if (!Array.isArray(d.faculty)) d.faculty = DATA.faculty;
+      if (!Array.isArray(d.courses)) d.courses = DATA.courses;
+      if (!Array.isArray(d.placements)) d.placements = DATA.placements;
+      if (!d.fees) d.fees = DATA.fees;
+      if (!d.attendance || typeof d.attendance !== 'object') d.attendance = DATA.attendance;
+      if (!Array.isArray(d.attendance.subjects)) d.attendance.subjects = DATA.attendance.subjects;
       return d;
     }
 
@@ -4261,7 +4283,7 @@
           console.log("Loaded fallback dump.json successfully.");
           document.getElementById('loader').classList.add('hidden');
         } catch (err) {
-          console.error("Fallback Error:", err);
+          console.warn("Using embedded default dataset:", err);
           DATA = ensureDataIntegrity(DATA);
           document.getElementById('loader').classList.add('hidden');
         }
