@@ -45,25 +45,13 @@ jobs:
           echo "Executing Static Analysis & Lint Checks..."
           node -e "console.log('Static syntax check passed')"
 
-      - name: "Stage 5: Deploy to GitHub Pages (gh-pages Branch)"
-        uses: peaceiris/actions-gh-pages@v3
-        continue-on-error: true
+      - name: "Stage 5: Deploy to GitHub Pages"
+        uses: peaceiris/actions-gh-pages@v4
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
           force_orphan: true
-
-      - name: "Stage 5b: Upload Pages Artifact"
-        uses: actions/upload-pages-artifact@v3
-        continue-on-error: true
-        with:
-          path: ./build
-
-      - name: "Stage 5c: Deploy to GitHub Pages (Native Action)"
-        id: deployment
-        uses: actions/deploy-pages@v4
-        continue-on-error: true
 
   e2e-testing-and-reporting:
     name: "Stage 7-13: Deployment Verification & E2E Multi-Domain Testing"
