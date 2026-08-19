@@ -100,18 +100,72 @@ jobs:
           ls -la automation/reports/JSON/ || true
           ls -la automation/reports/Summary/ || true
 
-      - name: "Stage 11: Upload Test Reports and Evidence Artifacts"
+      - name: "Upload Appium Test Report XLS"
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: Automation-Execution-Reports-and-Evidence
+          name: Appium-Test-Report-XLS
+          path: automation/reports/Excel/Appium_Test_Report.xlsx
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload HTML Test Reports"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: HTML-Test-Reports
+          path: automation/reports/HTML/*.html
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload JSON and Summary"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: JSON-and-Summary
           path: |
-            automation/reports/Excel/*.xlsx
-            automation/reports/HTML/*.html
-            automation/reports/JSON/*.json
-            automation/reports/Summary/*.md
-            automation/reports/Screenshots/
-            automation/reports/Logs/
+            automation/reports/JSON/execution-results.json
+            automation/reports/Summary/summary.md
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload Load Test Report XLS"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: Load-Test-Report-XLS
+          path: automation/reports/Excel/Load_Test_Report.xlsx
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload Master Test Report XLS"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: Master-Test-Report-XLS
+          path: |
+            automation/reports/Excel/Automation_Test_Report.xlsx
+            automation/reports/Excel/Passed_Test_Cases.xlsx
+            automation/reports/Excel/Failed_Test_Cases.xlsx
+            automation/reports/Excel/Summary_Report.xlsx
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload Selenium Test Report XLS"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: Selenium-Test-Report-XLS
+          path: automation/reports/Excel/Selenium_Test_Report.xlsx
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: "Upload Vulnerability Test Report XLS"
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: Vulnerability-Test-Report-XLS
+          path: automation/reports/Excel/Vulnerability_Test_Report.xlsx
           if-no-files-found: ignore
           retention-days: 30
 
