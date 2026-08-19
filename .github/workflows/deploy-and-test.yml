@@ -1,4 +1,4 @@
-name: Build, Deploy & Multi-Domain E2E Test Suite
+name: Build Deploy and Multi-Domain E2E Test Suite
 
 on:
   push:
@@ -21,78 +21,78 @@ permissions:
 
 jobs:
   build-and-deploy:
-    name: 🏗️ Stage 1-6: Build & Deploy to GitHub Pages
+    name: "Stage 1-6: Build and Deploy to GitHub Pages"
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Stage 1: Checkout Repository
+      - name: "Stage 1: Checkout Repository"
         uses: actions/checkout@v4
 
-      - name: 🟢 Stage 2: Setup Node.js Environment
+      - name: "Stage 2: Setup Node.js Environment"
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: 📦 Stage 2: Install Node Dependencies
+      - name: "Stage 2: Install Node Dependencies"
         run: |
           npm install --legacy-peer-deps || npm install || true
 
-      - name: ⚙️ Stage 3: Build Application
+      - name: "Stage 3: Build Application"
         run: |
           npm run build || node build.js || true
 
-      - name: 🔍 Stage 4: Static Analysis Check
+      - name: "Stage 4: Static Analysis Check"
         run: |
           echo "Executing Static Analysis & Lint Checks..."
           node -e "console.log('Static syntax check passed')"
 
-      - name: 🚀 Stage 5: Deploy to GitHub Pages (gh-pages Branch)
+      - name: "Stage 5: Deploy to GitHub Pages (gh-pages Branch)"
         uses: peaceiris/actions-gh-pages@v3
         continue-on-error: true
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
           force_orphan: true
 
-      - name: 📦 Stage 5b: Upload Pages Artifact
+      - name: "Stage 5b: Upload Pages Artifact"
         uses: actions/upload-pages-artifact@v3
         continue-on-error: true
         with:
           path: ./build
 
-      - name: 🌐 Stage 5c: Deploy to GitHub Pages (Native Action)
+      - name: "Stage 5c: Deploy to GitHub Pages (Native Action)"
         id: deployment
         uses: actions/deploy-pages@v4
         continue-on-error: true
 
   e2e-testing-and-reporting:
-    name: 🧪 Stage 7-13: Deployment Verification & E2E Multi-Domain Testing
+    name: "Stage 7-13: Deployment Verification & E2E Multi-Domain Testing"
     needs: build-and-deploy
-    if: always()
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     env:
       BASE_URL: ${{ github.event.inputs.base_url || 'https://GOPID1603.github.io/ARMS/' }}
       HEADLESS: 'true'
       BROWSER: 'chrome'
     steps:
-      - name: 📥 Stage 1: Checkout Repository
+      - name: "Stage 1: Checkout Repository"
         uses: actions/checkout@v4
 
-      - name: 🐍 Stage 2: Setup Python Environment
+      - name: "Stage 2: Setup Python Environment"
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 📦 Stage 2: Install Python Automation Dependencies
+      - name: "Stage 2: Install Python Automation Dependencies"
         run: |
           python -m pip install --upgrade pip || true
           pip install openpyxl selenium requests || true
 
-      - name: 🧪 Stage 6-8: Verify Deployment & Execute Multi-Domain Test Suite (1,200 Test Cases)
+      - name: "Stage 6-8: Verify Deployment and Execute Multi-Domain Test Suite"
         run: |
           python automation/tests/run_all_tests.py || true
 
-      - name: 📊 Stage 9-10: Verify Report Artifact Generation
+      - name: "Stage 9-10: Verify Report Artifact Generation"
         run: |
           echo "Validating generated test execution artifacts..."
           ls -la automation/reports/Excel/ || true
@@ -100,9 +100,9 @@ jobs:
           ls -la automation/reports/JSON/ || true
           ls -la automation/reports/Summary/ || true
 
-      - name: 📤 Stage 11: Upload Test Reports & Evidence Artifacts
+      - name: "Stage 11: Upload Test Reports and Evidence Artifacts"
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ always() }}
         with:
           name: Automation-Execution-Reports-and-Evidence
           path: |
@@ -115,8 +115,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: 📝 Stage 12: Publish GitHub Actions Step Summary
-        if: always()
+      - name: "Stage 12: Publish GitHub Actions Step Summary"
+        if: ${{ always() }}
         run: |
           if [ -f "automation/reports/Summary/summary.md" ]; then
             cat automation/reports/Summary/summary.md >> $GITHUB_STEP_SUMMARY
@@ -124,8 +124,7 @@ jobs:
             echo "Summary report missing." >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: 💾 Stage 13: Store Historical Results Record
-        if: always()
+      - name: "Stage 13: Store Historical Results Record"
+        if: ${{ always() }}
         run: |
           echo "Historical execution evidence recorded at $(date -u)"
-
