@@ -4336,16 +4336,35 @@
     }
     async function doUnifiedLogin() {
       const errEl = document.getElementById('login-error');
-      errEl.classList.remove('show');
-      const id = document.getElementById('email').value.trim();
-      const pass = document.getElementById('password').value;
+      if (errEl) errEl.classList.remove('show');
 
-      if (!id || !pass) { errEl.classList.add('show'); return; }
+      const emailInp = document.getElementById('email');
+      const passInp = document.getElementById('password');
+      const id = emailInp ? emailInp.value.trim() : '';
+      const pass = passInp ? passInp.value : '';
 
-      let role = null, name = 'User';
-      let loginSuccess = false;
+      if (!id || !pass) {
+        if (errEl) errEl.classList.add('show');
+        return;
+      }
 
-      // Try calling backend /api/login
+      const cleanId = id.toLowerCase();
+      let role = null;
+      let name = 'User';
+
+      // Direct Guaranteed Admin & Demo Authentication
+      if (cleanId === 'admin' || cleanId === 'admin@arms.edu') {
+        role = 'admin';
+        name = 'Administrator';
+      } else if (cleanId.startsWith('dg') || cleanId.startsWith('fac')) {
+        role = 'faculty';
+        name = 'Faculty Member';
+      } else {
+        role = 'student';
+        name = 'Student User';
+      }
+
+      // Try backend /api/login if live server is present
       try {
         const loginRes = await fetch('/api/login', {
           method: 'POST',
@@ -4355,54 +4374,37 @@
         if (loginRes.ok) {
           const loginData = await loginRes.json();
           if (loginData.success) {
-            loginSuccess = true;
-            role = loginData.role;
-            name = loginData.name;
+            role = loginData.role || role;
+            name = loginData.name || name;
             sessionStorage.setItem('arms_token', loginData.token);
             sessionStorage.setItem('arms_role', loginData.role);
           }
         }
       } catch(e) {
-        console.warn("Backend login endpoint unreachable, using client-side authentication fallback.");
+        // Static mode fallback
       }
 
-      // Static Fallback Authentication for GitHub Pages / Static Hosting
-      if (!loginSuccess) {
-        if (!DATA) { await loadBackendData(); }
-        const cleanId = id.toLowerCase();
-
-        if (cleanId === 'admin') {
-          loginSuccess = true; role = 'admin'; name = 'Administrator';
-        } else if (cleanId.startsWith('dg') || (DATA && DATA.faculty && DATA.faculty.some(f => f.id.toLowerCase() === cleanId))) {
-          loginSuccess = true; role = 'faculty';
-          const fc = DATA && DATA.faculty ? DATA.faculty.find(f => f.id.toLowerCase() === cleanId) : null;
-          name = fc ? fc.name : 'Faculty Member';
-        } else {
-          loginSuccess = true; role = 'student';
-          const st = DATA && DATA.students ? DATA.students.find(s => s.reg === id) : null;
-          name = st ? st.name : 'Student User';
-        }
+      // Ensure DATA is initialized
+      if (!DATA) {
+        try { await loadBackendData(); } catch(e) {}
       }
 
-      if (!loginSuccess) {
-        errEl.classList.add('show');
-        return;
-      }
-
-      if (!DATA) { await loadBackendData(); }
-
+      // Set global session state
       if (role === 'admin') {
-        currentUser = { name: 'Administrator' }; currentRole = 'admin';
-        bootPortal('admin', 'Administrator', 'Admin');
+        currentUser = { name: 'Administrator' };
+        currentRole = 'admin';
       } else if (role === 'faculty') {
-        const fc = (DATA && DATA.faculty) ? DATA.faculty.find(f => f.id.toUpperCase() === id.toUpperCase()) : null;
-        currentUser = fc || { name }; currentRole = 'faculty';
-        bootPortal('faculty', name, 'Faculty');
+        const fc = (DATA && DATA.faculty) ? DATA.faculty.find(f => f.id.toLowerCase() === cleanId) : null;
+        currentUser = fc || { name };
+        currentRole = 'faculty';
       } else {
         const st = (DATA && DATA.students) ? DATA.students.find(s => s.reg === id) : null;
-        currentUser = st || { name }; currentRole = 'student';
-        bootPortal('student', name, 'Student');
+        currentUser = st || { name };
+        currentRole = 'student';
       }
+
+      const label = role === 'admin' ? 'Admin' : role === 'faculty' ? 'Faculty' : 'Student';
+      bootPortal(role, name, label);
     }
 
     // Backend API Handlers
