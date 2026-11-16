@@ -83,10 +83,15 @@ CREATE TABLE IF NOT EXISTS od_requests (
 
 CREATE TABLE IF NOT EXISTS student_courses (
     id SERIAL PRIMARY KEY,
-    student_reg TEXT,
-    course_code TEXT,
+    student_reg TEXT NOT NULL,
+    course_code TEXT NOT NULL,
+    status TEXT DEFAULT 'Enrolled',
+    marks INTEGER,
+    grade TEXT,
+    gp INTEGER,
     FOREIGN KEY(student_reg) REFERENCES students(reg) ON DELETE CASCADE,
-    FOREIGN KEY(course_code) REFERENCES courses(code) ON DELETE CASCADE
+    FOREIGN KEY(course_code) REFERENCES courses(code) ON DELETE CASCADE,
+    UNIQUE(student_reg, course_code)
 );
 
 CREATE TABLE IF NOT EXISTS chatbot_logs (

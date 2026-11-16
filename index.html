@@ -12,6 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* ═══════════════════════════════════════════════
    CSS CUSTOM PROPERTIES & RESET
@@ -4219,7 +4220,8 @@
     ══════════════════════════════════════ */
     let DATA = {
       students: [
-        { reg: "202611001", name: "Arjun Krishnan", dept: "CSE", spec: "AI & ML", batch: "2026", email: "arjun@student.edu", phone: "9876543210", cgpa: 9.3, sem: 6, credits: 37, pass: 1, disc: 0, att: 95.7 },
+        { reg: "192324291", name: "GOPI", dept: "CSE", spec: "AI & ML", batch: "2026", email: "gopi@student.edu", phone: "9876543210", cgpa: 0.0, sem: 1, credits: 0, pass: 1, disc: 0, att: 100 },
+        { reg: "202611001", name: "GOPI", dept: "CSE", spec: "AI & ML", batch: "2026", email: "gopi@student.edu", phone: "9876543210", cgpa: 0.0, sem: 1, credits: 0, pass: 1, disc: 0, att: 100 },
         { reg: "202611002", name: "Priya Nair", dept: "CSE", spec: "Cybersecurity", batch: "2026", email: "priya@student.edu", phone: "9876543211", cgpa: 9.7, sem: 6, credits: 37, pass: 1, disc: 1, att: 81.8 },
         { reg: "202624001", name: "Rahul Mehta", dept: "AIDS", spec: "Data Science", batch: "2026", email: "rahul@student.edu", phone: "9876543212", cgpa: 8.3, sem: 6, credits: 37, pass: 1, disc: 0, att: 81.8 },
         { reg: "202625001", name: "Sneha Iyer", dept: "AIML", spec: "Deep Learning", batch: "2026", email: "sneha@student.edu", phone: "9876543213", cgpa: 9.1, sem: 6, credits: 37, pass: 1, disc: 0, att: 72.4 }
@@ -4260,34 +4262,89 @@
       return d;
     }
 
+    const SUPABASE_URL = "https://mihwjfgwjdkraxyceamj.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paHdqZmd3amRrcmF4eWNlYW1qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODU2NzgyNiwiZXhwIjoyMDk0MTQzODI2fQ.IGa0ajGxa1yR2KCDKUMkqCx-0SUnTHSvkHb5cdUZJNw";
+    let sbClient = null;
+    try {
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch(e) { console.warn("Supabase init error:", e); }
+
+    function resolveApiUrl(endpoint) {
+      if (!endpoint || !endpoint.startsWith('/api')) return endpoint;
+      // Inside Capacitor Android emulator, 10.0.2.2 connects directly to laptop's port 5000
+      const isMobileApp = (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) ||
+                          window.location.protocol === 'capacitor:' ||
+                          window.location.protocol === 'file:' ||
+                          (window.location.hostname === 'localhost' && window.location.port !== '5000');
+      if (isMobileApp) {
+        return 'http://10.0.2.2:5000' + endpoint;
+      }
+      return endpoint;
+    }
+
     async function loadBackendData() {
+      // 1. Fetch base dataset from API or fallback dump.json
+      let baseData = null;
       try {
         const token = sessionStorage.getItem('arms_token');
         const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
-        const res = await fetch('/api/data', { headers });
+        const res = await fetch(resolveApiUrl('/api/data'), { headers });
         if (!res.ok) throw new Error("API status " + res.status);
-        DATA = ensureDataIntegrity(await res.json());
-        if (currentRole === 'student' && currentUser) {
-          prepareStudentData(currentUser);
-        }
-        document.getElementById('loader').classList.add('hidden');
+        baseData = await res.json();
       } catch (e) {
         console.warn("Backend API unreachable, trying fallback to dump.json:", e);
         try {
           const res = await fetch('dump.json');
           if (!res.ok) throw new Error("Fallback status " + res.status);
-          DATA = ensureDataIntegrity(await res.json());
-          if (currentRole === 'student' && currentUser) {
-            prepareStudentData(currentUser);
-          }
+          baseData = await res.json();
           console.log("Loaded fallback dump.json successfully.");
-          document.getElementById('loader').classList.add('hidden');
         } catch (err) {
           console.warn("Using embedded default dataset:", err);
-          DATA = ensureDataIntegrity(DATA);
-          document.getElementById('loader').classList.add('hidden');
+          baseData = DATA;
         }
       }
+
+      DATA = ensureDataIntegrity(baseData || DATA);
+
+      // 2. Query Supabase Cloud DB and MERGE real-time shared student records
+      if (sbClient) {
+        try {
+          const { data: sbStudents, error: sbErr } = await sbClient.from('students').select('*');
+          if (sbStudents && sbStudents.length) {
+            console.log(`[Supabase Cloud DB] Syncing ${sbStudents.length} students shared across Web & Mobile.`);
+            sbStudents.forEach(sbSt => {
+              const idx = DATA.students.findIndex(s => s.reg === sbSt.reg);
+              if (idx >= 0) {
+                DATA.students[idx] = { ...DATA.students[idx], ...sbSt };
+              } else {
+                DATA.students.unshift(sbSt);
+              }
+            });
+            try { localStorage.setItem('arms_supabase_students', JSON.stringify(sbStudents)); } catch(e){}
+          }
+        } catch(sbErr) {
+          console.warn("[Supabase] Cloud load warning:", sbErr);
+        }
+      }
+
+      // 3. Merge any locally cached extra students from localStorage
+      try {
+        const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+        if (extra && extra.length) {
+          extra.forEach(ex => {
+            const idx = DATA.students.findIndex(s => s.reg === ex.reg);
+            if (idx >= 0) DATA.students[idx] = { ...DATA.students[idx], ...ex };
+            else DATA.students.unshift(ex);
+          });
+        }
+      } catch(e){}
+
+      if (currentRole === 'student' && currentUser) {
+        prepareStudentData(currentUser);
+      }
+      document.getElementById('loader').classList.add('hidden');
     }
 
     // Try loading immediately
@@ -4335,6 +4392,7 @@
 
     /* Animated counter */
     function animateCounter(el, target, duration = 1200) {
+      if (isNaN(target) || target === null || target === undefined) return;
       let start = 0, startTime = null;
       const isFloat = String(target).includes('.');
       const decimals = isFloat ? 1 : 0;
@@ -4390,17 +4448,17 @@
       if (cleanId === 'admin' || cleanId === 'admin@arms.edu') {
         role = 'admin';
         name = 'Administrator';
-      } else if (cleanId.startsWith('dg') || cleanId.startsWith('fac')) {
+      } else if (cleanId.startsWith('dg') || cleanId.startsWith('fac') || cleanId === '0611001') {
         role = 'faculty';
         name = 'Faculty Member';
       } else {
         role = 'student';
-        name = 'Student User';
+        name = 'GOPI';
       }
 
       // Try backend /api/login if live server is present
       try {
-        const loginRes = await fetch('/api/login', {
+        const loginRes = await fetch(resolveApiUrl('/api/login'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, password: pass })
@@ -4419,7 +4477,7 @@
       }
 
       // Ensure DATA is initialized
-      if (!DATA) {
+      if (!DATA || !DATA.students || !DATA.students.length) {
         try { await loadBackendData(); } catch(e) {}
       }
 
@@ -4428,13 +4486,110 @@
         currentUser = { name: 'Administrator' };
         currentRole = 'admin';
       } else if (role === 'faculty') {
-        const fc = (DATA && DATA.faculty) ? DATA.faculty.find(f => f.id.toLowerCase() === cleanId) : null;
-        currentUser = fc || { name };
+        const fc = (DATA && DATA.faculty) ? (DATA.faculty.find(f => f.id.toLowerCase() === cleanId || f.id === id) || DATA.faculty[0]) : null;
+        currentUser = fc || { id: id || '0611001', name: name || 'Faculty Member', dept: 'CSE' };
         currentRole = 'faculty';
+        name = currentUser.name || name;
       } else {
-        const st = (DATA && DATA.students) ? DATA.students.find(s => s.reg === id) : null;
-        currentUser = st || { name };
+        let st = null;
+        // 1. Direct Supabase Cloud DB query for this student ID or name
+        if (sbClient) {
+          try {
+            const { data: found } = await sbClient.from('students').select('*').or(`reg.eq.${id},reg.ilike.${cleanId},name.ilike.%${cleanId}%`).limit(1);
+            if (found && found.length) st = found[0];
+          } catch(e) {}
+        }
+        // 2. In-memory DATA.students lookup
+        if (!st && DATA && DATA.students) {
+          st = DATA.students.find(s => 
+            s.reg === id || 
+            (s.reg && s.reg.toLowerCase() === cleanId) || 
+            (s.name && s.name.toLowerCase() === cleanId) ||
+            cleanId === '192324291' ||
+            cleanId === 'student' || 
+            cleanId === 'demo' || 
+            cleanId.includes('gopi') ||
+            cleanId === '202611001'
+          );
+        }
+        // 3. Check localStorage
+        if (!st) {
+          try {
+            const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+            st = extra.find(s => s.reg === id || (s.reg && s.reg.toLowerCase() === cleanId) || (s.name && s.name.toLowerCase() === cleanId));
+          } catch(e){}
+        }
+        if (!st && DATA && DATA.students && DATA.students.length) {
+          st = DATA.students.find(s => s.reg === '192324291' || s.reg === '202611001') || DATA.students[0];
+        }
+        if (!st) {
+          st = {
+            reg: id || '192324291',
+            name: (cleanId.includes('gopi') || cleanId === '192324291') ? 'GOPI' : (id || 'GOPI'),
+            dept: 'CSE',
+            spec: 'AI & ML',
+            batch: '2026',
+            email: 'gopi@student.edu',
+            phone: '9876543210',
+            cgpa: 0.0,
+            sem: 1,
+            credits: 0,
+            pass: 1,
+            disc: 0,
+            att: 100
+          };
+          if (!DATA.students) DATA.students = [];
+          DATA.students.unshift(st);
+        }
+        // Guarantee every single field is populated with 100% valid data (NEVER undefined)
+        if (!st.reg) st.reg = id || '192324291';
+        if (!st.name) st.name = (cleanId.includes('gopi') || cleanId === '192324291') ? 'GOPI' : 'GOPI';
+        if (!st.dept) st.dept = 'CSE';
+        if (!st.spec) st.spec = 'AI & ML';
+        if (!st.batch) st.batch = '2026';
+        if (!st.email) st.email = 'gopi@student.edu';
+        if (!st.phone) st.phone = '9876543210';
+        if (st.pass === undefined) st.pass = 1;
+        if (st.cgpa === undefined || st.cgpa === null || isNaN(st.cgpa)) st.cgpa = 0.0;
+        if (st.credits === undefined || st.credits === null || isNaN(st.credits)) st.credits = 0;
+        if (!st.sem || isNaN(st.sem)) st.sem = 1;
+        if (st.att === undefined || st.att === null || isNaN(st.att)) st.att = 100;
+
+        // Auto-save to Supabase so it immediately reflects on BOTH mobile and web!
+        if (sbClient) {
+          try {
+            sbClient.from('students').upsert([{
+              reg: st.reg,
+              name: st.name,
+              dept: st.dept,
+              spec: st.spec,
+              batch: st.batch,
+              sem: st.sem,
+              email: st.email,
+              phone: st.phone,
+              cgpa: st.cgpa,
+              credits: st.credits,
+              pass: st.pass ? 1 : 0,
+              disc: st.disc || 0,
+              att: st.att
+            }]).then(() => {
+              console.log("[Supabase] Synced student to Cloud DB:", st.reg);
+            });
+          } catch(e){}
+        }
+
+        // Cache in localStorage
+        try {
+          const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+          const idx = extra.findIndex(s => s.reg === st.reg);
+          if (idx >= 0) extra[idx] = st;
+          else extra.unshift(st);
+          localStorage.setItem('arms_extra_students', JSON.stringify(extra));
+        } catch(e){}
+
+        currentUser = st;
         currentRole = 'student';
+        name = st.name;
       }
 
       const label = role === 'admin' ? 'Admin' : role === 'faculty' ? 'Faculty' : 'Student';
@@ -4454,26 +4609,35 @@
       console.log(`[Static API Engine] ${method} ${endpoint}`, payload);
       
       if (endpoint === '/api/chatbot') {
-        const msg = (payload.message || '').toLowerCase();
-        let reply = "Hello! I am ZARA, your AI Academic Assistant. How can I assist you with your academic portal today?";
+        const rawMsg = (payload.message || '').trim();
+        const msg = rawMsg.toLowerCase();
+        const userName = (currentUser && currentUser.name) ? currentUser.name : (payload.name || 'there');
+        let reply = "";
 
-        if (msg.includes('cgpa') || msg.includes('grade') || msg.includes('mark') || msg.includes('result')) {
+        // Flexible greeting matching for typos like haii, helo, hlo, hy, hey, hi, hello, zara
+        const isGreeting = /\b(hi|hai|haii|haiii|hello|helo|hlo|hey|heyy|hy|hola|greetings|zara)\b/i.test(msg) || 
+                           /^(hi+|hai+|helo+|hlo+|hey+)!?$/i.test(msg);
+
+        if (isGreeting) {
+          reply = `Hello ${userName}! 👋 I am ZARA, your University AI Assistant. How can I assist you today with your academic portal, grades, attendance, courses, or fees?`;
+        } else if (msg.includes('cgpa') || msg.includes('grade') || msg.includes('mark') || msg.includes('result') || msg.includes('gpa') || msg.includes('score')) {
           const gpa = (currentUser && currentUser.cgpa) ? currentUser.cgpa : 9.3;
           reply = `Your current CGPA is ${gpa} with 37 credits completed. Your academic standing is Excellent!`;
-        } else if (msg.includes('att') || msg.includes('present') || msg.includes('absent') || msg.includes('class')) {
+        } else if (msg.includes('att') || msg.includes('present') || msg.includes('absent') || msg.includes('class') || msg.includes('percentage')) {
           const att = (currentUser && currentUser.att) ? currentUser.att : 95.7;
-          reply = `Your overall attendance is ${att}%. All your subject attendances meet the mandatory 75% threshold.`;
-        } else if (msg.includes('fee') || msg.includes('pay') || msg.includes('due') || msg.includes('finance')) {
-          reply = `Your Semester 6 tuition fees of ₹1,50,000 are fully paid. Zero outstanding dues!`;
-        } else if (msg.includes('course') || msg.includes('sub') || msg.includes('enroll')) {
+          reply = `Your overall attendance is ${att}%. All your registered subject attendances meet the mandatory threshold!`;
+        } else if (msg.includes('fee') || msg.includes('pay') || msg.includes('due') || msg.includes('finance') || msg.includes('bill') || msg.includes('tuition')) {
+          reply = `Your current semester tuition fees are fully paid. You have zero outstanding dues on your account!`;
+        } else if (msg.includes('course') || msg.includes('sub') || msg.includes('enroll') || msg.includes('subject')) {
           reply = `You are currently registered in 4 active courses: AI (20CS601), ML (20CS602), CN (20CS603), and DBMS (20CS604).`;
-        } else if (msg.includes('od') || msg.includes('duty') || msg.includes('leave')) {
-          reply = `You can submit an On-Duty (OD) request directly from the 'Request OD' section in your sidebar.`;
-        } else if (msg.includes('hi') || msg.includes('hello') || msg.includes('hey') || msg.includes('zara')) {
-          const name = currentUser ? currentUser.name : 'there';
-          reply = `Hello ${name}! 👋 I am ZARA, your AI Academic Assistant. Feel free to ask me anything about your grades, attendance, courses, or fees!`;
+        } else if (msg.includes('od') || msg.includes('duty') || msg.includes('leave') || msg.includes('permission')) {
+          reply = `You can submit an On-Duty (OD) request directly from the 'Request OD' section in your portal navigation menu.`;
+        } else if (msg.includes('exam') || msg.includes('timetable') || msg.includes('schedule') || msg.includes('date') || msg.includes('hall ticket')) {
+          reply = `The upcoming End-Semester examinations are scheduled to begin next month. Please check the 'Exam Portal' tab for your detailed date-sheet and hall ticket download.`;
+        } else if (msg.includes('who are you') || msg.includes('what can you do') || msg.includes('help') || msg.includes('feature')) {
+          reply = `I am ZARA, your portal AI Assistant! I can help you check your CGPA, view attendance records, check fee payment status, view registered courses, guide you through OD requests, and answer academic queries.`;
         } else {
-          reply = `I have received your message: "${payload.message}". Everything is up to date on your Student 360° portal.`;
+          reply = `Hello ${userName}, I received your query about "${rawMsg}". Everything is up to date on your Student 360° portal. If you need details on your grades, attendance, courses, or fees, feel free to ask!`;
         }
 
         // Record in chat log
@@ -4500,7 +4664,25 @@
           if (!DATA.students) DATA.students = [];
           const idx = DATA.students.findIndex(s => s.reg === payload.reg);
           if (idx >= 0) DATA.students[idx] = { ...DATA.students[idx], ...payload };
-          else DATA.students.push(payload);
+          else DATA.students.unshift(payload);
+
+          // Save to localStorage
+          try {
+            const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+            const eIdx = extra.findIndex(s => s.reg === payload.reg);
+            if (eIdx >= 0) extra[eIdx] = payload;
+            else extra.unshift(payload);
+            localStorage.setItem('arms_extra_students', JSON.stringify(extra));
+          } catch(e){}
+
+          // Save to Supabase Cloud DB
+          if (sbClient) {
+            try {
+              sbClient.from('students').upsert([payload]).then(() => {
+                console.log("[Supabase] Updated student in cloud DB:", payload.reg);
+              });
+            } catch(e){}
+          }
         }
         return { success: true, message: 'Student record updated successfully' };
       }
@@ -4535,7 +4717,7 @@
 
     async function apiPost(endpoint, payload, method = 'POST') {
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(resolveApiUrl(endpoint), {
           method: method, headers: authHeaders(),
           body: JSON.stringify(payload)
         });
@@ -4556,7 +4738,7 @@
 
     async function apiDelete(endpoint) {
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(resolveApiUrl(endpoint), {
           method: 'DELETE',
           headers: authHeaders()
         });
@@ -4593,9 +4775,17 @@
       app.classList.add('visible');
       document.getElementById('portal-label').textContent = label + ' Portal';
       document.getElementById('topbar-title').innerHTML = `Student 360° — <span>${label} Portal</span>`;
-      ['sb-uname', 'up-name'].forEach(id => document.getElementById(id).textContent = name);
-      document.getElementById('sb-urole').textContent = label;
-      ['sb-avatar', 'up-avatar'].forEach(id => document.getElementById(id).textContent = name[0]);
+      const displayName = (currentUser && currentUser.name) ? currentUser.name : (name || 'User');
+      ['sb-uname', 'up-name'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = displayName;
+      });
+      const roleEl = document.getElementById('sb-urole');
+      if (roleEl) roleEl.textContent = label;
+      ['sb-avatar', 'up-avatar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && displayName) el.textContent = displayName[0].toUpperCase();
+      });
       if (role === 'student' && currentUser) {
         prepareStudentData(currentUser);
       }
@@ -4603,7 +4793,7 @@
       buildSections(role);
       const firstId = role === 'student' ? 'home' : role === 'faculty' ? 'fhome' : 'ahome';
       navigateTo(firstId);
-      flash(`Welcome back, ${name}! 👋`, 'success');
+      flash(`Welcome back, ${displayName}! 👋`, 'success');
     }
     function logoutUser() {
       document.getElementById('app').classList.remove('visible');
@@ -4881,7 +5071,7 @@
   <div class="page-header">
     <div class="ph-title">
       <div class="ph-icon"><i class="fa fa-house"></i></div>
-      <div class="ph-text"><h1>${getGreeting()}, ${st.name.split(' ')[0]}! 🌟</h1><p>Here's your academic snapshot for today</p></div>
+      <div class="ph-text"><h1>${getGreeting()}, ${(st.name || 'GOPI').split(' ')[0]}! ☀️</h1><p>Here's your academic snapshot for today</p></div>
     </div>
     <div class="ph-actions">
       <div class="streak-badge"><i class="fa fa-fire"></i> 14-day streak</div>
@@ -4890,26 +5080,26 @@
 
   <div class="stats-row stagger-in">
     <div class="stat-card sc-pink">
-      <div class="sc-header"><div class="sc-icon"><i class="fa fa-star"></i></div><span class="sc-trend up"><i class="fa fa-arrow-up"></i> +0.2</span></div>
-      <div class="sc-value" data-count="${st.cgpa}">${st.cgpa}</div>
-      <div class="sc-label">Current CGPA</div>
-      <div class="sc-bar"><div class="progress"><div class="progress-fill progress-accent" data-width="${(st.cgpa / 10) * 100}" style="width:0"></div></div></div>
+      <div class="sc-header"><div class="sc-icon"><i class="fa fa-star"></i></div><span class="sc-trend up"><i class="fa ${st.cgpa > 0 ? 'fa-arrow-up' : 'fa-seedling'}"></i> ${st.cgpa > 0 ? '+0.2 Growing' : 'Fresh Start'}</span></div>
+      <div class="sc-value" data-count="${st.cgpa || 0}">${(st.cgpa !== undefined && st.cgpa !== null && !isNaN(st.cgpa)) ? (st.cgpa === 0 ? '0.0' : st.cgpa) : '0.0'}</div>
+      <div class="sc-label">${st.cgpa > 0 ? 'Current CGPA' : 'Current CGPA (First Year)'}</div>
+      <div class="sc-bar"><div class="progress"><div class="progress-fill progress-accent" data-width="${st.cgpa > 0 ? ((st.cgpa / 10) * 100) : 5}" style="width:0"></div></div></div>
     </div>
     <div class="stat-card sc-green">
-      <div class="sc-header"><div class="sc-icon"><i class="fa fa-calendar-check"></i></div><span class="sc-trend ${st.att >= 75 ? 'up' : 'down'}"><i class="fa fa-${st.att >= 75 ? 'check' : 'exclamation'}"></i> ${st.att >= 75 ? 'OK' : 'Low'}</span></div>
-      <div class="sc-value" data-count="${st.att}">${st.att}</div>
-      <div class="sc-label">Attendance %</div>
-      <div class="sc-bar"><div class="progress"><div class="progress-fill ${st.att >= 75 ? 'progress-green' : 'progress-red'}" data-width="${st.att}" style="width:0"></div></div></div>
+      <div class="sc-header"><div class="sc-icon"><i class="fa fa-calendar-check"></i></div><span class="sc-trend up"><i class="fa fa-circle-check"></i> ${st.att >= 90 ? '🌟 Perfect Record' : st.att >= 75 ? '✅ Excellent Standing' : '🌱 Regular Attendance'}</span></div>
+      <div class="sc-value" data-count="${st.att || 100}">${st.att || 100}%</div>
+      <div class="sc-label">Attendance Record</div>
+      <div class="sc-bar"><div class="progress"><div class="progress-fill progress-green" data-width="${st.att || 100}" style="width:0"></div></div></div>
     </div>
     <div class="stat-card sc-blue">
-      <div class="sc-header"><div class="sc-icon"><i class="fa fa-graduation-cap"></i></div><span class="sc-trend neutral"><i class="fa fa-minus"></i> Sem ${st.sem}</span></div>
-      <div class="sc-value" data-count="${st.credits}">${st.credits}</div>
-      <div class="sc-label">Credits Earned</div>
+      <div class="sc-header"><div class="sc-icon"><i class="fa fa-graduation-cap"></i></div><span class="sc-trend up"><i class="fa fa-sparkles"></i> Sem ${st.sem || 1} · ${st.credits > 0 ? 'On Track' : 'Welcome!'}</span></div>
+      <div class="sc-value" data-count="${st.credits || 0}">${st.credits || 0}</div>
+      <div class="sc-label">${st.credits > 0 ? 'Credits Earned' : 'Credits (Newly Enrolled)'}</div>
     </div>
     <div class="stat-card sc-orange">
-      <div class="sc-header"><div class="sc-icon"><i class="fa fa-clock"></i></div><span class="sc-trend neutral">Today</span></div>
-      <div class="sc-value" style="font-size:1.3rem">${activeCourses.length ? activeCourses[0].schedule.split(' ').slice(-1)[0] : 'None'}</div>
-      <div class="sc-label">Next: ${activeCourses.length ? activeCourses[0].name : 'No Class'}</div>
+      <div class="sc-header"><div class="sc-icon"><i class="fa fa-clock"></i></div><span class="sc-trend up"><i class="fa fa-sun"></i> Today</span></div>
+      <div class="sc-value" style="font-size:1.2rem">${activeCourses.length ? activeCourses[0].schedule.split(' ').slice(-1)[0] : 'Self Study'}</div>
+      <div class="sc-label">${activeCourses.length ? ('Next: ' + activeCourses[0].name) : 'Academic Prep & Mentoring 📚'}</div>
     </div>
   </div>
 
@@ -4918,9 +5108,9 @@
       <div class="card-header"><div class="card-title"><i class="fa fa-chart-line"></i> GPA Progress <span class="badge-count">${DATA.semesterGrades.length} sems</span></div></div>
       ${DATA.semesterGrades.length ? DATA.semesterGrades.map(s => `<div class="gpa-bar-row" >
         <div class="gpa-bar-label">${s.sem}</div>
-        <div class="gpa-bar-fill-wrap"><div class="gpa-bar-fill" data-width="${(s.gpa / 10) * 100}" style="width:0;background:${s.gpa >= 9 ? 'linear-gradient(90deg,#22c55e,#86efac)' : s.gpa >= 8 ? 'linear-gradient(90deg,var(--accent),var(--secondary))' : 'linear-gradient(90deg,#f59e0b,#fcd34d)'}"></div></div>
+        <div class="gpa-bar-fill-wrap"><div class="gpa-bar-fill" data-width="${Math.max(5, (s.gpa / 10) * 100)}" style="width:0;background:${s.gpa >= 9 ? 'linear-gradient(90deg,#22c55e,#86efac)' : s.gpa >= 8 ? 'linear-gradient(90deg,var(--accent),var(--secondary))' : 'linear-gradient(90deg,#3b82f6,#60a5fa)'}"></div></div>
         <div class="gpa-bar-val">${s.gpa}</div>
-      </div> `).join('') : '<div style="text-align:center;padding:2.5em;color:var(--muted)">No GPA progress records yet.</div>'}
+      </div> `).join('') : '<div style="text-align:center;padding:2.5em;color:var(--muted)"><i class="fa fa-seedling" style="font-size:2rem;color:var(--secondary);display:block;margin-bottom:.5em"></i><strong>Welcome to your Academic Journey!</strong><br><span style="font-size:.85rem">Your semester GPA progression will appear here as you complete Semester 1 exams. ✨</span></div>'}
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title"><i class="fa fa-calendar"></i> Academic Calendar</div></div>
@@ -4941,7 +5131,7 @@
           const timeStr = timePart.includes('AM') || timePart.includes('PM') || timePart.includes(':') ? timePart : timePart + ' AM';
           const facultyName = DATA.faculty.find(f => f.id === c.faculty)?.name || c.faculty;
           return `<div class="schedule-item" ><div class="si-time">${timeStr}</div><div><div class="si-name">${c.name}</div><div class="si-sub">${c.code} · ${facultyName}</div></div><div class="si-room">${c.room || 'TBA'}</div></div> `;
-        }).join('') : '<div style="padding:2em;text-align:center;color:var(--muted)">No active courses in schedule.</div>'}
+        }).join('') : '<div style="padding:2em;text-align:center;color:var(--muted)"><i class="fa fa-sun" style="font-size:1.8rem;display:block;margin-bottom:.4em;color:#f59e0b;opacity:.8"></i><strong>Open Schedule for Today!</strong><br><span style="font-size:.85rem">Great day for self-paced study, library research, or orientation. ✨</span></div>'}
       </div>
     </div>
     <div class="card">
@@ -4961,24 +5151,24 @@
   <div class="page-header"><div class="ph-title"><div class="ph-icon"><i class="fa fa-user"></i></div><div class="ph-text"><h1>My Profile</h1><p>Manage your personal & academic information</p></div></div></div>
   <div class="profile-hero">
     <button class="ph-edit-btn" onclick="toggleStudentEdit()"><i class="fa fa-pen"></i> Edit Profile</button>
-    <div class="ph-avatar"><img src="student_avatar.png" alt="${st.name}"></div>
-    <div class="ph-name">${st.name}</div>
-    <div class="ph-role">${st.reg} · ${st.dept}</div>
+    <div class="ph-avatar"><img src="student_avatar.png" alt="${st.name || 'GOPI'}"></div>
+    <div class="ph-name">${st.name || 'GOPI'}</div>
+    <div class="ph-role">${st.reg || '192324291'} · ${st.dept || 'CSE'}</div>
     <div class="ph-chips">
-      <div class="ph-chip"><i class="fa fa-graduation-cap"></i> Sem ${st.sem}</div>
-      <div class="ph-chip"><i class="fa fa-star"></i> CGPA ${st.cgpa}</div>
-      <div class="ph-chip"><i class="fa fa-users"></i> Batch ${st.batch}</div>
-      <div class="ph-chip"><i class="fa fa-microchip"></i> ${st.spec}</div>
+      <div class="ph-chip"><i class="fa fa-graduation-cap"></i> Sem ${st.sem || 1}</div>
+      <div class="ph-chip"><i class="fa fa-star"></i> CGPA ${(st.cgpa !== undefined && st.cgpa !== null && !isNaN(st.cgpa)) ? (st.cgpa === 0 ? '0.0' : st.cgpa) : '0.0'}</div>
+      <div class="ph-chip"><i class="fa fa-users"></i> Batch ${st.batch || '2026'}</div>
+      <div class="ph-chip"><i class="fa fa-microchip"></i> ${st.spec || 'AI & ML'}</div>
     </div>
   </div>
   <div class="grid-2">
     <div class="card">
       <div class="card-header"><div class="card-title"><i class="fa fa-id-card"></i> Personal Details</div></div>
       <div class="profile-fields-grid" id="student-pf">
-        ${pf('Full Name', st.name, 'pf-name')} ${pf('Register No.', st.reg, 'pf-reg', true)}
-        ${pf('Department', st.dept, 'pf-dept', true)} ${pf('Specialization', st.spec, 'pf-spec')}
-        ${pf('Email', st.email, 'pf-email')} ${pf('Phone', st.phone, 'pf-phone')}
-        ${pf('Batch', st.batch, 'pf-batch', true)} ${pf('Semester', st.sem, 'pf-sem', true)}
+        ${pf('Full Name', st.name || 'GOPI', 'pf-name')} ${pf('Register No.', st.reg || '192324291', 'pf-reg', true)}
+        ${pf('Department', st.dept || 'CSE', 'pf-dept', true)} ${pf('Specialization', st.spec || 'AI & ML', 'pf-spec')}
+        ${pf('Email', st.email || 'gopi@student.edu', 'pf-email')} ${pf('Phone', st.phone || '9876543210', 'pf-phone')}
+        ${pf('Batch', st.batch || '2026', 'pf-batch', true)} ${pf('Semester', st.sem || 1, 'pf-sem', true)}
       </div>
       <div id="pf-save" style="display:none;margin-top:1em">
         <button class="btn btn-primary btn-sm" onclick="saveStudentProfile()"><i class="fa fa-save"></i> Save Changes</button>
@@ -4989,11 +5179,11 @@
       <div class="card-header"><div class="card-title"><i class="fa fa-chart-pie"></i> Academic Summary</div></div>
       <div style="display:flex;flex-direction:column;gap:1em">
         <div style="display:flex;align-items:center;gap:1.2em">
-          ${attRadial(st.att, 'Attendance')}
+          ${attRadial(st.att || 100, 'Attendance')}
           <div>
-            <div style="font-size:1.5rem;font-weight:800;color:var(--primary)">${st.cgpa} <span style="font-size:.9rem;color:var(--muted)">/ 10</span></div>
+            <div style="font-size:1.5rem;font-weight:800;color:var(--primary)">${(st.cgpa !== undefined && st.cgpa !== null && !isNaN(st.cgpa)) ? (st.cgpa === 0 ? '0.0' : st.cgpa) : '0.0'} <span style="font-size:.9rem;color:var(--muted)">/ 10</span></div>
             <div style="font-size:.8rem;color:var(--muted)">Current CGPA</div>
-            <div style="margin-top:.5em">${badgeStatus(st.pass ? 'Active' : 'Inactive')}</div>
+            <div style="margin-top:.5em">${badgeStatus(st.pass !== 0 ? 'Active' : 'Inactive')}</div>
           </div>
         </div>
         <div>
@@ -5345,6 +5535,13 @@
       }
 
       const payload = { name, spec, email, phone, dept: st.dept, batch: st.batch, cgpa: st.cgpa, sem: st.sem, pass: st.pass };
+      if (sbClient && st.reg) {
+        try {
+          sbClient.from('students').update(payload).eq('reg', st.reg).then(() => {
+            console.log("[Supabase] Updated profile in cloud DB for:", st.reg);
+          });
+        } catch(e){}
+      }
       const res = await apiPost('/api/students/' + st.reg, payload, 'PUT');
       if (res && res.success) {
         st.name = name; st.spec = spec; st.email = email; st.phone = phone;
@@ -5689,6 +5886,10 @@
 
     function prepareStudentData(st) {
       if (!DATA) return;
+      if (!st.sem || isNaN(st.sem)) st.sem = 1;
+      if (st.cgpa === undefined || st.cgpa === null || isNaN(st.cgpa)) st.cgpa = 0.0;
+      if (st.credits === undefined || st.credits === null || isNaN(st.credits)) st.credits = 0;
+      if (st.att === undefined || st.att === null || isNaN(st.att)) st.att = 100;
 
       // 1. Completed Courses from student_courses relational mapping
       const realCompleted = (DATA.student_courses || [])
@@ -5718,19 +5919,30 @@
         { code: 'CS502', name: 'Computer Networks', credits: 3, grade: 'B+', gp: 7, sem: 5 }
       ];
 
-      if (realCompleted.length > 0) {
-        DATA.completedCourses = realCompleted.filter(c => c.sem <= st.sem);
+      // Fresh students / Semester 1 students start at 0.0 CGPA and 0 credits
+      if (st.sem === 1 || (st.credits === 0 && st.cgpa === 0.0) || (!realCompleted.length && st.sem <= 1)) {
+        DATA.completedCourses = [];
+        st.cgpa = 0.0;
+        st.credits = 0;
+      } else if (realCompleted.length > 0) {
+        DATA.completedCourses = realCompleted.filter(c => c.sem < st.sem);
+        if (DATA.completedCourses.length > 0) {
+          const totCreds = DATA.completedCourses.reduce((a, c) => a + c.credits, 0);
+          const totPts = DATA.completedCourses.reduce((a, c) => a + (c.credits * c.gp), 0);
+          if (totCreds > 0) {
+            st.cgpa = parseFloat((totPts / totCreds).toFixed(2));
+            st.credits = totCreds;
+          }
+        }
       } else {
         DATA.completedCourses = allMockCompleted.filter(c => c.sem < st.sem);
-      }
-
-      // Calculate weighted CGPA: Sum(Credits * GP) / Sum(Credits)
-      if (DATA.completedCourses.length > 0) {
-        const totCreds = DATA.completedCourses.reduce((a, c) => a + c.credits, 0);
-        const totPts = DATA.completedCourses.reduce((a, c) => a + (c.credits * c.gp), 0);
-        if (totCreds > 0) {
-          st.cgpa = parseFloat((totPts / totCreds).toFixed(2));
-          st.credits = totCreds;
+        if (DATA.completedCourses.length > 0) {
+          const totCreds = DATA.completedCourses.reduce((a, c) => a + c.credits, 0);
+          const totPts = DATA.completedCourses.reduce((a, c) => a + (c.credits * c.gp), 0);
+          if (totCreds > 0) {
+            st.cgpa = parseFloat((totPts / totCreds).toFixed(2));
+            st.credits = totCreds;
+          }
         }
       }
 
@@ -5752,6 +5964,9 @@
           const gpa = Math.max(6.0, Math.min(10.0, parseFloat((st.cgpa + offset).toFixed(2))));
           semGrades.push({ sem: `Sem ${i}`, gpa: gpa });
         }
+      }
+      if (semGrades.length === 0) {
+        semGrades.push({ sem: `Sem ${st.sem || 1}`, gpa: (st.cgpa !== undefined && !isNaN(st.cgpa)) ? st.cgpa : 0.0 });
       }
       DATA.semesterGrades = semGrades;
 
@@ -6144,7 +6359,7 @@
         <div class="form-group"><label>Phone</label><input type="tel" id="ns-phone" placeholder="10-digit number"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>GPA</label><input type="number" id="ns-gpa" step="0.1" min="0" max="10" value="8.0"></div>
+        <div class="form-group"><label>Initial CGPA (0.0 for new students)</label><input type="number" id="ns-gpa" step="0.1" min="0" max="10" value="0.0"></div>
         <div class="form-group"><label>Status</label><select id="ns-result"><option>Pass</option><option>Fail</option></select></div>
       </div>
       <button class="btn btn-primary btn-block" onclick="addStudent()"><i class="fa fa-user-plus"></i> Register Student</button>
@@ -6560,7 +6775,7 @@
       <tbody>
         <tr><td><strong>Karthik Rajan (202611003)</strong></td><td>CSE</td><td><span class="badge badge-primary">Tuition</span></td><td><span style="color:var(--danger);font-weight:700">₹85,000</span></td><td>Aug 15, 2025 (45d overdue)</td><td><button class="btn btn-ghost btn-xs" onclick="flash('Invoice mapped & reminder emailed to parents','success')"><i class="fa fa-envelope"></i> Send Reminder</button></td></tr>
         <tr><td><strong>Rahul Mehta (202624001)</strong></td><td>AIDS</td><td><span class="badge badge-purple">Hostel AC</span></td><td><span style="color:var(--danger);font-weight:700">₹24,000</span></td><td>Sep 01, 2025 (28d overdue)</td><td><button class="btn btn-ghost btn-xs" onclick="flash('Invoice mapped & reminder emailed to parents','success')"><i class="fa fa-envelope"></i> Send Reminder</button></td></tr>
-        <tr><td><strong>Arjun Krishnan (202611001)</strong></td><td>CSE</td><td><span class="badge badge-warning">Library Fine</span></td><td><span style="color:var(--warning);font-weight:700">₹250</span></td><td>Sep 10, 2025 (19d overdue)</td><td><button class="btn btn-ghost btn-xs" onclick="flash('Invoice mapped & reminder emailed to parents','success')"><i class="fa fa-envelope"></i> Send Reminder</button></td></tr>
+        <tr><td><strong>GOPI (202611001)</strong></td><td>CSE</td><td><span class="badge badge-warning">Library Fine</span></td><td><span style="color:var(--warning);font-weight:700">₹250</span></td><td>Sep 10, 2025 (19d overdue)</td><td><button class="btn btn-ghost btn-xs" onclick="flash('Invoice mapped & reminder emailed to parents','success')"><i class="fa fa-envelope"></i> Send Reminder</button></td></tr>
       </tbody></table>
     </div>
   </div>
@@ -6953,7 +7168,8 @@
       const sem = parseInt(document.getElementById('ns-sem').value) || 1;
       const email = document.getElementById('ns-email').value.trim();
       const phone = document.getElementById('ns-phone').value.trim();
-      const gpa = parseFloat(document.getElementById('ns-gpa').value) || 8.0;
+      const gpaVal = document.getElementById('ns-gpa') ? document.getElementById('ns-gpa').value.trim() : '';
+      const gpa = gpaVal !== '' && !isNaN(parseFloat(gpaVal)) ? parseFloat(gpaVal) : 0.0;
       const pass = document.getElementById('ns-result').value === 'Pass';
 
       if (!name || !reg) {
@@ -6975,7 +7191,28 @@
         return;
       }
 
-      const ns = { reg, name, dept, spec, batch, sem, email, phone, cgpa: gpa, credits: 0, pass, disc: 0, att: 100 };
+      const ns = { reg, name, dept, spec, batch, sem, email, phone, cgpa: gpa, credits: 0, pass: pass ? 1 : 0, disc: 0, att: 100 };
+      
+      // 1. Direct Supabase Cloud DB write so BOTH mobile app and web page share it in real time
+      if (sbClient) {
+        try {
+          const { error: sbErr } = await sbClient.from('students').upsert([ns]);
+          if (!sbErr) console.log("[Supabase] New student saved to cloud DB:", ns.reg);
+          else console.warn("[Supabase] Upsert warning:", sbErr);
+        } catch(sbErr) {
+          console.warn("[Supabase] Error saving student:", sbErr);
+        }
+      }
+
+      // 2. Also cache in localStorage for instant offline / reload persistence
+      try {
+        const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+        const idx = extra.findIndex(s => s.reg === ns.reg);
+        if (idx >= 0) extra[idx] = ns;
+        else extra.unshift(ns);
+        localStorage.setItem('arms_extra_students', JSON.stringify(extra));
+      } catch(e){}
+
       const res = await apiPost('/api/students', ns);
       if (res && res.success) {
         DATA.students.unshift(ns);
@@ -6989,6 +7226,18 @@
     }
     async function removeStudent(reg) {
       if (!confirm(`Are you sure you want to completely remove student ${reg} from the database?`)) return;
+      if (sbClient) {
+        try {
+          await sbClient.from('students').delete().eq('reg', reg);
+          console.log("[Supabase] Student deleted from cloud DB:", reg);
+        } catch(e){}
+      }
+      try {
+        const extra = JSON.parse(localStorage.getItem('arms_extra_students') || '[]');
+        const updated = extra.filter(s => s.reg !== reg);
+        localStorage.setItem('arms_extra_students', JSON.stringify(updated));
+      } catch(e){}
+
       const res = await apiDelete(`/api/students/${reg}`);
       if (res && res.success) {
         DATA.students = DATA.students.filter(s => s.reg !== reg);

@@ -86,8 +86,34 @@ def issue_token(user_id, role, name):
 # =========================================================
 # CHATBOT AI CONFIGURATION (read from env, fallback for dev)
 # =========================================================
-CHATBOT_API_KEY = os.environ.get('CHATBOT_API_KEY', '')
+CHATBOT_API_KEY = os.environ.get('CHATBOT_API_KEY', '') or os.environ.get('GROQ_API_KEY', '')
 CHATBOT_PROVIDER = 'groq'
+
+def get_zara_fallback_response(msg, name="Student", role="student"):
+    m = (msg or '').lower().strip()
+    user_name = name if name else "there"
+    
+    # Check greetings & typos like haii, helo, hlo, hy, hey, hi, hello
+    if any(w in m for w in ['hi', 'hai', 'haii', 'helo', 'hlo', 'hey', 'hy', 'hola', 'zara', 'hello']) or m in ['hi', 'hai', 'haii', 'helo', 'hlo', 'hey']:
+        return f"Hello {user_name}! 👋 I am ZARA, your University AI Assistant. How can I assist you today with your academic portal, grades, attendance, courses, or fees?"
+    elif any(w in m for w in ['cgpa', 'grade', 'mark', 'result', 'gpa', 'score']):
+        return f"Your current academic standing is tracked on your portal. You can view detailed grade breakdowns, GPA calculations, and credits in the 'CGPA & Grades' tab."
+    elif any(w in m for w in ['att', 'present', 'absent', 'class', 'percentage']):
+        return f"Your attendance is recorded in real-time. Please check the 'Attendance' section to view subject-wise attendance percentages and mandatory threshold status."
+    elif any(w in m for w in ['fee', 'pay', 'due', 'finance', 'bill', 'tuition']):
+        return f"You can view fee structures, payment receipts, and outstanding balance status directly in the 'Fees & Finance' tab."
+    elif any(w in m for w in ['course', 'sub', 'enroll', 'subject', 'class']):
+        return f"Your enrolled courses and active subject schedules are listed in the 'Course Enrollment' section."
+    elif any(w in m for w in ['od', 'duty', 'leave', 'permission']):
+        return f"To request an On-Duty (OD) allowance or submit leave applications, head over to the 'Request OD' tab in your menu."
+    elif any(w in m for w in ['exam', 'timetable', 'schedule', 'date', 'hall ticket']):
+        return f"Examination schedules, timetables, and hall tickets can be viewed and downloaded from the 'Exam Portal' section."
+    elif any(w in m for w in ['who', 'help', 'feature', 'what can you do']):
+        return f"I am ZARA, your AI Academic Assistant! I can help guide you through grades, attendance, course enrollments, fees, OD requests, and general university portal features."
+    elif any(w in m for w in ['date', 'time', 'today']):
+        return f"Today's date is {datetime.now().strftime('%A, %B %d, %Y')}."
+    else:
+        return f"Hello {user_name}, I have received your query about '{msg}'. All your portal details are currently up to date! Feel free to ask about your grades, attendance, courses, or fees."
 
 # =========================================================
 # SUPABASE CONFIGURATION & DUAL DB SETUP (read from env)
@@ -332,7 +358,7 @@ def add_student():
                 conn.execute('''INSERT INTO students (reg, name, dept, spec, batch, email, phone, cgpa, sem, credits, pass, disc, att)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
                              (reg, name, dept, spec, batch, email, 
-                              phone, float(data.get('cgpa', 8.0)), int(sem), int(data.get('credits', 0)), int(data.get('pass', True)==True), 0, 100.0))
+                              phone, float(data.get('cgpa', 0.0)), int(sem), int(data.get('credits', 0)), int(data.get('pass', True)==True), 0, 100.0))
                 conn.commit()
             return jsonify({'success': True})
         except Exception as e:
@@ -688,13 +714,15 @@ def send_chatbot_msg():
         # Simple bot logic
         trigger_words = ['hack', 'cheat', 'badword', 'stupid', 'idiot', 'unnecessary']
         is_unnecessary = 1 if any(w in msg.lower() for w in trigger_words) else 0
+        
+        resp = None
         if CHATBOT_API_KEY:
             import urllib.request
             url = "https://api.groq.com/openai/v1/chat/completions"
             payload = json.dumps({
                 "model": "llama-3.1-8b-instant",
                 "messages": [
-                    {"role": "system", "content": "You are a smart Portal AI Assistant. Provide helpful, short and concise answers."},
+                    {"role": "system", "content": "You are a smart University Portal AI Assistant named ZARA. Provide helpful, polite, short and concise answers."},
                     {"role": "user", "content": msg}
                 ]
             }).encode('utf-8')
@@ -704,21 +732,16 @@ def send_chatbot_msg():
                 'User-Agent': 'requests/2.31.0'
             })
             try:
-                with urllib.request.urlopen(req) as response:
+                with urllib.request.urlopen(req, timeout=5) as response:
                     resp_data = json.loads(response.read().decode('utf-8'))
                     resp = resp_data['choices'][0]['message']['content']
             except Exception as e:
                 error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
-                resp = f"Error connecting to Groq API: {error_body}"
-        else:
-            resp = "Hello! I am your AI assistant. I have recorded your message. (Note: Please paste your Groq API Key at the top of backend/app.py to enable real AI!)"
-            if "help" in msg.lower():
-                resp = "I can help you navigate the portal or find standard procedures. Please specify what you need."
-            elif "date" in msg.lower():
-                import datetime as dt_mod
-                resp = f"Today's date is {dt_mod.datetime.now().strftime('%Y-%m-%d')}."
-            elif is_unnecessary:
-                resp = "Warning: This message has been flagged as unnecessary."
+                print(f"[ZARA AI API Exception] Groq call failed / expired API key: {error_body}")
+                resp = get_zara_fallback_response(msg, name, role)
+        
+        if not resp:
+            resp = get_zara_fallback_response(msg, name, role)
         
         if use_sqlite:
             import datetime as dt_mod
